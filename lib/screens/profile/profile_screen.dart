@@ -11,38 +11,52 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Mon Profil'), automaticallyImplyLeading: false),
+      appBar: AppBar(
+        title: Text('Mon Profil',
+          style: GoogleFonts.poppins(color: AppColors.textGold, fontWeight: FontWeight.w600)),
+        automaticallyImplyLeading: false,
+        backgroundColor: AppColors.black,
+      ),
       body: ListView(
         children: [
-          // Header profil
+          // Header
           Container(
-            color: AppColors.primary,
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+            color: AppColors.black,
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 44,
-                  backgroundColor: Colors.white.withOpacity(0.2),
-                  child: Text(MockUser.name.substring(0, 2).toUpperCase(),
-                    style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.w700, color: Colors.white)),
+                Container(
+                  width: 80, height: 80,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [AppColors.primaryDark, AppColors.primaryLight],
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(MockUser.name.substring(0, 2).toUpperCase(),
+                      style: GoogleFonts.poppins(
+                        fontSize: 28, fontWeight: FontWeight.w800, color: AppColors.black)),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Text(MockUser.name, style: GoogleFonts.poppins(
-                  fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white)),
-                Text(MockUser.email, style: GoogleFonts.poppins(fontSize: 13, color: Colors.white70)),
+                  fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textWhite)),
+                Text(MockUser.email, style: GoogleFonts.poppins(
+                  fontSize: 12, color: AppColors.textGrey)),
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _Badge(label: 'KYC ${MockUser.kycLevel}', color: Colors.green),
+                    _Badge(label: 'KYC ${MockUser.kycLevel}', color: AppColors.success),
                     const SizedBox(width: 8),
-                    _Badge(label: MockUser.clientType, color: Colors.white24),
+                    _Badge(label: MockUser.clientType, color: AppColors.primary),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // KYC Progress
           Padding(
@@ -52,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.cardBg,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8)],
+                border: Border.all(color: AppColors.divider, width: 0.5),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,31 +74,33 @@ class ProfileScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Niveau KYC', style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 15)),
-                      TextButton(onPressed: () {}, child: Text('Améliorer',
-                        style: GoogleFonts.poppins(color: AppColors.primary, fontSize: 12))),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _KycStep(label: 'Basic', isDone: true),
-                      Expanded(child: Container(height: 2, color: AppColors.primary)),
-                      _KycStep(label: 'Standard', isDone: true),
-                      Expanded(child: Container(height: 2, color: AppColors.divider)),
-                      _KycStep(label: 'Avancé', isDone: false),
+                      Text('Niveau KYC', style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textWhite)),
+                      TextButton(onPressed: () {},
+                        child: Text('Améliorer', style: GoogleFonts.poppins(
+                          color: AppColors.primary, fontSize: 12))),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  Text('Passez au niveau Avancé pour accéder aux financements > 50 000 USD',
-                    style: GoogleFonts.poppins(fontSize: 12, color: AppColors.textGrey)),
+                  Row(
+                    children: [
+                      _KycStep(label: 'Basic', isDone: true),
+                      Expanded(child: Container(height: 1,
+                        color: AppColors.primary.withOpacity(0.5))),
+                      _KycStep(label: 'Standard', isDone: true),
+                      Expanded(child: Container(height: 1, color: AppColors.divider)),
+                      _KycStep(label: 'Avancé', isDone: false),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Passez au niveau Avancé pour les financements > 50 000 USD',
+                    style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textGrey)),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 16),
 
-          // Infos
           _SectionTitle('Informations personnelles'),
           _InfoTile(icon: Icons.person_outline, label: 'Nom complet', value: MockUser.name),
           _InfoTile(icon: Icons.email_outlined, label: 'Email', value: MockUser.email),
@@ -108,19 +124,20 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: OutlinedButton.icon(
               icon: const Icon(Icons.logout, color: AppColors.error),
-              label: Text('Se déconnecter', style: GoogleFonts.poppins(color: AppColors.error, fontWeight: FontWeight.w600)),
+              label: Text('Se déconnecter',
+                style: GoogleFonts.poppins(color: AppColors.error, fontWeight: FontWeight.w600)),
               onPressed: () => Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (_) => const LoginScreen()), (_) => false),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.error),
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Center(child: Text('MyRawApp v1.0.0 · Inspire × YuuStore',
-            style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textLight))),
+          const SizedBox(height: 8),
+          Center(child: Text('Inspire By YuuStore',
+            style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textLight, letterSpacing: 2))),
           const SizedBox(height: 24),
         ],
       ),
@@ -137,8 +154,13 @@ class _Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
-      child: Text(label, style: GoogleFonts.poppins(fontSize: 11, color: Colors.white, fontWeight: FontWeight.w600)),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.4)),
+      ),
+      child: Text(label, style: GoogleFonts.poppins(
+        fontSize: 11, color: color, fontWeight: FontWeight.w600)),
     );
   }
 }
@@ -155,14 +177,16 @@ class _KycStep extends StatelessWidget {
         Container(
           width: 28, height: 28,
           decoration: BoxDecoration(
-            color: isDone ? AppColors.primary : AppColors.divider,
+            color: isDone ? AppColors.primary : AppColors.blackSurface,
             shape: BoxShape.circle,
+            border: Border.all(color: isDone ? AppColors.primary : AppColors.divider),
           ),
           child: Icon(isDone ? Icons.check : Icons.circle_outlined,
-            color: isDone ? Colors.white : AppColors.textLight, size: 16),
+            color: isDone ? AppColors.black : AppColors.textLight, size: 14),
         ),
         const SizedBox(height: 4),
-        Text(label, style: GoogleFonts.poppins(fontSize: 10, color: isDone ? AppColors.primary : AppColors.textLight)),
+        Text(label, style: GoogleFonts.poppins(
+          fontSize: 9, color: isDone ? AppColors.primary : AppColors.textLight)),
       ],
     );
   }
@@ -175,8 +199,10 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-      child: Text(title, style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textGrey)),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
+      child: Text(title, style: GoogleFonts.poppins(
+        fontSize: 12, fontWeight: FontWeight.w700,
+        color: AppColors.textGold, letterSpacing: 0.5)),
     );
   }
 }
@@ -192,16 +218,21 @@ class _InfoTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.divider, width: 0.5),
+      ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.primary, size: 20),
+          Icon(icon, color: AppColors.primary, size: 18),
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label, style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textGrey)),
-              Text(value, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(value, style: GoogleFonts.poppins(
+                fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textWhite)),
             ],
           ),
         ],
@@ -222,14 +253,19 @@ class _ActionTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        decoration: BoxDecoration(
+          color: AppColors.cardBg,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.divider, width: 0.5),
+        ),
         child: Row(
           children: [
-            Icon(icon, color: AppColors.textGrey, size: 20),
+            Icon(icon, color: AppColors.textGrey, size: 18),
             const SizedBox(width: 12),
-            Expanded(child: Text(label, style: GoogleFonts.poppins(fontSize: 14))),
-            const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.textGrey),
+            Expanded(child: Text(label, style: GoogleFonts.poppins(
+              fontSize: 13, color: AppColors.textWhite))),
+            const Icon(Icons.arrow_forward_ios, size: 12, color: AppColors.textLight),
           ],
         ),
       ),

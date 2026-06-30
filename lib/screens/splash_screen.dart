@@ -21,32 +21,35 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _logoController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
-    _textController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _logoController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
+    _textController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
 
-    _logoScale = Tween<double>(begin: 0.5, end: 1.0).animate(
+    _logoScale = Tween<double>(begin: 0.6, end: 1.0).animate(
       CurvedAnimation(parent: _logoController, curve: Curves.elasticOut));
-    _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.easeIn));
-    _textOpacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _textController, curve: Curves.easeIn));
-    _textSlide = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _logoOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: const Interval(0.0, 0.6)));
+    _textOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(_textController);
+    _textSlide = Tween<Offset>(begin: const Offset(0, 0.4), end: Offset.zero).animate(
       CurvedAnimation(parent: _textController, curve: Curves.easeOut));
 
-    _startAnimation();
-  }
+    _logoController.forward().then((_) {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        if (mounted) _textController.forward();
+      });
+    });
 
-  void _startAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _logoController.forward();
-    await Future.delayed(const Duration(milliseconds: 500));
-    _textController.forward();
-    await Future.delayed(const Duration(milliseconds: 1800));
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-      );
-    }
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          PageRouteBuilder(
+            pageBuilder: (_, a1, a2) => const OnboardingScreen(),
+            transitionsBuilder: (_, a, __, child) =>
+              FadeTransition(opacity: a, child: child),
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -59,11 +62,12 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Logo RawBank doré
             AnimatedBuilder(
               animation: _logoController,
               builder: (_, __) => Opacity(
@@ -71,74 +75,70 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 child: Transform.scale(
                   scale: _logoScale.value,
                   child: Container(
-                    width: 100,
-                    height: 100,
+                    width: 110,
+                    height: 110,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 20, spreadRadius: 2)],
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        colors: [AppColors.primaryDark, AppColors.primaryLight, AppColors.primaryDark],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withOpacity(0.5),
+                          blurRadius: 40,
+                          spreadRadius: 8,
+                        ),
+                      ],
                     ),
                     child: Center(
-                      child: Text(
-                        'R',
+                      child: Text('R',
                         style: GoogleFonts.poppins(
-                          fontSize: 56,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.primary,
-                        ),
-                      ),
+                          fontSize: 52, fontWeight: FontWeight.w900, color: AppColors.black)),
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            AnimatedBuilder(
-              animation: _textController,
-              builder: (_, __) => SlideTransition(
-                position: _textSlide,
-                child: Opacity(
-                  opacity: _textOpacity.value,
-                  child: Column(
-                    children: [
-                      Text(
-                        'MyRawApp',
-                        style: GoogleFonts.poppins(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.white,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'by Inspire × YuuStore',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: AppColors.white.withOpacity(0.8),
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ],
-                  ),
+            const SizedBox(height: 28),
+            SlideTransition(
+              position: _textSlide,
+              child: FadeTransition(
+                opacity: _textOpacity,
+                child: Column(
+                  children: [
+                    Text('RawBank',
+                      style: GoogleFonts.poppins(
+                        fontSize: 32, fontWeight: FontWeight.w800,
+                        color: AppColors.textGold,
+                        letterSpacing: 1.5)),
+                    const SizedBox(height: 4),
+                    Text('MyRawApp',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16, fontWeight: FontWeight.w400,
+                        color: AppColors.textGrey, letterSpacing: 4)),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 60),
-            AnimatedBuilder(
-              animation: _textController,
-              builder: (_, __) => Opacity(
-                opacity: _textOpacity.value,
-                child: Text(
-                  'RawBank RDC',
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: AppColors.white.withOpacity(0.6),
-                    letterSpacing: 3,
-                    fontWeight: FontWeight.w300,
+            const SizedBox(height: 80),
+            FadeTransition(
+              opacity: _textOpacity,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.primary.withOpacity(0.6),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  Text('Inspire By YuuStore',
+                    style: GoogleFonts.poppins(fontSize: 11, color: AppColors.textLight, letterSpacing: 2)),
+                ],
               ),
             ),
           ],
