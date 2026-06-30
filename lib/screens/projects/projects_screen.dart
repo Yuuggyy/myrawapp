@@ -6,352 +6,253 @@ import '../../data/mock_data.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
-
   @override
   State<ProjectsScreen> createState() => _ProjectsScreenState();
 }
 
-class _ProjectsScreenState extends State<ProjectsScreen> {
-  String _filter = 'Tous';
-
+class _ProjectsScreenState extends State<ProjectsScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabs;
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Mes Projets'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(icon: const Icon(Icons.add_circle_outline), onPressed: () => _showNewProjectSheet(context)),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Filtres
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: ['Tous', 'En cours', 'Terminés', 'Lady\'s First'].map((f) =>
-                GestureDetector(
-                  onTap: () => setState(() => _filter = f),
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: _filter == f ? AppColors.primary : AppColors.cardBg,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _filter == f ? AppColors.primary : AppColors.divider),
-                    ),
-                    child: Text(f, style: GoogleFonts.poppins(
-                      fontSize: 13, color: _filter == f ? Colors.white : AppColors.textGrey,
-                      fontWeight: _filter == f ? FontWeight.w600 : FontWeight.w400)),
-                  ),
-                ),
-              ).toList(),
-            ),
-          ),
-          const SizedBox(height: 20),
+  void initState() { super.initState(); _tabs = TabController(length: 2, vsync: this); }
+  @override
+  void dispose() { _tabs.dispose(); super.dispose(); }
 
-          // Nouveau dossier CTA
-          GestureDetector(
-            onTap: () => _showNewProjectSheet(context),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [AppColors.primaryDark, AppColors.primary]),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), shape: BoxShape.circle),
-                    child: const Icon(Icons.add, color: Colors.white, size: 28),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Déposer un nouveau dossier', style: GoogleFonts.poppins(
-                        color: Colors.white, fontWeight: FontWeight.w700, fontSize: 15)),
-                      Text('PME, Agriculture, Lady\'s First...', style: GoogleFonts.poppins(
-                        color: Colors.white70, fontSize: 12)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
+  void _showNewProjectDialog(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final card = isDark ? AppColors.darkCard : AppColors.lightCard;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final titleCtrl = TextEditingController();
+    final amountCtrl = TextEditingController();
+    String selectedType = 'PME';
 
-          Text('Dossiers actifs (${MockProjects.projects.length})',
-            style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
-
-          ...MockProjects.projects.map((p) => _ProjectDetailCard(project: p)),
-        ],
-      ),
-    );
-  }
-
-  void _showNewProjectSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const _NewProjectSheet(),
+      backgroundColor: card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setS) => Padding(
+          padding: EdgeInsets.fromLTRB(20, 20, 20,
+            MediaQuery.of(ctx).viewInsets.bottom + 24),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Center(child: Container(width: 36, height: 4,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 16),
+            Text('Nouveau projet', style: GoogleFonts.poppins(
+              fontSize: 18, fontWeight: FontWeight.w700, color: textPrimary)),
+            const SizedBox(height: 16),
+            TextField(controller: titleCtrl,
+              style: TextStyle(color: textPrimary),
+              decoration: const InputDecoration(labelText: 'Titre du projet')),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              value: selectedType,
+              dropdownColor: card,
+              style: TextStyle(color: textPrimary),
+              decoration: const InputDecoration(labelText: 'Type de financement'),
+              items: ['PME', 'Agriculture', 'Immobilier', 'Lady\'s First', 'RSE']
+                .map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
+              onChanged: (v) => setS(() => selectedType = v ?? selectedType),
+            ),
+            const SizedBox(height: 12),
+            TextField(controller: amountCtrl, keyboardType: TextInputType.number,
+              style: TextStyle(color: textPrimary),
+              decoration: const InputDecoration(
+                labelText: 'Montant demandé (USD)',
+                prefixIcon: Icon(Icons.attach_money_rounded, size: 20))),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () { Navigator.pop(context); },
+              child: const Text('Soumettre le dossier')),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isDark ? AppColors.darkBg : AppColors.lightBg;
+    final card = isDark ? AppColors.darkCard : AppColors.lightCard;
+    final divider = isDark ? AppColors.darkDivider : AppColors.lightDivider;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
+    return Scaffold(
+      backgroundColor: bg,
+      appBar: AppBar(
+        backgroundColor: bg,
+        automaticallyImplyLeading: false,
+        title: Text('Mes projets', style: GoogleFonts.poppins(
+          color: textPrimary, fontWeight: FontWeight.w700)),
+        actions: [
+          TextButton.icon(
+            icon: const Icon(Icons.add_rounded, color: AppColors.gold, size: 20),
+            label: Text('Nouveau', style: GoogleFonts.poppins(
+              color: AppColors.gold, fontWeight: FontWeight.w600, fontSize: 13)),
+            onPressed: () => _showNewProjectDialog(context),
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabs,
+          labelColor: AppColors.gold,
+          unselectedLabelColor: textSecondary,
+          indicatorColor: AppColors.gold,
+          indicatorSize: TabBarIndicatorSize.label,
+          dividerColor: divider,
+          labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13),
+          unselectedLabelStyle: GoogleFonts.poppins(fontSize: 13),
+          tabs: const [Tab(text: 'Mes dossiers'), Tab(text: 'Programmes')],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabs,
+        children: [
+          _MyProjects(isDark: isDark, card: card, divider: divider,
+            textPrimary: textPrimary, textSecondary: textSecondary),
+          _Programs(isDark: isDark, card: card, divider: divider,
+            textPrimary: textPrimary, textSecondary: textSecondary),
+        ],
+      ),
     );
   }
 }
 
-class _ProjectDetailCard extends StatelessWidget {
-  final Map<String, dynamic> project;
-  const _ProjectDetailCard({required this.project});
+class _MyProjects extends StatelessWidget {
+  final bool isDark;
+  final Color card, divider, textPrimary, textSecondary;
+  const _MyProjects({required this.isDark, required this.card,
+    required this.divider, required this.textPrimary, required this.textSecondary});
 
-  Color get _statusColor {
-    switch (project['statusCode']) {
-      case 1: return Colors.blue;
-      case 2: return Colors.orange;
-      case 3: return Colors.purple;
-      case 4: return Colors.green;
-      default: return AppColors.textGrey;
+  Color _statusColor(int code) {
+    switch (code) {
+      case 1: return const Color(0xFF4285F4);
+      case 2: return AppColors.warning;
+      case 3: return const Color(0xFF9C27B0);
+      case 4: return AppColors.success;
+      default: return AppColors.darkTextSecondary;
     }
   }
 
-  IconData get _statusIcon {
-    switch (project['statusCode']) {
-      case 1: return Icons.upload_file_rounded;
-      case 2: return Icons.psychology_rounded;
-      case 3: return Icons.how_to_reg_rounded;
-      case 4: return Icons.check_circle_rounded;
-      default: return Icons.circle_outlined;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12)],
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: _statusColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(_statusIcon, color: _statusColor, size: 22),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(project['title'], style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w700, fontSize: 15)),
-                          Text('${project['type']} · ${project['sector']}',
-                            style: GoogleFonts.poppins(fontSize: 12, color: AppColors.textGrey)),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _statusColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(project['status'], style: GoogleFonts.poppins(
-                        fontSize: 10, color: _statusColor, fontWeight: FontWeight.w700)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _InfoChip(label: 'Montant', value: '\$${NumberFormat('#,###').format(project['amount'])}'),
-                    _InfoChip(label: 'Date', value: project['createdDate']),
-                    if (project['aiScore'] > 0)
-                      _InfoChip(label: 'Score IA', value: '${project['aiScore']}/100', isScore: true),
-                  ],
-                ),
-                if (project['aiScore'] > 0) ...[
-                  const SizedBox(height: 16),
-                  Text('Analyse IA', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textGrey)),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _ScoreBar(label: 'RSE', score: project['rseScore']),
-                      const SizedBox(width: 8),
-                      _ScoreBar(label: 'Conf.', score: project['complianceScore']),
-                      const SizedBox(width: 8),
-                      _ScoreBar(label: 'Com.', score: project['commercialScore']),
-                      const SizedBox(width: 8),
-                      _ScoreBar(label: 'Compta', score: project['accountingScore']),
-                    ],
-                  ),
-                ],
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.background,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(project['step'], style: GoogleFonts.poppins(
-                    fontSize: 12, color: AppColors.textGrey, fontStyle: FontStyle.italic)),
-                ),
-              ],
-            ),
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: MockProjects.projects.length,
+      itemBuilder: (_, i) {
+        final p = MockProjects.projects[i];
+        final color = _statusColor(p['statusCode'] as int);
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: card,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: divider, width: 0.5),
           ),
-          Container(
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.divider)),
-            ),
-            child: Row(
-              children: [
-                Expanded(child: TextButton.icon(
-                  icon: const Icon(Icons.chat_bubble_outline, size: 16),
-                  label: Text('Chat IA', style: GoogleFonts.poppins(fontSize: 13)),
-                  onPressed: () {},
-                  style: TextButton.styleFrom(foregroundColor: AppColors.primary),
-                )),
-                Container(width: 1, height: 40, color: AppColors.divider),
-                Expanded(child: TextButton.icon(
-                  icon: const Icon(Icons.upload_file_outlined, size: 16),
-                  label: Text('Documents', style: GoogleFonts.poppins(fontSize: 13)),
-                  onPressed: () {},
-                  style: TextButton.styleFrom(foregroundColor: AppColors.textGrey),
-                )),
-              ],
-            ),
-          ),
-        ],
-      ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(child: Text(p['title'] as String, style: GoogleFonts.poppins(
+                fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary))),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20)),
+                child: Text(p['status'] as String, style: GoogleFonts.poppins(
+                  fontSize: 10, color: color, fontWeight: FontWeight.w600))),
+            ]),
+            const SizedBox(height: 8),
+            Row(children: [
+              Text(p['type'] as String, style: GoogleFonts.poppins(
+                fontSize: 12, color: textSecondary)),
+              const SizedBox(width: 8),
+              Text('·', style: TextStyle(color: textSecondary)),
+              const SizedBox(width: 8),
+              Text('\$${NumberFormat('#,###').format(p['amount'])} USD',
+                style: GoogleFonts.poppins(fontSize: 12,
+                  color: AppColors.gold, fontWeight: FontWeight.w600)),
+            ]),
+            if ((p['aiScore'] as int) > 0) ...[
+              const SizedBox(height: 10),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: (p['aiScore'] as int) / 100,
+                  backgroundColor: AppColors.gold.withOpacity(0.1),
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.gold),
+                  minHeight: 4)),
+              const SizedBox(height: 6),
+              Row(children: [
+                const Icon(Icons.psychology_rounded, size: 13, color: AppColors.gold),
+                const SizedBox(width: 4),
+                Text('Score IA : ${p['aiScore']}/100 — ${p['aiRecommendation']}',
+                  style: GoogleFonts.poppins(fontSize: 11, color: textSecondary)),
+              ]),
+            ],
+          ]),
+        );
+      },
     );
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool isScore;
-  const _InfoChip({required this.label, required this.value, this.isScore = false});
+class _Programs extends StatelessWidget {
+  final bool isDark;
+  final Color card, divider, textPrimary, textSecondary;
+  const _Programs({required this.isDark, required this.card,
+    required this.divider, required this.textPrimary, required this.textSecondary});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: GoogleFonts.poppins(fontSize: 10, color: AppColors.textLight)),
-        Text(value, style: GoogleFonts.poppins(
-          fontSize: 13, fontWeight: FontWeight.w600,
-          color: isScore ? AppColors.primary : AppColors.textDark)),
-      ],
-    );
-  }
-}
+    final programs = [
+      {'title': 'PME RawBank', 'desc': 'Financement jusqu\'à 500 000 USD pour les petites et moyennes entreprises congolaises.', 'icon': Icons.business_rounded, 'range': '10K – 500K USD'},
+      {'title': 'Lady\'s First', 'desc': 'Programme exclusif pour les femmes entrepreneures de la RDC.', 'icon': Icons.people_rounded, 'range': '5K – 100K USD'},
+      {'title': 'Agri-Finance', 'desc': 'Soutien à l\'agriculture et à l\'agro-industrie congolaise.', 'icon': Icons.eco_rounded, 'range': '10K – 250K USD'},
+      {'title': 'Immo RawBank', 'desc': 'Crédits immobiliers et construction pour particuliers et promoteurs.', 'icon': Icons.home_rounded, 'range': '50K – 1M USD'},
+    ];
 
-class _ScoreBar extends StatelessWidget {
-  final String label;
-  final int score;
-  const _ScoreBar({required this.label, required this.score});
-
-  Color get _color {
-    if (score >= 80) return Colors.green;
-    if (score >= 60) return Colors.orange;
-    return AppColors.error;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(label, style: GoogleFonts.poppins(fontSize: 10, color: AppColors.textGrey)),
-          const SizedBox(height: 4),
-          LinearProgressIndicator(
-            value: score / 100,
-            backgroundColor: AppColors.divider,
-            color: _color,
-            minHeight: 6,
-            borderRadius: BorderRadius.circular(3),
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: programs.length,
+      itemBuilder: (_, i) {
+        final p = programs[i];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: card,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: divider, width: 0.5),
           ),
-          const SizedBox(height: 2),
-          Text('$score', style: GoogleFonts.poppins(fontSize: 10, color: _color, fontWeight: FontWeight.w600)),
-        ],
-      ),
-    );
-  }
-}
-
-class _NewProjectSheet extends StatefulWidget {
-  const _NewProjectSheet();
-
-  @override
-  State<_NewProjectSheet> createState() => _NewProjectSheetState();
-}
-
-class _NewProjectSheetState extends State<_NewProjectSheet> {
-  String _selectedType = 'PME';
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.fromLTRB(24, 16, 24, MediaQuery.of(context).viewInsets.bottom + 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(child: Container(width: 40, height: 4,
-            decoration: BoxDecoration(color: AppColors.divider, borderRadius: BorderRadius.circular(2)))),
-          const SizedBox(height: 20),
-          Text('Nouveau dossier', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 20),
-          TextField(controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Titre du projet', prefixIcon: Icon(Icons.business_outlined))),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            value: _selectedType,
-            decoration: InputDecoration(
-              labelText: 'Type de projet',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              prefixIcon: const Icon(Icons.category_outlined),
+          child: Row(children: [
+            Container(
+              width: 48, height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.gold.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(14)),
+              child: Icon(p['icon'] as IconData, color: AppColors.gold, size: 24),
             ),
-            items: ['PME', 'Agriculture', 'Immobilier', "Lady's First", 'Exportation']
-              .map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
-            onChanged: (v) => setState(() => _selectedType = v!),
-          ),
-          const SizedBox(height: 16),
-          TextField(controller: _amountController, keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Montant recherché (USD)', prefixIcon: Icon(Icons.attach_money))),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Déposer le dossier'),
-          ),
-        ],
-      ),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(p['title'] as String, style: GoogleFonts.poppins(
+                fontSize: 14, fontWeight: FontWeight.w700, color: textPrimary)),
+              const SizedBox(height: 2),
+              Text(p['desc'] as String, style: GoogleFonts.poppins(
+                fontSize: 12, color: textSecondary, height: 1.4)),
+              const SizedBox(height: 6),
+              Text(p['range'] as String, style: GoogleFonts.poppins(
+                fontSize: 12, color: AppColors.gold, fontWeight: FontWeight.w600)),
+            ])),
+            const Icon(Icons.chevron_right_rounded, color: AppColors.gold, size: 20),
+          ]),
+        );
+      },
     );
   }
 }
