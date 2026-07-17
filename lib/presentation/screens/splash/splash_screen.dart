@@ -107,9 +107,9 @@ class _SplashScreenState extends State<SplashScreen>
                   ],
                 ),
                 child: const Center(
-                  child: const Text(
+                  child: Text(
                     'MR',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.primary,
                       fontSize: 36,
                       fontWeight: FontWeight.w900,
@@ -126,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen>
                 opacity: _textOpacity,
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       'MyRawApp',
                       style: TextStyle(
                         color: Colors.white,

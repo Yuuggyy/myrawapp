@@ -33,20 +33,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     setState(() { _isLoading = true; _errorMessage = null; });
 
-    try {
-      await ApiService.instance.register({
-        'full_name': _nameController.text.trim(),
-        'email': _emailController.text.trim(),
-        'phone': _phoneController.text.trim(),
-        'password': _passwordController.text,
-        'client_type': _clientType,
-      });
-      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.login);
-    } catch (e) {
-      setState(() => _errorMessage = 'Erreur lors de l\'inscription. Veuillez réessayer.');
-    } finally {
-      if (mounted) setState(() { _isLoading = false; });
-    }
+    // Mock register — just simulate a delay and go to dashboard
+    await Future.delayed(const Duration(milliseconds: 800));
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_logged_in', true);
+    await prefs.setString('user_email', _emailController.text.trim());
+    await prefs.setString('user_name', _nameController.text.trim());
+
+    if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
   }
 
   @override
@@ -69,12 +64,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Créer un compte',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Rejoignez MyRawApp en quelques étapes.',
                   style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
                 ),

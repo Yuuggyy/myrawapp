@@ -108,24 +108,24 @@ class ProfileScreen extends StatelessWidget {
                         border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
                       child: const Row(
-                        children: const [
-                          const Icon(Icons.lock_outline, color: AppColors.primary, size: 28),
-                          const SizedBox(width: 14),
-                          const Expanded(
-                            child: const Column(
+                        children: [
+                          Icon(Icons.lock_outline, color: AppColors.primary, size: 28),
+                          SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                const Text('Améliorez votre KYC',
+                              children: [
+                                Text('Améliorez votre KYC',
                                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                                const SizedBox(height: 2),
-                                const Text(
+                                SizedBox(height: 2),
+                                Text(
                                   'Débloquez des limites plus élevées',
-                                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                                  style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
                                 ),
                               ],
                             ),
                           ),
-                          const Icon(Icons.chevron_right, color: AppColors.grey500),
+                          Icon(Icons.chevron_right, color: AppColors.grey500),
                         ],
                       ),
                     ),
@@ -176,10 +176,10 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
+                  Text(
                     'MyRawApp v${AppConstants.version}\n© 2026 RawBank RDC',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.grey500, fontSize: 12),
+                    style: TextStyle(color: AppColors.grey500, fontSize: 12),
                   ),
                   const SizedBox(height: 40),
                 ],
@@ -265,7 +265,7 @@ class _MenuItem extends StatelessWidget {
               child: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ),
             if (trailing != null)
-              const Text(trailing!, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+              Text(trailing!, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
             const SizedBox(width: 8),
             const Icon(Icons.chevron_right, size: 20, color: AppColors.grey500),
           ],

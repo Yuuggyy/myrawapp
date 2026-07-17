@@ -821,7 +821,7 @@ class _AgentOption extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: selected ? color : AppColors.textPrimary)),
-                  const Text(desc, style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                  Text(desc, style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
                 ],
               ),
             ),

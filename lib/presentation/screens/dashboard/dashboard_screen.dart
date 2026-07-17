@@ -23,10 +23,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
-          const _HomeTab(),
-          const _ProjectsTab(),
-          const AccountsScreen(),
-          const ProfileScreen(),
+          _HomeTab(),
+          _ProjectsTab(),
+          AccountsScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -98,10 +98,10 @@ class _HomeTab extends StatelessWidget {
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    const Text('Bonjour 👋',
+                  children: [
+                    Text('Bonjour 👋',
                         style: TextStyle(color: Colors.white70, fontSize: 13)),
-                    const Text('Jean Mutombo',
+                    Text('Jean Mutombo',
                         style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
                   ],
                 ),
@@ -212,10 +212,10 @@ class _IllicoCashCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Row(
-            children: const [
-              const Text('IllicoCash', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-              const Spacer(),
-              const Text('USD', style: TextStyle(color: Colors.white54, fontSize: 13)),
+            children: [
+              Text('IllicoCash', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+              Spacer(),
+              Text('USD', style: TextStyle(color: Colors.white54, fontSize: 13)),
             ],
           ),
           const SizedBox(height: 12),
@@ -337,12 +337,12 @@ class _KycBanner extends StatelessWidget {
           ),
           const SizedBox(width: 14),
           const Expanded(
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                const Text('KYC Standard', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                const Text('Améliorez pour débloquer plus de services',
-                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+              children: [
+                Text('KYC Standard', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                Text('Améliorez pour débloquer plus de services',
+                    style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               ],
             ),
           ),
@@ -391,7 +391,7 @@ class _ProjectCard extends StatelessWidget {
             children: [
               const Icon(Icons.auto_awesome, size: 16, color: AppColors.warning),
               const SizedBox(width: 6),
-              const Text(status, style: TextStyle(color: AppColors.warning, fontSize: 13, fontWeight: FontWeight.w500)),
+              Text(status, style: TextStyle(color: AppColors.warning, fontSize: 13, fontWeight: FontWeight.w500)),
             ],
           ),
           const SizedBox(height: 10),
@@ -451,7 +451,7 @@ class _TxItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                const Text(date, style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                Text(date, style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               ],
             ),
           ),
@@ -504,7 +504,7 @@ class _ProjectsTab extends StatelessWidget {
             step: 2,
             date: 'Soumis il y a 3 jours',
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _FullProjectCard(
             title: 'Ferme avicole Mbankana',
             type: 'Agriculture',
@@ -515,7 +515,7 @@ class _ProjectsTab extends StatelessWidget {
             step: 5,
             date: 'Approuvé le 12/07/2026',
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           _FullProjectCard(
             title: 'Logiciel gestion stock',
             type: 'PME',
@@ -526,7 +526,7 @@ class _ProjectsTab extends StatelessWidget {
             step: 1,
             date: 'Soumis il y a 7 jours',
           ),
-          const SizedBox(height: 100),
+          SizedBox(height: 100),
         ],
       ),
     );
@@ -576,7 +576,7 @@ class _FullProjectCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           const SizedBox(height: 4),
-          const Text(sector, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+          Text(sector, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -589,7 +589,7 @@ class _FullProjectCard extends StatelessWidget {
                 child: Text(status, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.w600)),
               ),
               const Spacer(),
-              const Text(date, style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+              Text(date, style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
             ],
           ),
           const SizedBox(height: 12),

@@ -122,15 +122,15 @@ class _KycScreenState extends State<KycScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Row(
-                    children: const [
-                      const Icon(Icons.upgrade, color: AppColors.primary),
-                      const SizedBox(width: 8),
-                      const Text('Passer au KYC Avancé',
+                    children: [
+                      Icon(Icons.upgrade, color: AppColors.primary),
+                      SizedBox(width: 8),
+                      Text('Passer au KYC Avancé',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Pour déposer des projets supérieurs à \$20,000 et ouvrir un compte entreprise, vous devez compléter votre vérification avancée.',
                     style: TextStyle(color: AppColors.textSecondary, fontSize: 13, height: 1.4),
                   ),
