@@ -4,6 +4,7 @@ import 'core/theme/app_theme.dart';
 import 'presentation/screens/splash/splash_screen.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/auth/register_screen.dart';
+import 'presentation/screens/auth/business_register_screen.dart';
 import 'presentation/screens/dashboard/dashboard_screen.dart';
 import 'presentation/screens/projects/projects_screen.dart';
 import 'presentation/screens/projects/new_project_screen.dart';
@@ -43,6 +44,8 @@ class MyRawApp extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const LoginScreen());
           case '/register':
             return MaterialPageRoute(builder: (_) => const RegisterScreen());
+          case '/business-register':
+            return MaterialPageRoute(builder: (_) => const BusinessRegisterScreen());
           case '/dashboard':
             return MaterialPageRoute(builder: (_) => const DashboardScreen());
           case '/projects':

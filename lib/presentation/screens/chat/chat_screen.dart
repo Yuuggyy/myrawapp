@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../data/models/business_sector.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ── AI Agent Model ──
 enum AgentType { router, rse, compliance, commercial, accounting }
@@ -79,6 +81,87 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  BusinessSector? _cachedSector;
+
+  Future<void> _loadSectorData() async {
+    _cachedSector = await _loadSector();
+    if (mounted) setState(() {});
+  }
+
+
+  // ── Sector-aware compliance methods ──
+
+  Future<BusinessSector?> _loadSector() async {
+    final prefs = await SharedPreferences.getInstance();
+    final sectorId = prefs.getString('business_sector');
+    if (sectorId != null && sectorId != 'autre') {
+      return BusinessSectors.findById(sectorId);
+    }
+    final sectorName = prefs.getString('business_sector_name');
+    if (sectorName != null) {
+      // Try to find by name for "autre" sectors
+      try {
+        return BusinessSectors.sectors.firstWhere((s) => s.name == sectorName);
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  Map<String, dynamic> _getComplianceResponse() {
+    // Try to load sector - for now use synchronous approach with cached value
+    // Since we can't use async in _getWelcome, we'll use a fallback
+    final sector = _cachedSector;
+    if (sector != null) {
+      final docsCount = sector.requiredDocuments.length;
+      final commonCount = BusinessSectors.commonDocuments.length;
+      final sectorDocsCount = docsCount - commonCount;
+      return {
+        'content': "Je suis l'agent Conformité. Je vérifie votre dossier selon les exigences de *${sector.regulator}*.\n\nSecteur détecté: *${sector.name}*\n\nVérifications en cours:\n✅ Registre de commerce — à valider\n✅ Identification du promoteur\n⚠️ ${sectorDocsCount} document(s) spécifiques au secteur — à fournir\n\nRégulateur: ${sector.regulator}\nNiveau de conformité actuel: *45%*",
+        'quickReplies': [
+          QuickReply('Que dois-je fournir ?', 'conformite_docs'),
+          QuickReply('Voir régulateur', 'conformite_regulateur'),
+        ],
+      };
+    }
+    return {
+      'content': "Je suis l'agent Conformité. Je vérifie que votre dossier respecte les exigences réglementaires de la BCC et de RawBank.\n\nVérifications en cours:\n✅ Registre de commerce valide\n✅ Identification du promoteur\n⚠️ Statuts de l'entreprise — à fournir\n⚠️ Attestation fiscale — à fournir\n\nNiveau de conformité actuel: *65%*",
+      'quickReplies': [
+        QuickReply('Que dois-je fournir ?', 'conformite_docs'),
+        QuickReply('Délai réglementaire', 'conformite_delai'),
+      ],
+    };
+  }
+
+  Map<String, dynamic> _getComplianceDocsResponse() {
+    final sector = _cachedSector;
+    if (sector != null) {
+      final docsList = sector.requiredDocuments.asMap().entries.map((e) => '${e.key + 1}. ${e.value}').join('\n');
+      final optionalList = sector.optionalDocuments.isNotEmpty
+        ? '\n\nDocuments recommandés (optionnels):\n${sector.optionalDocuments.map((d) => '• $d').join('\n')}'
+        : '';
+      final notesList = sector.regulatoryNotes.isNotEmpty
+        ? '\n\nNotes réglementaires:\n${sector.regulatoryNotes.map((n) => '⚠️ $n').join('\n')}'
+        : '';
+      return {
+        'content': "Documents requis pour le secteur *${sector.name}*:\n\nRégulateur: ${sector.regulator}\n\n$docsList$optionalList$notesList\n\nCes documents sont à déposer dans la section *KYC* de l'application.",
+        'quickReplies': [
+          QuickReply('Aller au KYC', 'goto_kyc'),
+          QuickReply('Parler au Routeur', 'agent_router'),
+        ],
+      };
+    }
+    return {
+      'content': "Documents réglementaires à fournir:\n\n1. Statuts de l'entreprise (notariés)\n2. Extrait RCCM\n3. Carte d'identité du gérant\n4. Attestation fiscale (DGI)\n5. Attestation de localisation\n6. Bilan financier (si > 3 ans d'activité)\n\nCes documents sont à déposer dans la section *KYC* de l'application.",
+      'quickReplies': [
+        QuickReply('Aller au KYC', 'goto_kyc'),
+        QuickReply('Délai réglementaire', 'conformite_delai'),
+      ],
+    };
+  }
+
+  BusinessSector? _cachedSector;
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
   bool _isAiTyping = false;
@@ -92,6 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    _loadSectorData();
     super.initState();
     _messages = [
       ChatMessage(
@@ -236,13 +320,7 @@ class _ChatScreenState extends State<ChatScreen> {
         };
 
       case AgentType.compliance:
-        return {
-          'content': "Je suis l'agent Conformité. Je vérifie que votre dossier respecte les exigences réglementaires de la BCC et de RawBank.\n\nVérifications en cours:\n✅ Registre de commerce valide\n✅ Identification du promoteur\n⚠️ Statuts de l'entreprise — à fournir\n⚠️ Attestation fiscale — à fournir\n\nNiveau de conformité actuel: *65%*",
-          'quickReplies': [
-            QuickReply('Que dois-je fournir ?', 'conformite_docs'),
-            QuickReply('Délai réglementaire', 'conformite_delai'),
-          ],
-        };
+        return _getComplianceResponse();
 
       case AgentType.commercial:
         if (msg.contains('marché') || msg.contains('viabilit')) {
@@ -664,6 +742,7 @@ class _TypingIndicatorState extends State<_TypingIndicator>
 
   @override
   void initState() {
+    _loadSectorData();
     super.initState();
     _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
     _a = Tween<double>(begin: 0.3, end: 1).animate(_c);

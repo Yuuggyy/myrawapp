@@ -40,6 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     await prefs.setBool('is_logged_in', true);
     await prefs.setString('user_email', _emailController.text.trim());
     await prefs.setString('user_name', _nameController.text.trim());
+    await prefs.setString('account_type', _clientType);
 
     if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
   }
@@ -93,129 +94,161 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       icon: Icons.business_outlined,
                       label: 'Entreprise',
                       isSelected: _clientType == 'enterprise',
-                      onTap: () => setState(() => _clientType = 'enterprise'),
+                      onTap: () {
+                        // Navigate to business registration
+                        Navigator.pushNamed(context, '/business-register');
+                      },
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 24),
 
-                if (_errorMessage != null) ...[
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.error.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(10),
+                // Only show individual form when 'individual' is selected
+                if (_clientType == 'individual') ...[
+                  if (_errorMessage != null) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(_errorMessage!,
+                        style: const TextStyle(color: AppColors.error, fontSize: 13)),
                     ),
-                    child: Text(_errorMessage!,
-                      style: const TextStyle(color: AppColors.error, fontSize: 13)),
+                    const SizedBox(height: 16),
+                  ],
+
+                  RawTextField(
+                    controller: _nameController,
+                    label: 'Nom complet',
+                    hint: 'Jean Kabila',
+                    prefixIcon: Icons.badge_outlined,
+                    validator: (v) => (v?.isEmpty ?? true) ? 'Nom requis' : null,
                   ),
                   const SizedBox(height: 16),
-                ],
 
-                RawTextField(
-                  controller: _nameController,
-                  label: 'Nom complet',
-                  hint: 'Jean Kabila',
-                  prefixIcon: Icons.badge_outlined,
-                  validator: (v) => (v?.isEmpty ?? true) ? 'Nom requis' : null,
-                ),
-                const SizedBox(height: 16),
-
-                RawTextField(
-                  controller: _emailController,
-                  label: 'Email',
-                  hint: 'votre@email.com',
-                  keyboardType: TextInputType.emailAddress,
-                  prefixIcon: Icons.email_outlined,
-                  validator: (v) {
-                    if (v?.isEmpty ?? true) return 'Email requis';
-                    if (!v!.contains('@')) return 'Email invalide';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                RawTextField(
-                  controller: _phoneController,
-                  label: 'Téléphone',
-                  hint: '+243 81X XXX XXXX',
-                  keyboardType: TextInputType.phone,
-                  prefixIcon: Icons.phone_outlined,
-                  validator: (v) => (v?.isEmpty ?? true) ? 'Téléphone requis' : null,
-                ),
-                const SizedBox(height: 16),
-
-                RawTextField(
-                  controller: _passwordController,
-                  label: 'Mot de passe',
-                  hint: 'Min. 8 caractères',
-                  obscureText: _obscurePassword,
-                  prefixIcon: Icons.lock_outlined,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: AppColors.grey500,
-                    ),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                  RawTextField(
+                    controller: _emailController,
+                    label: 'Email',
+                    hint: 'votre@email.com',
+                    keyboardType: TextInputType.emailAddress,
+                    prefixIcon: Icons.email_outlined,
+                    validator: (v) {
+                      if (v?.isEmpty ?? true) return 'Email requis';
+                      if (!v!.contains('@')) return 'Email invalide';
+                      return null;
+                    },
                   ),
-                  validator: (v) {
-                    if (v?.isEmpty ?? true) return 'Mot de passe requis';
-                    if (v!.length < 8) return 'Minimum 8 caractères';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                RawTextField(
-                  controller: _confirmPasswordController,
-                  label: 'Confirmer le mot de passe',
-                  hint: '••••••••',
-                  obscureText: true,
-                  prefixIcon: Icons.lock_outlined,
-                  validator: (v) {
-                    if (v != _passwordController.text) return 'Les mots de passe ne correspondent pas';
-                    return null;
-                  },
-                ),
+                  RawTextField(
+                    controller: _phoneController,
+                    label: 'Téléphone',
+                    hint: '+243 81X XXX XXXX',
+                    keyboardType: TextInputType.phone,
+                    prefixIcon: Icons.phone_outlined,
+                    validator: (v) => (v?.isEmpty ?? true) ? 'Téléphone requis' : null,
+                  ),
+                  const SizedBox(height: 16),
 
-                const SizedBox(height: 20),
-
-                // Terms
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _acceptTerms,
-                      activeColor: AppColors.primary,
-                      onChanged: (v) => setState(() => _acceptTerms = v ?? false),
+                  RawTextField(
+                    controller: _passwordController,
+                    label: 'Mot de passe',
+                    hint: 'Min. 8 caractères',
+                    obscureText: _obscurePassword,
+                    prefixIcon: Icons.lock_outlined,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        color: AppColors.grey500,
+                      ),
+                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                     ),
-                    Expanded(
-                      child: RichText(
-                        text: TextSpan(
-                          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
-                          children: const [
-                            const TextSpan(text: "J'accepte les "),
-                            TextSpan(
-                              text: 'Conditions Générales d\'Utilisation',
-                              style: const TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w600,
+                    validator: (v) {
+                      if (v?.isEmpty ?? true) return 'Mot de passe requis';
+                      if (v!.length < 8) return 'Minimum 8 caractères';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  RawTextField(
+                    controller: _confirmPasswordController,
+                    label: 'Confirmer le mot de passe',
+                    hint: '••••••••',
+                    obscureText: true,
+                    prefixIcon: Icons.lock_outlined,
+                    validator: (v) {
+                      if (v != _passwordController.text) return 'Les mots de passe ne correspondent pas';
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Terms
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _acceptTerms,
+                        activeColor: AppColors.primary,
+                        onChanged: (v) => setState(() => _acceptTerms = v ?? false),
+                      ),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                            children: const [
+                              TextSpan(text: "J'accepte les "),
+                              TextSpan(
+                                text: 'Conditions Générales d\'Utilisation',
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  RawButton(
+                    label: 'Créer mon compte',
+                    isLoading: _isLoading,
+                    onPressed: _register,
+                  ),
+                ] else ...[
+                  // Enterprise selected — show info
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                RawButton(
-                  label: 'Créer mon compte',
-                  isLoading: _isLoading,
-                  onPressed: _register,
-                ),
+                    child: Column(
+                      children: [
+                        Icon(Icons.business, size: 48, color: AppColors.primary),
+                        SizedBox(height: 12),
+                        Text(
+                          'Compte Entreprise',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.primary),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Vous allez être redirigé vers le formulaire d\'inscription entreprise avec sélection de secteur d\'activité.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
 
                 const SizedBox(height: 32),
               ],
