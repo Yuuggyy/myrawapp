@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 
@@ -60,13 +59,13 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuth() async {
-    const storage = FlutterSecureStorage();
-    final token = await storage.read(key: AppConstants.tokenKey);
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(AppConstants.tokenKey);
     if (!mounted) return;
     if (token != null) {
-      context.go(AppRoutes.dashboard);
+      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
     } else {
-      context.go(AppRoutes.login);
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
     }
   }
 
@@ -85,16 +84,12 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo animé
             AnimatedBuilder(
               animation: _logoController,
               builder: (context, child) {
                 return Transform.scale(
                   scale: _logoScale.value,
-                  child: Opacity(
-                    opacity: _logoOpacity.value,
-                    child: child,
-                  ),
+                  child: Opacity(opacity: _logoOpacity.value, child: child),
                 );
               },
               child: Container(
@@ -105,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -125,8 +120,6 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
             const SizedBox(height: 24),
-
-            // Texte animé
             SlideTransition(
               position: _textSlide,
               child: FadeTransition(
@@ -146,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen>
                     Text(
                       'Votre banque, réinventée',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.5,
@@ -168,7 +161,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: Text(
               'by Inspire × YuuStore',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 fontSize: 12,
                 letterSpacing: 1,
               ),

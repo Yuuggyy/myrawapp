@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../data/models/project_model.dart';
@@ -104,7 +103,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       label: Text(f),
                       selected: isSelected,
                       onSelected: (_) => setState(() => _selectedFilter = f),
-                      selectedColor: AppColors.primary.withOpacity(0.15),
+                      selectedColor: AppColors.primary.withValues(alpha: 0.15),
                       checkmarkColor: AppColors.primary,
                       labelStyle: TextStyle(
                         color: isSelected ? AppColors.primary : AppColors.textSecondary,
@@ -131,7 +130,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                       return _ProjectTile(
                         project: project,
                         statusColor: _statusColor(project.status),
-                        onTap: () => context.go('/projects/${project.id}'),
+                        onTap: () => Navigator.pushNamed(context, '/projects/${project.id}'),
                       );
                     },
                   ),
@@ -139,7 +138,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go(AppRoutes.newProject),
+        onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Nouveau projet',
@@ -179,7 +178,7 @@ class _ProjectTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.08),
+                    color: AppColors.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(project.type,
@@ -249,7 +248,7 @@ class _EmptyState extends StatelessWidget {
             style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () => context.go(AppRoutes.newProject),
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
             icon: const Icon(Icons.add),
             label: const Text('Créer un projet'),
             style: ElevatedButton.styleFrom(

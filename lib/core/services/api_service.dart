@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_constants.dart';
 
 class ApiService {
   static ApiService? _instance;
   late final Dio _dio;
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  SharedPreferences? _prefs;
 
   ApiService._internal() {
     _dio = Dio(BaseOptions(
@@ -18,6 +18,7 @@ class ApiService {
       },
     ));
     _setupInterceptors();
+    _initPrefs();
   }
 
   static ApiService get instance {
@@ -25,11 +26,31 @@ class ApiService {
     return _instance!;
   }
 
+  Future<void> _initPrefs() async {
+    _prefs ??= await SharedPreferences.getInstance();
+  }
+
+  Future<String?> _readToken() async {
+    await _initPrefs();
+    return _prefs!.getString(AppConstants.tokenKey);
+  }
+
+  Future<void> _writeToken(String key, String value) async {
+    await _initPrefs();
+    await _prefs!.setString(key, value);
+  }
+
+  Future<void> _deleteAll() async {
+    await _initPrefs();
+    await _prefs!.remove(AppConstants.tokenKey);
+    await _prefs!.remove(AppConstants.refreshTokenKey);
+  }
+
   void _setupInterceptors() {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await _storage.read(key: AppConstants.tokenKey);
+          final token = await _readToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
@@ -39,7 +60,7 @@ class ApiService {
           if (error.response?.statusCode == 401) {
             final refreshed = await _refreshToken();
             if (refreshed) {
-              final token = await _storage.read(key: AppConstants.tokenKey);
+              final token = await _readToken();
               error.requestOptions.headers['Authorization'] = 'Bearer $token';
               final response = await _dio.fetch(error.requestOptions);
               return handler.resolve(response);
@@ -53,15 +74,16 @@ class ApiService {
 
   Future<bool> _refreshToken() async {
     try {
-      final refreshToken = await _storage.read(key: AppConstants.refreshTokenKey);
+      await _initPrefs();
+      final refreshToken = _prefs!.getString(AppConstants.refreshTokenKey);
       if (refreshToken == null) return false;
 
       final response = await _dio.post('/auth/refresh', data: {
         'refresh_token': refreshToken,
       });
 
-      await _storage.write(key: AppConstants.tokenKey, value: response.data['access_token']);
-      await _storage.write(key: AppConstants.refreshTokenKey, value: response.data['refresh_token']);
+      await _writeToken(AppConstants.tokenKey, response.data['access_token']);
+      await _writeToken(AppConstants.refreshTokenKey, response.data['refresh_token']);
       return true;
     } catch (_) {
       await logout();
@@ -70,17 +92,16 @@ class ApiService {
   }
 
   Future<void> logout() async {
-    await _storage.deleteAll();
+    await _deleteAll();
   }
 
-  // AUTH
   Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await _dio.post('/auth/login', data: {
       'email': email,
       'password': password,
     });
-    await _storage.write(key: AppConstants.tokenKey, value: response.data['access_token']);
-    await _storage.write(key: AppConstants.refreshTokenKey, value: response.data['refresh_token']);
+    await _writeToken(AppConstants.tokenKey, response.data['access_token']);
+    await _writeToken(AppConstants.refreshTokenKey, response.data['refresh_token']);
     return response.data;
   }
 
@@ -89,7 +110,6 @@ class ApiService {
     return response.data;
   }
 
-  // PROJECTS
   Future<List<dynamic>> getProjects() async {
     final response = await _dio.get('/projects');
     return response.data;
@@ -113,7 +133,6 @@ class ApiService {
     return response.data;
   }
 
-  // AI
   Future<Map<String, dynamic>> getAiReport(String projectId) async {
     final response = await _dio.get('/ai/report/$projectId');
     return response.data;
@@ -124,7 +143,6 @@ class ApiService {
     return response.data;
   }
 
-  // ACCOUNTS
   Future<List<dynamic>> getAccounts() async {
     final response = await _dio.get('/accounts');
     return response.data;
@@ -135,7 +153,6 @@ class ApiService {
     return response.data;
   }
 
-  // CHAT
   Future<List<dynamic>> getMessages(String projectId) async {
     final response = await _dio.get('/chats/$projectId');
     return response.data;
@@ -149,7 +166,6 @@ class ApiService {
     return response.data;
   }
 
-  // KYC
   Future<Map<String, dynamic>> getKycStatus() async {
     final response = await _dio.get('/kyc/status');
     return response.data;
@@ -164,7 +180,6 @@ class ApiService {
     return response.data;
   }
 
-  // ADMIN
   Future<List<dynamic>> getAdminProjects({String? status, String? sector}) async {
     final response = await _dio.get('/admin/projects', queryParameters: {
       if (status != null) 'status': status,

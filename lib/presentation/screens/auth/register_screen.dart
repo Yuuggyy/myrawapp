@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/services/api_service.dart';
@@ -42,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'password': _passwordController.text,
         'client_type': _clientType,
       });
-      if (mounted) context.go(AppRoutes.login);
+      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.login);
     } catch (e) {
       setState(() => _errorMessage = 'Erreur lors de l\'inscription. Veuillez réessayer.');
     } finally {
@@ -59,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-          onPressed: () => context.go(AppRoutes.login),
+          onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.login),
         ),
       ),
       body: SafeArea(
@@ -110,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.08),
+                      color: AppColors.error.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(_errorMessage!,
@@ -255,7 +254,7 @@ class _TypeCard extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withOpacity(0.08) : AppColors.grey100,
+            color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.grey100,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? AppColors.primary : AppColors.grey300,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/constants/app_constants.dart';
 
 // ── AI Agent Model ──
 enum AgentType { router, rse, compliance, commercial, accounting }
@@ -350,7 +349,7 @@ class _ChatScreenState extends State<ChatScreen> {
               margin: const EdgeInsets.only(right: 12),
               width: 36, height: 36,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.swap_horiz, color: Colors.white, size: 20),
@@ -572,7 +571,7 @@ class _MessageBubble extends StatelessWidget {
                 ),
                 border: message.isAi ? Border.all(color: AppColors.grey200) : null,
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2)),
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2)),
                 ],
               ),
               child: Column(
@@ -583,7 +582,7 @@ class _MessageBubble extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 6),
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: agentColor.withOpacity(0.1),
+                        color: agentColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -763,9 +762,9 @@ class _AgentChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: color.withOpacity(isActive ? 0.15 : 0.06),
+          color: color.withValues(alpha: isActive ? 0.15 : 0.06),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(isActive ? 0.5 : 0.2)),
+          border: Border.all(color: color.withValues(alpha: isActive ? 0.5 : 0.2)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -805,7 +804,7 @@ class _AgentOption extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 4),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: selected ? color.withOpacity(0.08) : Colors.transparent,
+          color: selected ? color.withValues(alpha: 0.08) : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: selected ? color : Colors.transparent, width: 1.5),
         ),
@@ -813,7 +812,7 @@ class _AgentOption extends StatelessWidget {
           children: [
             Container(
               width: 32, height: 32,
-              decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
               child: Icon(icon, color: color, size: 18),
             ),
             const SizedBox(width: 10),

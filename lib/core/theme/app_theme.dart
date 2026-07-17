@@ -27,6 +27,7 @@ class AppColors {
   static const Color grey100 = Color(0xFFF5F5F5);
   static const Color grey200 = Color(0xFFEEEEEE);
   static const Color grey300 = Color(0xFFE0E0E0);
+  static const Color grey400 = Color(0xFFBDBDBD);
   static const Color grey500 = Color(0xFF9E9E9E);
   static const Color grey700 = Color(0xFF616161);
   static const Color grey900 = Color(0xFF212121);
@@ -178,7 +179,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.grey100,
-        selectedColor: AppColors.primary.withOpacity(0.15),
+        selectedColor: AppColors.primary.withValues(alpha: 0.15),
         labelStyle: GoogleFonts.inter(fontSize: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../data/models/user_model.dart';
 import '../../../data/models/account_model.dart';
-import '../../../data/models/project_model.dart';
 import '../accounts/accounts_screen.dart';
 import '../profile/profile_screen.dart';
-import '../transfer/transfer_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -44,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           selectedIndex: _selectedIndex,
           onDestinationSelected: (i) => setState(() => _selectedIndex = i),
           backgroundColor: Colors.white,
-          indicatorColor: AppColors.primary.withOpacity(0.1),
+          indicatorColor: AppColors.primary.withValues(alpha: 0.1),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           destinations: const [
             NavigationDestination(
@@ -114,7 +110,7 @@ class _HomeTab extends StatelessWidget {
                   children: [
                     Container(
                       width: 42, height: 42,
-                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
                       child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
                     ),
                     const Positioned(
@@ -131,7 +127,7 @@ class _HomeTab extends StatelessWidget {
                 const SizedBox(width: 8),
                 Container(
                   width: 42, height: 42,
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
                   child: const Center(
                     child: Text('JM', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
                   ),
@@ -157,7 +153,7 @@ class _HomeTab extends StatelessWidget {
                   children: [
                     const Text('Projets en cours', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                     TextButton(
-                      onPressed: () => context.push(AppRoutes.newProject),
+                      onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
                       child: const Text('Voir tout', style: TextStyle(color: AppColors.primary, fontSize: 13)),
                     ),
                   ],
@@ -230,7 +226,7 @@ class _IllicoCashCard extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              _QuickBtn(icon: Icons.send, label: 'Virement', onTap: () => context.push('/transfer')),
+              _QuickBtn(icon: Icons.send, label: 'Virement', onTap: () => Navigator.pushNamed(context, '/transfer')),
               const SizedBox(width: 10),
               _QuickBtn(icon: Icons.add, label: 'Dépôt', onTap: () {}),
               const SizedBox(width: 10),
@@ -259,7 +255,7 @@ class _QuickBtn extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -290,7 +286,7 @@ class _QuickActions extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               final route = a['route'] as String;
-              if (route.isNotEmpty) context.push(route);
+              if (route.isNotEmpty) Navigator.pushNamed(context, route);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -325,16 +321,16 @@ class _KycBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.08),
+        color: AppColors.warning.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.warning.withOpacity(0.2)),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           Container(
             width: 44, height: 44,
             decoration: BoxDecoration(
-              color: AppColors.warning.withOpacity(0.15),
+              color: AppColors.warning.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(Icons.shield_outlined, color: AppColors.warning, size: 24),
@@ -379,7 +375,7 @@ class _ProjectCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
@@ -440,7 +436,7 @@ class _TxItem extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: (isCredit ? AppColors.success : AppColors.primary).withOpacity(0.1),
+              color: (isCredit ? AppColors.success : AppColors.primary).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -489,7 +485,7 @@ class _ProjectsTab extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push(AppRoutes.newProject),
+        onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
@@ -565,7 +561,7 @@ class _FullProjectCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
@@ -587,7 +583,7 @@ class _FullProjectCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.12),
+                  color: statusColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(status, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.w600)),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/services/api_service.dart';
@@ -37,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text.trim(),
         _passwordController.text,
       );
-      if (mounted) context.go(AppRoutes.dashboard);
+      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
     } catch (e) {
       setState(() {
         _errorMessage = 'Email ou mot de passe incorrect.';
@@ -130,9 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.08),
+                      color: AppColors.error.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                      border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       children: [
@@ -193,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () => context.go(AppRoutes.forgotPassword),
+                    onPressed: () => Navigator.pushNamed(context, AppRoutes.forgotPassword),
                     child: const Text(
                       'Mot de passe oublié ?',
                       style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500),
@@ -228,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Register
                 OutlinedButton(
-                  onPressed: () => context.go(AppRoutes.register),
+                  onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
                   child: const Text('Créer un compte'),
                 ),
 

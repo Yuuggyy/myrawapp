@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../data/models/user_model.dart';
@@ -72,9 +71,9 @@ class ProfileScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: AppColors.warning.withOpacity(0.12),
+                            color: AppColors.warning.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: AppColors.warning.withOpacity(0.3)),
+                            border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -103,9 +102,9 @@ class ProfileScreen extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.06),
+                        color: AppColors.primary.withValues(alpha: 0.06),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
                       child: Row(
                         children: [
@@ -161,7 +160,7 @@ class ProfileScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 52,
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go(AppRoutes.login),
+                      onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.login),
                       icon: const Icon(Icons.logout, color: AppColors.error),
                       label: const Text('Se déconnecter',
                           style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600)),
@@ -189,6 +188,8 @@ class ProfileScreen extends StatelessWidget {
 
   String _kycLabel(KycLevel level) {
     switch (level) {
+      case KycLevel.none:
+        return 'Non vérifié';
       case KycLevel.basic:
         return 'Basique';
       case KycLevel.standard:
