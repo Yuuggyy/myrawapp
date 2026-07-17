@@ -27,16 +27,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _HomeTab(),
           _ProjectsTab(),
           AccountsScreen(),
+          ChatScreen(projectId: 'assistant', showBackButton: false),
           ProfileScreen(),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'chat_ia_fab',
-        onPressed: () => Navigator.pushNamed(context, '/projects/assistant'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.smart_toy_outlined),
-        label: const Text('Chat IA', style: TextStyle(fontWeight: FontWeight.w700)),
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
@@ -66,6 +59,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: Icon(Icons.account_balance_wallet_outlined),
               selectedIcon: Icon(Icons.account_balance_wallet, color: AppColors.primary),
               label: 'Comptes',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.smart_toy_outlined),
+              selectedIcon: Icon(Icons.smart_toy, color: AppColors.primary),
+              label: 'Chat IA',
             ),
             NavigationDestination(
               icon: Icon(Icons.person_outlined),
