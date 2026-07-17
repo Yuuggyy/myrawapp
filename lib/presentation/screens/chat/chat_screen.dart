@@ -168,6 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
   AgentType? _activeAgent; // null = router
   bool _showAgentPanel = false;
 
+  bool get _isGeneralAssistant => widget.projectId == 'assistant';
   final String _projectTitle = 'Épicerie Bio Kinshasa';
 
   late List<ChatMessage> _messages;
@@ -176,7 +177,27 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     _loadSectorData();
     super.initState();
-    _messages = [
+    _messages = _isGeneralAssistant ? _buildAssistantIntro() : _buildProjectIntro();
+  }
+
+  List<ChatMessage> _buildAssistantIntro() {
+    return [
+      ChatMessage(
+        content: "Bonjour 👋 Je suis l'Assistant RawBank. Je peux répondre à vos questions sur vos comptes, vos virements, vos projets de financement ou votre dossier KYC. Que puis-je faire pour vous ?",
+        isAi: true,
+        time: DateTime.now(),
+        agent: AgentType.router,
+        quickReplies: [
+          QuickReply('Voir mes comptes', 'goto_comptes'),
+          QuickReply('Suivre un projet', 'agent_router'),
+          QuickReply('Documents KYC requis', 'conformite_docs'),
+        ],
+      ),
+    ];
+  }
+
+  List<ChatMessage> _buildProjectIntro() {
+    return [
       ChatMessage(
         content: "Bonjour ! Je suis le Routeur IA de RawBank. J'ai pris en charge votre dossier *$_projectTitle*. Je vais l'analyser et l'orienter vers les agents spécialisés.",
         isAi: true,
@@ -292,8 +313,19 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
           };
         }
+        if (_isGeneralAssistant && (msg.contains('compte') || msg.contains('solde'))) {
+          return {
+            'content': "Vous pouvez consulter tous vos comptes RawBank (IllicoCash, Courant, Épargne...) depuis l'onglet *Comptes* en bas de l'écran. Vous pouvez aussi y ouvrir un nouveau compte en un clic.",
+            'quickReplies': [
+              QuickReply('Documents KYC requis', 'conformite_docs'),
+              QuickReply('Suivre un projet', 'agent_router'),
+            ],
+          };
+        }
         return {
-          'content': "J'ai bien reçu votre message. En tant que Routeur, j'analyse votre demande et l'oriente vers l'agent le plus pertinent.\n\nVous pouvez aussi parler directement à un agent spécialisé en le sélectionnant en haut de l'écran.",
+          'content': _isGeneralAssistant
+              ? "J'ai bien reçu votre message. Je peux vous aider sur vos comptes, vos transferts, vos projets de financement ou vos documents KYC. Que souhaitez-vous savoir ?"
+              : "J'ai bien reçu votre message. En tant que Routeur, j'analyse votre demande et l'oriente vers l'agent le plus pertinent.\n\nVous pouvez aussi parler directement à un agent spécialisé en le sélectionnant en haut de l'écran.",
           'quickReplies': [
             QuickReply('Statut du dossier', 'statut'),
             QuickReply('Documents manquants', 'docs_manquants'),
@@ -406,11 +438,13 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _activeAgent != null ? 'Agent ${_activeAgent!.label}' : 'Routeur IA',
+              _activeAgent != null
+                  ? 'Agent ${_activeAgent!.label}'
+                  : (_isGeneralAssistant ? 'Assistant RawBank' : 'Routeur IA'),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             Text(
-              _activeAgent?.description ?? 'Synthèse & coordination',
+              _activeAgent?.description ?? (_isGeneralAssistant ? 'Toujours disponible' : 'Synthèse & coordination'),
               style: const TextStyle(fontSize: 11, color: Colors.white70),
             ),
           ],
@@ -601,6 +635,7 @@ class _ChatScreenState extends State<ChatScreen> {
       case 'conformite_delai': return 'Quel est le délai réglementaire ?';
       case 'amortissement': return 'Voir le tableau d\'amortissement';
       case 'ameliorer_fin': return 'Comment améliorer mon score financier ?';
+      case 'goto_comptes': return 'Je veux voir mes comptes';
       default: return value;
     }
   }
