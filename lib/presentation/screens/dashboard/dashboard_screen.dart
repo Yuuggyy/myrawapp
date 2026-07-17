@@ -5,6 +5,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../data/models/account_model.dart';
 import '../accounts/accounts_screen.dart';
 import '../profile/profile_screen.dart';
+import '../chat/chat_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -28,6 +29,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           AccountsScreen(),
           ProfileScreen(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'chat_ia_fab',
+        onPressed: () => Navigator.pushNamed(context, '/projects/assistant'),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.smart_toy_outlined),
+        label: const Text('Chat IA', style: TextStyle(fontWeight: FontWeight.w700)),
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
