@@ -563,23 +563,6 @@ class _RechargeSheetState extends State<_RechargeSheet> {
     super.dispose();
   }
 
-  String get _accountTypeInfo {
-    switch (_accountType) {
-      case 'illico':
-        return 'IllicoCash: transferts mobiles, paiements marchands, recharge. Activation immédiate. Frais 0.5% par transaction.';
-      case 'current':
-        return 'Compte Courant: virements bancaires, chèques, carte de débit. Idéal pour la gestion quotidienne.';
-      case 'savings':
-        return 'Compte Épargne: intérêts annuels 3.5%, accès flexible. Idéal pour épargner en sécurité.';
-      case 'enterprise':
-        return 'Compte Entreprise: gestion des flux professionnels, multi-signataires, ligne de crédit. Documents entreprise requis.';
-      case 'investment':
-        return 'Compte Investissement: placements, OPCVM, titres. Accompagnement par un conseiller RawBank.';
-      default:
-        return '';
-    }
-  }
-
   void _submit() async {
     if (_amountCtrl.text.isEmpty || double.tryParse(_amountCtrl.text) == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Montant invalide')));
