@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           'RB',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textOnPrimary,
                             fontSize: 20,
                             fontWeight: FontWeight.w900,
                           ),
