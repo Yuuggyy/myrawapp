@@ -28,9 +28,9 @@ class BusinessSectors {
   static const List<String> commonDocuments = [
     'RCCM (Registre du Commerce et du Crédit Mobilier)',
     'Statuts de l\'entreprise',
-    'Numéro d'Identification Nationale (ID Nat / NIF)',
-    'Pièce d'identité du représentant légal',
-    'Patente (licence d'exploitation)',
+    'Numéro d\'Identification Nationale (ID Nat / NIF)',
+    'Pièce d\'identité du représentant légal',
+    'Patente (licence d\'exploitation)',
     'Attestation de dépôt de déclaration à la DGI',
   ];
 
@@ -43,7 +43,7 @@ class BusinessSectors {
       description: 'Production végétale, élevage, transformation agro-alimentaire',
       requiredDocuments: [
         ...commonDocuments,
-        'Autorisation d'exploitation de terres (titre foncier ou bail)',
+        'Autorisation d\'exploitation de terres (titre foncier ou bail)',
         'Certificat phytosanitaire (pour exportation)',
         'Agrément SENASEM (semences et plants)',
       ],
@@ -53,8 +53,8 @@ class BusinessSectors {
       ],
       regulatoryNotes: [
         'Les terres agricoles nécessitent un titre foncier ou un bail emphytéotique',
-        'L'importation d'intrants agricoles nécessite une autorisation du Ministère',
-        'L'exportation de produits agricoles requiert un certificat phytosanitaire',
+        'L\'importation d\'intrants agricoles nécessite une autorisation du Ministère',
+        'L\'exportation de produits agricoles requiert un certificat phytosanitaire',
       ],
     ),
     BusinessSector(
@@ -65,7 +65,7 @@ class BusinessSectors {
       description: 'Exploration, exploitation, transformation minière',
       requiredDocuments: [
         ...commonDocuments,
-        'Permis de recherche ou d'exploitation (Cadastre Minier)',
+        'Permis de recherche ou d\'exploitation (Cadastre Minier)',
         'Certificat de conformité environnementale',
         'Carte de carrière (pour carrières)',
         'Attestation de paiement des droits miniers',
@@ -76,10 +76,10 @@ class BusinessSectors {
         'Attestation de responsabilité sociétale minière',
       ],
       regulatoryNotes: [
-        'Le Code Minier (Loi n°007/2002) régit l'ensemble du secteur',
+        'Le Code Minier (Loi n°007/2002) régit l\'ensemble du secteur',
         'Le CTCPM délivre tous les titres miniers',
         'Obligation de RSE pour toutes les entreprises minières',
-        'Traçabilité obligatoire pour l'or, le coltan et l'étain (3TG)',
+        'Traçabilité obligatoire pour l\'or, le coltan et l\'étain (3TG)',
       ],
     ),
     BusinessSector(
@@ -90,16 +90,16 @@ class BusinessSectors {
       description: 'Téléphonie, internet, services numériques, data centers',
       requiredDocuments: [
         ...commonDocuments,
-        'Licence ARPTC d'exploitation de services telecom',
+        'Licence ARPTC d\'exploitation de services telecom',
         'Autorisation de fréquences radioélectriques',
         'Certificat de conformité des équipements',
       ],
       optionalDocuments: [
         'Agrément pour services de paiement mobile',
-        'Certificat ISO 27001 (sécurité de l'information)',
+        'Certificat ISO 27001 (sécurité de l\'information)',
       ],
       regulatoryNotes: [
-        'L'ARPTC régule tous les services de télécommunications',
+        'L\'ARPTC régule tous les services de télécommunications',
         'Les fréquences radioélectriques nécessitent une autorisation spécifique',
         'Loi n°024/2002 sur les télécommunications en RDC',
       ],
@@ -109,23 +109,23 @@ class BusinessSectors {
       name: 'Finance, Banque & Microfinance',
       icon: 'finance',
       regulator: 'BCC (Banque Centrale du Congo)',
-      description: 'Banques, microfinance, transfert d'argent, fintech',
+      description: 'Banques, microfinance, transfert d\'argent, fintech',
       requiredDocuments: [
         ...commonDocuments,
         'Agrément BCC (Banque Centrale du Congo)',
         'Capital minimum conformément à la réglementation BCC',
-        'Plan d'affaires approuvé par la BCC',
+        'Plan d\'affaires approuvé par la BCC',
         'Attestation de conformité anti-blanchiment (LCB-FT)',
-        'Rapport d'audit prudential annuel',
+        'Rapport d\'audit prudential annuel',
       ],
       optionalDocuments: [
         'Certificat de la cellule nationale de renseignements financiers (CENAREF)',
       ],
       regulatoryNotes: [
-        'La BCC est l'autorité de régulation unique',
+        'La BCC est l\'autorité de régulation unique',
         'Loi n°005/2002 sur la Banque Centrale',
         'Conformité stricte LCB-FT (Loi n°022/2002)',
-        'Capital minimum variable selon le type d'institution',
+        'Capital minimum variable selon le type d\'institution',
       ],
     ),
     BusinessSector(
@@ -138,7 +138,7 @@ class BusinessSectors {
         ...commonDocuments,
         'Agrément BTP (classification des entreprises)',
         'Permis de construire (pour les projets)',
-        'Attestation ONEM (Office National de l'Emploi)',
+        'Attestation ONEM (Office National de l\'Emploi)',
         'Certificat de conformité technique',
       ],
       optionalDocuments: [
@@ -146,7 +146,7 @@ class BusinessSectors {
         'Attestation CNPP (Commission Nationale de Prévention des Pollutions)',
       ],
       regulatoryNotes: [
-        'L'agrément BTP classe les entreprises en catégories (I à V)',
+        'L\'agrément BTP classe les entreprises en catégories (I à V)',
         'Les marchés publics nécessitent un agrément valide',
       ],
     ),
@@ -162,7 +162,7 @@ class BusinessSectors {
         'Attestation de respect des normes de concurrence (DGCC)',
       ],
       optionalDocuments: [
-        'Licence d'importation (pour produits réglementés)',
+        'Licence d\'importation (pour produits réglementés)',
         'Attestation de conformité aux normes métrologiques',
       ],
       regulatoryNotes: [
@@ -178,12 +178,12 @@ class BusinessSectors {
       description: 'Importation, exportation, transit, commissionnement',
       requiredDocuments: [
         ...commonDocuments,
-        'Code douanier (numéro d'identification douanier)',
+        'Code douanier (numéro d\'identification douanier)',
         'Registre des opérations douanières',
         'Attestation de franchise ou régime douanier',
       ],
       optionalDocuments: [
-        'Certificat d'origine (pour préférences tarifaires)',
+        'Certificat d\'origine (pour préférences tarifaires)',
         'Engagement de transit international',
       ],
       regulatoryNotes: [
@@ -210,7 +210,7 @@ class BusinessSectors {
       ],
       regulatoryNotes: [
         'OFRAC régule le transport routier de marchandises et voyageurs',
-        'Les transports aérien et maritime relèvent de l'OACI/OMI',
+        'Les transports aérien et maritime relèvent de l\'OACI/OMI',
         'Assurance responsabilité civile obligatoire',
       ],
     ),
@@ -223,7 +223,7 @@ class BusinessSectors {
       requiredDocuments: [
         ...commonDocuments,
         'Agrément du Ministère de la Santé',
-        'Inscription à l'Ordre des Pharmaciens (pour pharmacies)',
+        'Inscription à l\'Ordre des Pharmaciens (pour pharmacies)',
         'Autorisation de mise sur le marché (AMM) pour médicaments',
         'Certificat de bonnes pratiques de stockage',
       ],
@@ -233,52 +233,52 @@ class BusinessSectors {
       ],
       regulatoryNotes: [
         'La Direction de la Pharmacie régule les médicaments',
-        'L'importation de médicaments nécessite une AMM',
-        'Obligation d'avoir un pharmacien responsable',
+        'L\'importation de médicaments nécessite une AMM',
+        'Obligation d\'avoir un pharmacien responsable',
       ],
     ),
     BusinessSector(
       id: 'energy',
       name: 'Énergie & Électricité',
       icon: 'energy',
-      regulator: 'Ministère de l'Énergie & ARE (Autorité de Régulation)',
-      description: 'Production, distribution, transport d'énergie',
+      regulator: 'Ministère de l\'Énergie & ARE (Autorité de Régulation)',
+      description: 'Production, distribution, transport d\'énergie',
       requiredDocuments: [
         ...commonDocuments,
-        'Licence de production/distribution d'énergie (ARE)',
-        'Étude d'impact environnemental (EIE)',
+        'Licence de production/distribution d\'énergie (ARE)',
+        'Étude d\'impact environnemental (EIE)',
         'Convention de concession (pour production)',
       ],
       optionalDocuments: [
-        'Certificat de réduction d'émissions (MDP/MOC)',
-        'Attestation d'efficacité énergétique',
+        'Certificat de réduction d\'émissions (MDP/MOC)',
+        'Attestation d\'efficacité énergétique',
       ],
       regulatoryNotes: [
-        'L'ARE régule le secteur électrique',
+        'L\'ARE régule le secteur électrique',
         'La SNEL détient le monopole de transport',
-        'L'auto-production nécessite une autorisation',
+        'L\'auto-production nécessite une autorisation',
       ],
     ),
     BusinessSector(
       id: 'education',
       name: 'Éducation & Formation',
       icon: 'education',
-      regulator: 'Ministère de l'Enseignement (EPSP & ESU)',
+      regulator: 'Ministère de l\'Enseignement (EPSP & ESU)',
       description: 'Écoles, universités, centres de formation',
       requiredDocuments: [
         ...commonDocuments,
-        'Agrément du Ministère de l'EPSP ou ESU',
+        'Agrément du Ministère de l\'EPSP ou ESU',
         'Programmes pédagogiques approuvés',
-        'Attestation d'infrastructures conformes',
+        'Attestation d\'infrastructures conformes',
       ],
       optionalDocuments: [
         'Accréditation internationale',
         'Attestation de qualification du personnel enseignant',
       ],
       regulatoryNotes: [
-        'L'EPSP régule le primaire et secondaire',
-        'L'ESU régule l'enseignement supérieur',
-        'Les diplômes doivent être reconnus par l'État',
+        'L\'EPSP régule le primaire et secondaire',
+        'L\'ESU régule l\'enseignement supérieur',
+        'Les diplômes doivent être reconnus par l\'État',
       ],
     ),
     BusinessSector(
@@ -289,12 +289,12 @@ class BusinessSectors {
       description: 'Presse, radio, télévision, production audiovisuelle',
       requiredDocuments: [
         ...commonDocuments,
-        'Autorisation du CSAC (Conseil Supérieur de l'Audiovisuel)',
+        'Autorisation du CSAC (Conseil Supérieur de l\'Audiovisuel)',
         'Licence de fréquence (ARPTC) pour radio/TV',
         'Carte de journaliste (pour les journalistes)',
       ],
       optionalDocuments: [
-        'Convention avec l'ORTP (Office de Radio-Télévision)',
+        'Convention avec l\'ORTP (Office de Radio-Télévision)',
       ],
       regulatoryNotes: [
         'Le CSAC régule la liberté de la presse',
@@ -306,12 +306,12 @@ class BusinessSectors {
       id: 'manufacturing',
       name: 'Industrie & Manufacturing',
       icon: 'manufacturing',
-      regulator: 'Ministère de l'Industrie',
+      regulator: 'Ministère de l\'Industrie',
       description: 'Transformation, usines, production industrielle',
       requiredDocuments: [
         ...commonDocuments,
-        'Agrément industriel du Ministère de l'Industrie',
-        'Étude d'impact environnemental (EIE)',
+        'Agrément industriel du Ministère de l\'Industrie',
+        'Étude d\'impact environnemental (EIE)',
         'Certificat de conformité aux normes OQTC',
       ],
       optionalDocuments: [
@@ -319,7 +319,7 @@ class BusinessSectors {
         'Attestation de zone économique spéciale (ZES)',
       ],
       regulatoryNotes: [
-        'L'OQTC (Office Québécois de la Technologie et de la Conformité) vérifie les normes',
+        'L\'OQTC (Office Québécois de la Technologie et de la Conformité) vérifie les normes',
         'Les ZES offrent des avantages fiscaux',
         'Obligation EIE pour installations industrielles',
       ],
@@ -332,18 +332,18 @@ class BusinessSectors {
       description: 'Hôtels, restaurants, agences de voyage, tourisme',
       requiredDocuments: [
         ...commonDocuments,
-        'Licence d'exploitation touristique (ONT)',
+        'Licence d\'exploitation touristique (ONT)',
         'Classement hôtelier (étoiles)',
-        'Certificat d'hygiène et sécurité',
+        'Certificat d\'hygiène et sécurité',
       ],
       optionalDocuments: [
         'Attestation de formation en hôtellerie',
         'Certification HACCP (pour restaurants)',
       ],
       regulatoryNotes: [
-        'L'ONT (Office National du Tourisme) délivre les licences',
+        'L\'ONT (Office National du Tourisme) délivre les licences',
         'Le classement hôtelier est obligatoire',
-        'Normes d'hygiène strictes pour la restauration',
+        'Normes d\'hygiène strictes pour la restauration',
       ],
     ),
     BusinessSector(
@@ -359,8 +359,8 @@ class BusinessSectors {
         'Certificat de conformité du bâtiment',
       ],
       optionalDocuments: [
-        'Attestation d'assurance décennale',
-        'Rapport d'expertise immobilière',
+        'Attestation d\'assurance décennale',
+        'Rapport d\'expertise immobilière',
       ],
       regulatoryNotes: [
         'La Loi foncière n°073/021 de 1973 régit le foncier',
@@ -372,11 +372,11 @@ class BusinessSectors {
       id: 'fishing',
       name: 'Pêche & Aquaculture',
       icon: 'fishing',
-      regulator: 'Ministère de l'Agriculture (Pêche)',
+      regulator: 'Ministère de l\'Agriculture (Pêche)',
       description: 'Pêche continentale, aquaculture, transformation poisson',
       requiredDocuments: [
         ...commonDocuments,
-        'Licence de pêche (Ministère de l'Agriculture)',
+        'Licence de pêche (Ministère de l\'Agriculture)',
         'Autorisation de pêcherie (pour installations)',
         'Certificat sanitaire des produits de la pêche',
       ],
@@ -392,14 +392,14 @@ class BusinessSectors {
       id: 'forestry',
       name: 'Forêt & Exploitation Forestière',
       icon: 'forestry',
-      regulator: 'MECNT (Ministère de l'Environnement)',
+      regulator: 'MECNT (Ministère de l\'Environnement)',
       description: 'Exploitation forestière, bois, transformation',
       requiredDocuments: [
         ...commonDocuments,
         'Concession forestière (titre forestier)',
-        'Plan d'aménagement forestier (PAF)',
+        'Plan d\'aménagement forestier (PAF)',
         'Certificat de légalité du bois (FLEGT)',
-        'Étude d'impact environnemental',
+        'Étude d\'impact environnemental',
       ],
       optionalDocuments: [
         'Certification FSC (Forest Stewardship Council)',
@@ -407,18 +407,18 @@ class BusinessSectors {
       regulatoryNotes: [
         'Le Code Forestier (Loi n°011/2002) régit le secteur',
         'Le MECNT délivre les concessions',
-        'Traçabilité obligatoire via Sigifl (Système de Gestion de l'Information Forestière)',
+        'Traçabilité obligatoire via Sigifl (Système de Gestion de l\'Information Forestière)',
       ],
     ),
     BusinessSector(
       id: 'textile',
       name: 'Textile & Habillement',
       icon: 'textile',
-      regulator: 'Ministère de l'Industrie',
+      regulator: 'Ministère de l\'Industrie',
       description: 'Production textile, confection, mode',
       requiredDocuments: [
         ...commonDocuments,
-        'Agrément industriel (Ministère de l'Industrie)',
+        'Agrément industriel (Ministère de l\'Industrie)',
         'Certificat de conformité textile',
       ],
       optionalDocuments: [
@@ -457,7 +457,7 @@ class BusinessSectors {
       description: 'Compagnies aériennes, maintenance, services aéroportuaires',
       requiredDocuments: [
         ...commonDocuments,
-        'Certificat d'exploitant aérien (AOC)',
+        'Certificat d\'exploitant aérien (AOC)',
         'Licence de maintenance (CAA)',
         'Certificat de navigabilité',
       ],
@@ -466,7 +466,7 @@ class BusinessSectors {
         'Attestation de conformité OACI',
       ],
       regulatoryNotes: [
-        'La CAA régule l'aviation civile',
+        'La CAA régule l\'aviation civile',
         'Obligation de respect des standards OACI',
         'La RVA gère les aéroports',
       ],
@@ -479,7 +479,7 @@ class BusinessSectors {
       description: 'Transport maritime, services portuaires, transit',
       requiredDocuments: [
         ...commonDocuments,
-        'Licence d'armateur (Ministère des Transports)',
+        'Licence d\'armateur (Ministère des Transports)',
         'Convention portuaire (SCTP)',
         'Certificat de sécurité maritime',
       ],
@@ -495,7 +495,7 @@ class BusinessSectors {
       id: 'food',
       name: 'Agro-alimentaire & Boissons',
       icon: 'food',
-      regulator: 'Ministère de l'Agriculture & DRC FDA equivalent',
+      regulator: 'Ministère de l\'Agriculture & DRC FDA equivalent',
       description: 'Production alimentaire, boissons, restauration industrielle',
       requiredDocuments: [
         ...commonDocuments,
@@ -523,7 +523,7 @@ class BusinessSectors {
         'Agrément de fabrication pharmaceutique',
         'AMM (Autorisation de Mise sur le Marché) par produit',
         'Certificat BPF (Bonnes Pratiques de Fabrication)',
-        'Licence d'importation de médicaments',
+        'Licence d\'importation de médicaments',
       ],
       optionalDocuments: [
         'Certification WHO-GMP (OMS)',
@@ -532,7 +532,7 @@ class BusinessSectors {
       regulatoryNotes: [
         'La Direction de la Pharmacie régule le secteur',
         'BPF obligatoires pour la fabrication locale',
-        'L'importation nécessite une licence spécifique par produit',
+        'L\'importation nécessite une licence spécifique par produit',
       ],
     ),
     BusinessSector(
@@ -546,14 +546,14 @@ class BusinessSectors {
         'Agrément ARCA',
         'Capital minimum réglementaire',
         'Programme de réassurance approuvé',
-        'Rapport d'audit prudential annuel',
+        'Rapport d\'audit prudential annuel',
       ],
       optionalDocuments: [
         'Certificat de solvabilité',
       ],
       regulatoryNotes: [
-        'L'ARCA est le régulateur unique du secteur assurances',
-        'Loi n°007/2015 sur l'assurance en RDC',
+        'L\'ARCA est le régulateur unique du secteur assurances',
+        'Loi n°007/2015 sur l\'assurance en RDC',
         'Capital minimum: variable selon la branche',
       ],
     ),
@@ -565,31 +565,31 @@ class BusinessSectors {
       description: 'ONGD, associations, fondations, coopératives',
       requiredDocuments: [
         ...commonDocuments,
-        'Acte d'enregistrement (Ministère de l'Intérieur)',
-        'Statuts de l'association/ONG',
+        'Acte d\'enregistrement (Ministère de l\'Intérieur)',
+        'Statuts de l\'association/ONG',
         'Agrément du Ministère du Plan (pour ONGD étrangères)',
         'Accord-cadre avec le gouvernement',
       ],
       optionalDocuments: [
         'Attestation de transparence financière',
-        'Rapport d'activités annuel',
+        'Rapport d\'activités annuel',
       ],
       regulatoryNotes: [
-        'Les ONGD locales sont régies par le Ministère de l'Intérieur',
+        'Les ONGD locales sont régies par le Ministère de l\'Intérieur',
         'Les ONGD internationales nécessitent un accord-cadre',
-        'Obligation de produire un rapport d'activités annuel',
+        'Obligation de produire un rapport d\'activités annuel',
       ],
     ),
     BusinessSector(
       id: 'security',
       name: 'Sécurité & Gardiennage',
       icon: 'security',
-      regulator: 'Ministère de l'Intérieur',
+      regulator: 'Ministère de l\'Intérieur',
       description: 'Sociétés de sécurité privée, gardiennage, protection',
       requiredDocuments: [
         ...commonDocuments,
-        'Agrément du Ministère de l'Intérieur',
-        'Autorisation de port d'armes (si applicable)',
+        'Agrément du Ministère de l\'Intérieur',
+        'Autorisation de port d\'armes (si applicable)',
         'Casier judiciaire du personnel',
       ],
       optionalDocuments: [
@@ -597,7 +597,7 @@ class BusinessSectors {
       ],
       regulatoryNotes: [
         'Le secteur de la sécurité privée est strictement réglementé',
-        'L'agrément du Ministère de l'Intérieur est obligatoire',
+        'L\'agrément du Ministère de l\'Intérieur est obligatoire',
       ],
     ),
     BusinessSector(
@@ -609,13 +609,13 @@ class BusinessSectors {
       requiredDocuments: [
         ...commonDocuments,
         'Attestation de qualification professionnelle',
-        'Inscription à l'Ordre (pour avocats, comptables, experts)',
+        'Inscription à l\'Ordre (pour avocats, comptables, experts)',
       ],
       optionalDocuments: [
         'Certification professionnelle internationale',
       ],
       regulatoryNotes: [
-        'Les professions libérales nécessitent une inscription à l'Ordre',
+        'Les professions libérales nécessitent une inscription à l\'Ordre',
         'Le barème des honoraires est réglementé pour certaines professions',
       ],
     ),
@@ -627,8 +627,8 @@ class BusinessSectors {
       description: 'Exploration, production, raffinage, distribution pétrolière',
       requiredDocuments: [
         ...commonDocuments,
-        'Permis d'exploration/exploitation (Ministère des Hydrocarbures)',
-        'Étude d'impact environnemental (EIE)',
+        'Permis d\'exploration/exploitation (Ministère des Hydrocarbures)',
+        'Étude d\'impact environnemental (EIE)',
         'Certificat de conformité HSE',
         'Convention de partage de production (CPP)',
       ],
@@ -659,47 +659,47 @@ class BusinessSectors {
       regulatoryNotes: [
         'Le Ministère des PTNTIC promeut le secteur numérique',
         'La protection des données personnelles est obligatoire',
-        'Les brevets sont gérés par l'OAPI',
+        'Les brevets sont gérés par l\'OAPI',
       ],
     ),
     BusinessSector(
       id: 'water',
       name: 'Eau & Assainissement',
       icon: 'water',
-      regulator: 'Ministère de l'Eau & REGIDESO',
-      description: 'Distribution d'eau, assainissement, forage',
+      regulator: 'Ministère de l\'Eau & REGIDESO',
+      description: 'Distribution d\'eau, assainissement, forage',
       requiredDocuments: [
         ...commonDocuments,
-        'Autorisation de prélèvement d'eau',
+        'Autorisation de prélèvement d\'eau',
         'Convention avec REGIDESO (si applicable)',
-        'Certificat de potabilité de l'eau',
+        'Certificat de potabilité de l\'eau',
       ],
       optionalDocuments: [
-        'Certification ISO 24516 (services d'eau)',
+        'Certification ISO 24516 (services d\'eau)',
       ],
       regulatoryNotes: [
-        'La REGIDESO gère le service public de l'eau',
+        'La REGIDESO gère le service public de l\'eau',
         'Les forages nécessitent une autorisation',
-        'Qualité de l'eau conforme aux normes OMS',
+        'Qualité de l\'eau conforme aux normes OMS',
       ],
     ),
     BusinessSector(
       id: 'artisanat',
-      name: 'Artisanat & Métiers d'Art',
+      name: 'Artisanat & Métiers d\'Art',
       icon: 'artisanat',
       regulator: 'Ministère des PME & INPP',
-      description: 'Artisanat, métiers d'art, production artisanale',
+      description: 'Artisanat, métiers d\'art, production artisanale',
       requiredDocuments: [
         ...commonDocuments,
-        'Carte d'artisan (Ministère des PME)',
+        'Carte d\'artisan (Ministère des PME)',
       ],
       optionalDocuments: [
         'Attestation de formation INPP',
-        'Label d'authenticité',
+        'Label d\'authenticité',
       ],
       regulatoryNotes: [
-        'L'INPP forme et certifie les artisans',
-        'Les produits artisanaux peuvent bénéficier de l'IGP (indication géographique protégée)',
+        'L\'INPP forme et certifie les artisans',
+        'Les produits artisanaux peuvent bénéficier de l\'IGP (indication géographique protégée)',
       ],
     ),
     BusinessSector(
@@ -707,11 +707,11 @@ class BusinessSectors {
       name: 'Logistique & Supply Chain',
       icon: 'logistics',
       regulator: 'Ministère des Transports & DGDA',
-      description: 'Entreposage, chaîne d'approvisionnement, freight forwarding',
+      description: 'Entreposage, chaîne d\'approvisionnement, freight forwarding',
       requiredDocuments: [
         ...commonDocuments,
         'Licence de transitaire (DGDA)',
-        'Attestation d'entrepôt douanier (si applicable)',
+        'Attestation d\'entrepôt douanier (si applicable)',
       ],
       optionalDocuments: [
         'Certification FIATA (Fédération Internationale des Transitaires)',
@@ -730,14 +730,14 @@ class BusinessSectors {
       requiredDocuments: [
         ...commonDocuments,
         'Autorisation du Ministère de la Culture',
-        'Licence d'exploitation du droit d'auteur (SOPEXA/SONECA)',
+        'Licence d\'exploitation du droit d\'auteur (SOPEXA/SONECA)',
       ],
       optionalDocuments: [
-        'Carte d'artiste (Ministère de la Culture)',
+        'Carte d\'artiste (Ministère de la Culture)',
         'Attestation de droits voisins',
       ],
       regulatoryNotes: [
-        'La SONECA gère les droits d'auteur',
+        'La SONECA gère les droits d\'auteur',
         'Les événements publics nécessitent une autorisation municipale',
         'Loi n°086/1986 sur la protection des œuvres intellectuelles',
       ],
@@ -751,21 +751,21 @@ class BusinessSectors {
       requiredDocuments: [
         ...commonDocuments,
         'Agrément de prestataire minier',
-        'Certificat d'accréditation du laboratoire (si applicable)',
+        'Certificat d\'accréditation du laboratoire (si applicable)',
       ],
       optionalDocuments: [
         'Certification ISO 17025 (laboratoires)',
       ],
       regulatoryNotes: [
         'Les prestataires miniers doivent être agréés par le CTCPM',
-        'Les laboratoires d'analyse minière nécessitent une accréditation',
+        'Les laboratoires d\'analyse minière nécessitent une accréditation',
       ],
     ),
     BusinessSector(
       id: 'environment',
       name: 'Environnement & Éco-services',
       icon: 'environment',
-      regulator: 'MECNT (Ministère de l'Environnement)',
+      regulator: 'MECNT (Ministère de l\'Environnement)',
       description: 'Gestion des déchets, recyclage, éco-industries, consultance EIE',
       requiredDocuments: [
         ...commonDocuments,
@@ -784,7 +784,7 @@ class BusinessSectors {
       id: 'agribusiness',
       name: 'Agro-business & Plantations',
       icon: 'agribusiness',
-      regulator: 'Ministère de l'Agriculture & APIA',
+      regulator: 'Ministère de l\'Agriculture & APIA',
       description: 'Grandes plantations, transformation, exportation agricole',
       requiredDocuments: [
         ...commonDocuments,
@@ -796,13 +796,13 @@ class BusinessSectors {
         'Certification Rainforest Alliance / Fair Trade',
       ],
       regulatoryNotes: [
-        'L'APIA promeut les investissements agricoles',
+        'L\'APIA promeut les investissements agricoles',
         'Les grandes plantations nécessitent un bail emphytéotique',
       ],
     ),
   ];
 
-  // Recherche d'un secteur par ID
+  // Recherche d\'un secteur par ID
   static BusinessSector? findById(String id) {
     try {
       return sectors.firstWhere((s) => s.id == id);
