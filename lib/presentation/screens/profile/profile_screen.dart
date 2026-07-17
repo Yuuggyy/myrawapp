@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../data/models/user_model.dart';
@@ -160,7 +161,11 @@ class ProfileScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 52,
                     child: OutlinedButton.icon(
-                      onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.login),
+                      onPressed: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('is_logged_in', false);
+                        if (context.mounted) Navigator.pushReplacementNamed(context, AppRoutes.login);
+                      },
                       icon: const Icon(Icons.logout, color: AppColors.error),
                       label: const Text('Se déconnecter',
                           style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600)),

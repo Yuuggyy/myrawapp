@@ -60,9 +60,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _checkAuth() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(AppConstants.tokenKey);
+    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
     if (!mounted) return;
-    if (token != null) {
+    if (isLoggedIn) {
       Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
     } else {
       Navigator.pushReplacementNamed(context, AppRoutes.login);
