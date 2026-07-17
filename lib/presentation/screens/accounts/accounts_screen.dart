@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/illicocash_api.dart';
+import '../../../core/utils/responsive.dart';
 import '../../../data/models/account_model.dart';
+import '../../../data/account_opening_questions.dart';
+import '../../widgets/common/dynamic_question_form.dart';
 
 class AccountsScreen extends StatefulWidget {
   const AccountsScreen({super.key});
@@ -48,7 +51,10 @@ class _AccountsScreenState extends State<AccountsScreen> {
       backgroundColor: AppColors.background,
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : CustomScrollView(
+          : Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+          child: CustomScrollView(
         slivers: [
           SliverAppBar(
             floating: true,
@@ -167,6 +173,8 @@ class _AccountsScreenState extends State<AccountsScreen> {
             ),
           ),
         ],
+          ),
+        ),
       ),
     );
   }
@@ -373,8 +381,14 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
   final _phoneCtrl = TextEditingController();
   final _nameCtrl = TextEditingController();
   final _pinCtrl = TextEditingController();
+  final _formKey = GlobalKey<DynamicQuestionFormState>();
+
   String _accountType = 'illico';
+  int _step = 0; // 0 = type + identité de base, 1 = questions spécifiques, 2 = récap
   bool _loading = false;
+  Map<String, dynamic> _answers = {};
+
+  static const _totalSteps = 3;
 
   @override
   void dispose() {
@@ -382,6 +396,17 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
     _nameCtrl.dispose();
     _pinCtrl.dispose();
     super.dispose();
+  }
+
+  String get _accountTypeLabel {
+    switch (_accountType) {
+      case 'illico': return 'IllicoCash';
+      case 'current': return 'Compte Courant';
+      case 'savings': return 'Compte Épargne';
+      case 'enterprise': return 'Compte Entreprise';
+      case 'investment': return 'Compte Investissement';
+      default: return '';
+    }
   }
 
   String get _accountTypeInfo {
@@ -401,14 +426,40 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
     }
   }
 
-  void _submit() async {
-    if (_phoneCtrl.text.isEmpty || _nameCtrl.text.isEmpty || _pinCtrl.text.length < 4) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Remplissez tous les champs. PIN minimum 4 chiffres.')),
-      );
+  void _goNext() {
+    if (_step == 0) {
+      if (_nameCtrl.text.isEmpty || _phoneCtrl.text.isEmpty || _pinCtrl.text.length < 4) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Remplissez tous les champs. PIN minimum 4 chiffres.')),
+        );
+        return;
+      }
+      setState(() => _step = 1);
       return;
     }
+    if (_step == 1) {
+      final missing = _formKey.currentState?.missingRequired() ?? [];
+      if (missing.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Encore ${missing.length} question(s) à compléter, ex: ${missing.first}')),
+        );
+        return;
+      }
+      setState(() => _step = 2);
+      return;
+    }
+    _submit();
+  }
 
+  void _goBack() {
+    if (_step == 0) {
+      Navigator.pop(context);
+    } else {
+      setState(() => _step -= 1);
+    }
+  }
+
+  void _submit() async {
     setState(() => _loading = true);
     final result = await widget.api.createAccount(
       phone: _phoneCtrl.text,
@@ -423,7 +474,7 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
       widget.onCreated();
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Compte ${_accountType == 'illico' ? 'IllicoCash' : _accountType == 'current' ? 'Courant' : _accountType == 'savings' ? 'Épargne' : _accountType == 'enterprise' ? 'Entreprise' : 'Investissement'} ouvert avec succès !'), backgroundColor: AppColors.success),
+        SnackBar(content: Text('Demande d\'ouverture — $_accountTypeLabel envoyée avec succès !'), backgroundColor: AppColors.success),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -436,111 +487,271 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(color: AppColors.grey300, borderRadius: BorderRadius.circular(2))),
-            ),
-            const Text('Ouvrir un compte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 6),
-            const Text('Sélectionnez le type de compte bancaire RawBank à ouvrir',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
-            const SizedBox(height: 20),
-
-            // Account type — all RawBank products
-            Row(
-              children: [
-                Expanded(
-                  child: _TypeOption(
-                    icon: Icons.account_balance_wallet, label: 'IllicoCash',
-                    selected: _accountType == 'illico',
-                    onTap: () => setState(() => _accountType = 'illico'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _TypeOption(
-                    icon: Icons.account_balance, label: 'Courant',
-                    selected: _accountType == 'current',
-                    onTap: () => setState(() => _accountType = 'current'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _TypeOption(
-                    icon: Icons.savings_outlined, label: 'Épargne',
-                    selected: _accountType == 'savings',
-                    onTap: () => setState(() => _accountType = 'savings'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _TypeOption(
-                    icon: Icons.business_outlined, label: 'Entreprise',
-                    selected: _accountType == 'enterprise',
-                    onTap: () => setState(() => _accountType = 'enterprise'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _TypeOption(
-                    icon: Icons.trending_up, label: 'Invest.',
-                    selected: _accountType == 'investment',
-                    onTap: () => setState(() => _accountType = 'investment'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(child: Container()), // spacer
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            TextFormField(
-              controller: _nameCtrl,
-              decoration: const InputDecoration(labelText: 'Nom complet *', prefixIcon: Icon(Icons.person_outline)),
-            ),
-            const SizedBox(height: 16),
-
-            TextFormField(
-              controller: _phoneCtrl,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(labelText: 'Numéro de téléphone *', prefixIcon: Icon(Icons.phone), hintText: '+243 ...'),
-            ),
-            const SizedBox(height: 16),
-
-            TextFormField(
-              controller: _pinCtrl,
-              keyboardType: TextInputType.number,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'PIN (4 chiffres) *', prefixIcon: Icon(Icons.lock_outline)),
-            ),
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity, height: 52,
-              child: ElevatedButton(
-                onPressed: _loading ? null : _submit,
-                child: _loading
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(_accountType == 'enterprise' ? 'Demander l\'ouverture' : 'Ouvrir le compte'),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.88),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(color: AppColors.grey300, borderRadius: BorderRadius.circular(2))),
               ),
-            ),
-            const SizedBox(height: 16),
-          ],
+              const Text('Ouvrir un compte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 6),
+              Text(
+                _step == 0
+                    ? 'Sélectionnez le type de compte bancaire RawBank à ouvrir'
+                    : _step == 1
+                        ? 'Quelques questions requises par RawBank pour ce type de compte'
+                        : 'Vérifiez votre demande avant envoi',
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+
+              // Progress
+              Row(
+                children: List.generate(_totalSteps, (i) {
+                  return Expanded(
+                    child: Container(
+                      height: 4,
+                      margin: EdgeInsets.only(right: i < _totalSteps - 1 ? 6 : 0),
+                      decoration: BoxDecoration(
+                        color: i <= _step ? AppColors.primary : AppColors.grey200,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 20),
+
+              if (_step == 0) ..._buildStepType(),
+              if (_step == 1) ..._buildStepQuestions(),
+              if (_step == 2) ..._buildStepReview(),
+
+              const SizedBox(height: 24),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: _loading ? null : _goBack,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(_step == 0 ? 'Annuler' : 'Retour'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: _loading ? null : _goNext,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: _loading
+                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                            : Text(_step < 2 ? 'Continuer' : (_accountType == 'enterprise' ? "Envoyer la demande" : 'Ouvrir le compte')),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  List<Widget> _buildStepType() {
+    return [
+      Row(
+        children: [
+          Expanded(
+            child: _TypeOption(
+              icon: Icons.account_balance_wallet, label: 'IllicoCash',
+              selected: _accountType == 'illico',
+              onTap: () => setState(() => _accountType = 'illico'),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _TypeOption(
+              icon: Icons.account_balance, label: 'Courant',
+              selected: _accountType == 'current',
+              onTap: () => setState(() => _accountType = 'current'),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _TypeOption(
+              icon: Icons.savings_outlined, label: 'Épargne',
+              selected: _accountType == 'savings',
+              onTap: () => setState(() => _accountType = 'savings'),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 12),
+      Row(
+        children: [
+          Expanded(
+            child: _TypeOption(
+              icon: Icons.business_outlined, label: 'Entreprise',
+              selected: _accountType == 'enterprise',
+              onTap: () => setState(() => _accountType = 'enterprise'),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _TypeOption(
+              icon: Icons.trending_up, label: 'Invest.',
+              selected: _accountType == 'investment',
+              onTap: () => setState(() => _accountType = 'investment'),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Container()), // spacer
+        ],
+      ),
+      const SizedBox(height: 12),
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.info.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(_accountTypeInfo, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+      ),
+      const SizedBox(height: 20),
+
+      TextFormField(
+        controller: _nameCtrl,
+        decoration: const InputDecoration(labelText: 'Nom complet *', prefixIcon: Icon(Icons.person_outline)),
+      ),
+      const SizedBox(height: 16),
+
+      TextFormField(
+        controller: _phoneCtrl,
+        keyboardType: TextInputType.phone,
+        decoration: const InputDecoration(labelText: 'Numéro de téléphone *', prefixIcon: Icon(Icons.phone), hintText: '+243 ...'),
+      ),
+      const SizedBox(height: 16),
+
+      TextFormField(
+        controller: _pinCtrl,
+        keyboardType: TextInputType.number,
+        obscureText: true,
+        decoration: const InputDecoration(labelText: 'PIN (4 chiffres) *', prefixIcon: Icon(Icons.lock_outline)),
+      ),
+    ];
+  }
+
+  List<Widget> _buildStepQuestions() {
+    return [
+      Container(
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.06),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.fact_check_outlined, size: 18, color: AppColors.primary),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Ces questions correspondent exactement à ce que RawBank demande pour un $_accountTypeLabel.',
+                style: const TextStyle(fontSize: 12, color: AppColors.textPrimary),
+              ),
+            ),
+          ],
+        ),
+      ),
+      DynamicQuestionForm(
+        key: _formKey,
+        questions: AccountOpeningQuestions.forType(_accountType),
+        initialAnswers: _answers,
+        onChanged: (a) => _answers = a,
+      ),
+    ];
+  }
+
+  List<Widget> _buildStepReview() {
+    final entries = _answers.entries.where((e) => e.value != null && e.value.toString().isNotEmpty).toList();
+    return [
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.grey100,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.summarize_outlined, size: 20, color: AppColors.primary),
+                const SizedBox(width: 8),
+                Text(_accountTypeLabel, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _reviewRow('Nom complet', _nameCtrl.text),
+            _reviewRow('Téléphone', _phoneCtrl.text),
+            const Divider(height: 20),
+            for (final e in entries) _reviewRow(_labelFor(e.key), _formatAnswer(e.value)),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      const Text(
+        'En confirmant, vous acceptez les Conditions Générales de Banque de RawBank pour ce produit.',
+        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+      ),
+    ];
+  }
+
+  String _labelFor(String id) {
+    for (final q in AccountOpeningQuestions.forType(_accountType)) {
+      if (q.id == id) return q.label;
+    }
+    return id;
+  }
+
+  String _formatAnswer(dynamic v) {
+    if (v is bool) return v ? 'Oui' : 'Non';
+    if (v is DateTime) return '${v.day.toString().padLeft(2, '0')}/${v.month.toString().padLeft(2, '0')}/${v.year}';
+    return v.toString();
+  }
+
+  Widget _reviewRow(String label, String value) {
+    if (value.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(flex: 2, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+          Expanded(flex: 3, child: Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600), textAlign: TextAlign.right)),
+        ],
+      ),
+    );
+  }
 }
+
 
 // ── Recharge Sheet ──
 class _RechargeSheet extends StatefulWidget {
