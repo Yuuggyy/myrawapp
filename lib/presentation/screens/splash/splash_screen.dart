@@ -108,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
                 child: const Center(
                   child: Text(
-                    'MR',
+                    'RB',
                     style: TextStyle(
                       color: AppColors.primary,
                       fontSize: 36,

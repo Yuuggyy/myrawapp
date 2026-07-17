@@ -5,11 +5,18 @@
 
 ---
 
+## Principe fondamental
+
+*MyRawApp EST RawBank.* L'application n'est pas une plateforme tierce ou un service séparé — c'est l'application bancaire officielle de RawBank. Lorsqu'un utilisateur télécharge MyRawApp et "crée un compte", il ouvre directement un compte bancaire à RawBank. Il n'y a pas de distinction entre "compte MyRawApp" et "compte bancaire".
+
+L'identité visuelle utilise le branding RawBank (logo "RB", couleurs rouge #CC0000). Les écrans d'authentification parlent d'"ouvrir un compte RawBank", pas de "créer un compte MyRawApp". Depuis l'onglet Comptes, l'utilisateur peut ouvrir de nouveaux produits bancaires RawBank (IllicoCash, Compte Courant, Compte Épargne, Compte Entreprise, Compte Investissement) — car il est déjà client de la banque.
+
 ## Vision
 
-MyRawApp est une plateforme digitale bancaire de nouvelle génération qui place l'intelligence artificielle au cœur du traitement des dossiers de financement, de la conformité et de la relation client. Conçue pour RawBank (première banque commerciale de la RDC), l'application permet aux clients (particuliers et entreprises) de :
+MyRawApp est l'application bancaire digitale de RawBank (première banque commerciale de la RDC). Elle place l'intelligence artificielle au cœur du traitement des dossiers de financement, de la conformité et de la relation client. L'application permet aux clients (particuliers et entreprises) de :
 
-- Gérer leurs comptes bancaires et IllicoCash
+- Ouvrir et gérer leurs comptes bancaires RawBank (courant, épargne, entreprise, investissement)
+- Gérer leur wallet IllicoCash (transferts, paiements marchands, recharge)
 - Soumettre des demandes de financement avec analyse IA multi-agents
 - Discuter avec un système de chat IA à 5 agents spécialisés
 - Compléter leur KYC par niveaux
@@ -101,7 +108,7 @@ lib/
 ## Écrans détaillés
 
 ### 1. Splash (`/`)
-Splash animé avec logo "MR" + tagline. Vérifie `SharedPreferences.is_logged_in` :
+Splash animé avec logo "RB" (RawBank) + tagline. Vérifie `SharedPreferences.is_logged_in` :
 - Si `true` → Dashboard
 - Si `false` → Login
 
@@ -109,16 +116,22 @@ Splash animé avec logo "MR" + tagline. Vérifie `SharedPreferences.is_logged_in
 
 #### Login (`/login`)
 - Email + mot de passe (mock: email valide + 6 caractères minimum)
-- Lien vers inscription
+- Branding RawBank (logo "RB", "Banque digitale — RDC")
+- Texte: "Accédez à votre compte bancaire RawBank"
+- Bouton: "Ouvrir un compte RawBank" (pas "Créer un compte MyRawApp")
 - Sauvegarde session dans SharedPreferences
 
 #### Register (`/register`)
+*Ouverture de compte bancaire — devenir client RawBank*
 - Sélection type de compte: Particulier | Entreprise
+- Info banner: "En ouvrant un compte particulier, vous devenez client RawBank. Un compte IllicoCash et un compte courant seront automatiquement créés."
+- Conditions: "Conditions Générales de Banque de RawBank" (pas CGU d'une app)
+- Bouton: "Ouvrir mon compte" (pas "Créer mon compte")
 - **Particulier**: formulaire direct (nom, email, téléphone, mot de passe)
 - **Entreprise**: redirige vers `/business-register` (ne remplit pas le formulaire ici)
 
 #### Business Register (`/business-register`)
-Inscription entreprise en **3 étapes** :
+*Ouverture de compte entreprise RawBank — 3 étapes*
 
 **Étape 1** — Entreprise + Secteur
 - Nom de l'entreprise
@@ -171,7 +184,13 @@ Bottom navigation avec 4 onglets:
   - **QR Pay** → placeholder (snackbar "bientôt")
   - **Historique** → liste des transactions
 - Liste des transactions (avec IllicoCashApi mock)
-- Bouton "Créer un compte" → bottom sheet (épargne, entreprise)
+- Bouton **"Ouvrir un compte"** → bottom sheet avec 5 produits bancaires RawBank:
+  1. IllicoCash (wallet mobile, activation immédiate)
+  2. Compte Courant (virements, chèques, carte de débit)
+  3. Compte Épargne (intérêts 3.5% annuels)
+  4. Compte Entreprise (multi-signataires, ligne de crédit)
+  5. Compte Investissement (OPCVM, titres, conseiller)
+- Chaque type affiche une info banner avec les conditions spécifiques
 - Taux de change USD/CDF simulé (~2950)
 
 ### 5. Transfer (`/transfer`)
@@ -339,7 +358,7 @@ Défini dans `main.dart` avec `onGenerateRoute`:
 | `is_logged_in` | bool | Session active |
 | `user_email` | String | Email utilisateur |
 | `user_name` | String | Nom utilisateur/entreprise |
-| `account_type` | String | "individual" ou "enterprise" |
+| `account_type` | String | "individual" ou "enterprise" (type de compte bancaire ouvert) |
 | `business_sector` | String | ID du secteur (ex: "agriculture") ou "autre" |
 | `business_sector_name` | String | Nom du secteur ou texte personnalisé |
 | `rccm` | String | Numéro RCCM (compte entreprise) |
@@ -363,25 +382,27 @@ Défini dans `main.dart` avec `onGenerateRoute`:
 
 ## Notes pour la prochaine IA / développeur
 
-1. **L'app est 100% mockée** — aucune donnée ne persiste hors SharedPreferences. L'ApiService est configuré mais le backend n'existe pas encore.
+1. **MyRawApp = RawBank** — l'app n'est pas un service séparé. Créer un compte dans l'app = ouvrir un compte à RawBank. L'identité visuelle est RawBank (logo "RB", rouge #CC0000). Les écrans d'auth parlent d'"ouvrir un compte bancaire RawBank", pas de "créer un compte MyRawApp".
 
-2. **Le chat IA est simulé** — les réponses sont hardcodées par agent avec des mots-clés. La sensibilité au secteur fonctionne via `_cachedSector` chargé depuis SharedPreferences dans `chat_screen.dart`.
+3. **L'app est 100% mockée** — aucune donnée ne persiste hors SharedPreferences. L'ApiService est configuré mais le backend n'existe pas encore.
 
-3. **Les 36 secteurs** sont dans `lib/data/models/business_sector.dart`. Chaque secteur a son régulateur, ses documents requis et ses notes réglementaires. L'option "Autre" permet à l'utilisateur de saisir un secteur non listé.
+3. **Le chat IA est simulé** — les réponses sont hardcodées par agent avec des mots-clés. La sensibilité au secteur fonctionne via `_cachedSector` chargé depuis SharedPreferences dans `chat_screen.dart`.
 
-4. **IllicoCashApi** est un mock complet en mémoire. Les soldes, transactions et frais sont simulés. Remplacer par l'API réelle quand disponible.
+4. **Les 36 secteurs** sont dans `lib/data/models/business_sector.dart`. Chaque secteur a son régulateur, ses documents requis et ses notes réglementaires. L'option "Autre" permet à l'utilisateur de saisir un secteur non listé.
 
-5. **Le formulaire New Project** a 4 étapes avec champs conditionnels selon le type de financement (Prêt, Prêt avec intérêt, Partenariat, RSE). Les données ne sont pas persistées — ajouter l'API dans Phase 2.
+5. **IllicoCashApi** est un mock complet en mémoire. Les soldes, transactions et frais sont simulés. Remplacer par l'API réelle quand disponible.
 
-6. **Le thème `lib/theme/app_theme.dart`** est obsolète (ancien design gold/dark). Le thème actif est `lib/core/theme/app_theme.dart` (rouge RawBank + Inter).
+6. **Le formulaire New Project** a 4 étapes avec champs conditionnels selon le type de financement (Prêt, Prêt avec intérêt, Partenariat, RSE). Les données ne sont pas persistées — ajouter l'API dans Phase 2.
 
-7. **Pas de state management externe** (pas de Riverpod, Bloc, Provider). Tout est en StatefulWidget. C'est volontaire pour Phase 1 — envisager Riverpod en Phase 2.
+7. **Le thème `lib/theme/app_theme.dart`** est obsolète (ancien design gold/dark). Le thème actif est `lib/core/theme/app_theme.dart` (rouge RawBank + Inter).
 
-8. **Le routing** gère les routes dynamiques `/projects/:id` dans `onGenerateRoute` (main.dart).
+8. **Pas de state management externe** (pas de Riverpod, Bloc, Provider). Tout est en StatefulWidget. C'est volontaire pour Phase 1 — envisager Riverpod en Phase 2.
 
-9. **Les conventions Flutter modernes** sont respectées: `withValues()` au lieu de `withOpacity()`, `const` constructors, Material 3.
+9. **Le routing** gère les routes dynamiques `/projects/:id` dans `onGenerateRoute` (main.dart).
 
-10. **GitHub**: `Yuuggyy/myrawapp` — le repo ne doit contenir que les fichiers Flutter, isolé des autres projets.
+10. **Les conventions Flutter modernes** sont respectées: `withValues()` au lieu de `withOpacity()`, `const` constructors, Material 3.
+
+11. **GitHub**: `Yuuggyy/myrawapp` — le repo ne doit contenir que les fichiers Flutter, isolé des autres projets.
 
 ---
 

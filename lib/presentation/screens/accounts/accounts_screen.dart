@@ -384,6 +384,23 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
     super.dispose();
   }
 
+  String get _accountTypeInfo {
+    switch (_accountType) {
+      case 'illico':
+        return 'IllicoCash: transferts mobiles, paiements marchands, recharge. Activation immédiate. Frais 0.5% par transaction.';
+      case 'current':
+        return 'Compte Courant: virements bancaires, chèques, carte de débit. Idéal pour la gestion quotidienne.';
+      case 'savings':
+        return 'Compte Épargne: intérêts annuels 3.5%, accès flexible. Idéal pour épargner en sécurité.';
+      case 'enterprise':
+        return 'Compte Entreprise: gestion des flux professionnels, multi-signataires, ligne de crédit. Documents entreprise requis.';
+      case 'investment':
+        return 'Compte Investissement: placements, OPCVM, titres. Accompagnement par un conseiller RawBank.';
+      default:
+        return '';
+    }
+  }
+
   void _submit() async {
     if (_phoneCtrl.text.isEmpty || _nameCtrl.text.isEmpty || _pinCtrl.text.length < 4) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -406,7 +423,7 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
       widget.onCreated();
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Compte créé avec succès !'), backgroundColor: AppColors.success),
+        SnackBar(content: Text('Compte ${_accountType == 'illico' ? 'IllicoCash' : _accountType == 'current' ? 'Courant' : _accountType == 'savings' ? 'Épargne' : _accountType == 'enterprise' ? 'Entreprise' : 'Investissement'} ouvert avec succès !'), backgroundColor: AppColors.success),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -429,13 +446,13 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
               child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(color: AppColors.grey300, borderRadius: BorderRadius.circular(2))),
             ),
-            const Text('Créer un compte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+            const Text('Ouvrir un compte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
-            const Text('Ouvrez un nouveau compte IllicoCash ou Épargne',
+            const Text('Sélectionnez le type de compte bancaire RawBank à ouvrir',
                 style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
             const SizedBox(height: 20),
 
-            // Account type
+            // Account type — all RawBank products
             Row(
               children: [
                 Expanded(
@@ -448,11 +465,41 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _TypeOption(
+                    icon: Icons.account_balance, label: 'Courant',
+                    selected: _accountType == 'current',
+                    onTap: () => setState(() => _accountType = 'current'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _TypeOption(
                     icon: Icons.savings_outlined, label: 'Épargne',
                     selected: _accountType == 'savings',
                     onTap: () => setState(() => _accountType = 'savings'),
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _TypeOption(
+                    icon: Icons.business_outlined, label: 'Entreprise',
+                    selected: _accountType == 'enterprise',
+                    onTap: () => setState(() => _accountType = 'enterprise'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _TypeOption(
+                    icon: Icons.trending_up, label: 'Invest.',
+                    selected: _accountType == 'investment',
+                    onTap: () => setState(() => _accountType = 'investment'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Container()), // spacer
               ],
             ),
             const SizedBox(height: 16),
@@ -484,7 +531,7 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
                 onPressed: _loading ? null : _submit,
                 child: _loading
                     ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : const Text('Créer le compte'),
+                    : Text(_accountType == 'enterprise' ? 'Demander l\'ouverture' : 'Ouvrir le compte'),
               ),
             ),
             const SizedBox(height: 16),
@@ -514,6 +561,23 @@ class _RechargeSheetState extends State<_RechargeSheet> {
   void dispose() {
     _amountCtrl.dispose();
     super.dispose();
+  }
+
+  String get _accountTypeInfo {
+    switch (_accountType) {
+      case 'illico':
+        return 'IllicoCash: transferts mobiles, paiements marchands, recharge. Activation immédiate. Frais 0.5% par transaction.';
+      case 'current':
+        return 'Compte Courant: virements bancaires, chèques, carte de débit. Idéal pour la gestion quotidienne.';
+      case 'savings':
+        return 'Compte Épargne: intérêts annuels 3.5%, accès flexible. Idéal pour épargner en sécurité.';
+      case 'enterprise':
+        return 'Compte Entreprise: gestion des flux professionnels, multi-signataires, ligne de crédit. Documents entreprise requis.';
+      case 'investment':
+        return 'Compte Investissement: placements, OPCVM, titres. Accompagnement par un conseiller RawBank.';
+      default:
+        return '';
+    }
   }
 
   void _submit() async {

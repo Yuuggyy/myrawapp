@@ -57,22 +57,22 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 48),
 
-                // Logo + Header
+                // Logo + Header — RawBank branding
                 Row(
                   children: [
                     Container(
-                      width: 48,
-                      height: 48,
+                      width: 52,
+                      height: 52,
                       decoration: BoxDecoration(
                         color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Center(
                         child: Text(
-                          'MR',
+                          'RB',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
@@ -82,14 +82,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('MyRawApp',
+                        Text('RawBank',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 22,
                             fontWeight: FontWeight.w800,
                             color: AppColors.primary,
                           ),
                         ),
-                        Text('RawBank Digital',
+                        Text('Banque digitale — RDC',
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary,
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Bienvenue. Connectez-vous à votre espace.',
+                  'Accédez à votre compte bancaire RawBank.',
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondary,
@@ -121,7 +121,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 32),
 
-                // Error message
                 if (_errorMessage != null) ...[
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -146,7 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // Email
                 RawTextField(
                   controller: _emailController,
                   label: 'Email',
@@ -162,7 +160,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 16),
 
-                // Password
                 RawTextField(
                   controller: _passwordController,
                   label: 'Mot de passe',
@@ -185,7 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 12),
 
-                // Forgot Password
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -199,7 +195,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Login Button
                 RawButton(
                   label: 'Se connecter',
                   isLoading: _isLoading,
@@ -208,7 +203,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Divider
                 const Row(
                   children: [
                     Expanded(child: Divider()),
@@ -222,15 +216,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Register
+                // Open a bank account — not "create a MyRawApp account"
                 OutlinedButton(
                   onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
-                  child: const Text('Créer un compte'),
+                  child: const Text('Ouvrir un compte RawBank'),
                 ),
 
                 const SizedBox(height: 32),
 
-                // Footer
                 const Center(
                   child: Text(
                     '© 2026 RawBank — Inspire by YuuStore',

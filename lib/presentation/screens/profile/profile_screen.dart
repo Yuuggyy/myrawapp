@@ -177,7 +177,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'MyRawApp v${AppConstants.version}\n© 2026 RawBank RDC',
+                    'RawBank — MyRawApp v${AppConstants.version}\n© 2026 RawBank RDC',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.grey500, fontSize: 12),
                   ),

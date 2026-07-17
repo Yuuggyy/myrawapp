@@ -28,12 +28,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
     if (!_acceptTerms) {
-      setState(() => _errorMessage = 'Veuillez accepter les conditions d\'utilisation.');
+      setState(() => _errorMessage = 'Veuillez accepter les conditions d\'ouverture de compte.');
       return;
     }
     setState(() { _isLoading = true; _errorMessage = null; });
 
-    // Mock register — just simulate a delay and go to dashboard
+    // Mock — simulate account opening at RawBank
     await Future.delayed(const Duration(milliseconds: 800));
 
     final prefs = await SharedPreferences.getInstance();
@@ -65,20 +65,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // RawBank branding
+                Row(
+                  children: [
+                    Container(
+                      width: 44, height: 44,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: Text('RB',
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900)),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text('RawBank',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.primary)),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
                 Text(
-                  'Créer un compte',
+                  'Ouvrir un compte',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Rejoignez MyRawApp en quelques étapes.',
+                  'Ouvrez votre compte bancaire RawBank en quelques minutes. '
+                  'Vous serez immédiatement client de la banque.',
                   style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
                 ),
 
                 const SizedBox(height: 32),
 
                 // Type de compte
-                const Text('Type de compte',
+                const Text('Type de compte bancaire',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 const SizedBox(height: 12),
                 Row(
@@ -86,6 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _TypeCard(
                       icon: Icons.person_outline,
                       label: 'Particulier',
+                      subtitle: 'Compte personnel',
                       isSelected: _clientType == 'individual',
                       onTap: () => setState(() => _clientType = 'individual'),
                     ),
@@ -93,9 +117,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _TypeCard(
                       icon: Icons.business_outlined,
                       label: 'Entreprise',
+                      subtitle: 'Compte professionnel',
                       isSelected: _clientType == 'enterprise',
                       onTap: () {
-                        // Navigate to business registration
                         Navigator.pushNamed(context, '/business-register');
                       },
                     ),
@@ -104,7 +128,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 24),
 
-                // Only show individual form when 'individual' is selected
                 if (_clientType == 'individual') ...[
                   if (_errorMessage != null) ...[
                     Container(
@@ -118,6 +141,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 16),
                   ],
+
+                  // Info banner
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.info.withValues(alpha: 0.06),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.info_outline, size: 18, color: AppColors.info),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'En ouvrant un compte particulier, vous devenez client RawBank. '
+                            'Un compte IllicoCash et un compte courant seront automatiquement créés.',
+                            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
 
                   RawTextField(
                     controller: _nameController,
@@ -187,7 +235,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Terms
                   Row(
                     children: [
                       Checkbox(
@@ -202,12 +249,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             children: const [
                               TextSpan(text: "J'accepte les "),
                               TextSpan(
-                                text: 'Conditions Générales d\'Utilisation',
+                                text: 'Conditions Générales de Banque',
                                 style: const TextStyle(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
+                              TextSpan(text: ' de RawBank.'),
                             ],
                           ),
                         ),
@@ -218,12 +266,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 24),
 
                   RawButton(
-                    label: 'Créer mon compte',
+                    label: 'Ouvrir mon compte',
                     isLoading: _isLoading,
                     onPressed: _register,
                   ),
                 ] else ...[
-                  // Enterprise selected — show info
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -236,12 +283,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Icon(Icons.business, size: 48, color: AppColors.primary),
                         SizedBox(height: 12),
                         Text(
-                          'Compte Entreprise',
+                          'Compte Entreprise RawBank',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.primary),
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'Vous allez être redirigé vers le formulaire d\'inscription entreprise avec sélection de secteur d\'activité.',
+                          'Vous allez être redirigé vers le formulaire d\'ouverture de compte entreprise '
+                          'avec sélection de secteur d\'activité et documents réglementaires.',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
                         ),
@@ -263,12 +311,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 class _TypeCard extends StatelessWidget {
   final IconData icon;
   final String label;
+  final String subtitle;
   final bool isSelected;
   final VoidCallback onTap;
 
   const _TypeCard({
     required this.icon,
     required this.label,
+    required this.subtitle,
     required this.isSelected,
     required this.onTap,
   });
@@ -280,7 +330,7 @@ class _TypeCard extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.grey100,
             borderRadius: BorderRadius.circular(12),
@@ -291,14 +341,22 @@ class _TypeCard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(icon, color: isSelected ? AppColors.primary : AppColors.grey500),
-              const SizedBox(height: 6),
+              Icon(icon, color: isSelected ? AppColors.primary : AppColors.grey500, size: 28),
+              const SizedBox(height: 8),
               Text(
                 label,
                 style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                  fontSize: 13,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isSelected ? AppColors.primary.withValues(alpha: 0.7) : AppColors.grey500,
                 ),
               ),
             ],

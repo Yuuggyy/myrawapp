@@ -199,10 +199,10 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Compte Entreprise',
+                Text('Compte Entreprise RawBank',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
-                Text('Créez le compte professionnel de votre entreprise.',
+                Text('Ouvrez le compte bancaire de votre entreprise auprès de RawBank.'),
                   style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
 
                 const SizedBox(height: 16),
@@ -490,10 +490,11 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Récapitulatif',
+                          Text('Récapitulatif — Ouverture de compte',
                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                           SizedBox(height: 8),
                           Text('Entreprise: ${_companyNameController.text}', style: TextStyle(fontSize: 13)),
+                          Text('Banque: RawBank', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                           Text('Secteur: ${_isOtherSector ? _otherSectorController.text : _selectedSector?.name}', style: TextStyle(fontSize: 13)),
                           Text('Email: ${_emailController.text}', style: TextStyle(fontSize: 13)),
                           Text('RCCM: ${_rccmController.text}', style: TextStyle(fontSize: 13)),
