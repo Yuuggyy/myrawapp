@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
-  // RawBank Brand Colors
-  static const Color primary = Color(0xFFCC0000);
-  static const Color primaryDark = Color(0xFF990000);
-  static const Color primaryLight = Color(0xFFFF3333);
-  static const Color secondary = Color(0xFF1A1A1A);
+  // RawBank Brand Colors — gold & black
+  static const Color primary = Color(0xFFB8860B);
+  static const Color primaryDark = Color(0xFF8C6508);
+  static const Color primaryLight = Color(0xFFD4AF37);
+  static const Color secondary = Color(0xFF0D0D0D);
   static const Color background = Color(0xFFF5F5F5);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color error = Color(0xFFB00020);
@@ -21,7 +21,7 @@ class AppColors {
   static const Color aiCompliance = Color(0xFF1565C0);
   static const Color aiCommercial = Color(0xFFE65100);
   static const Color aiAccounting = Color(0xFF6A1B9A);
-  static const Color aiRouter = Color(0xFFCC0000);
+  static const Color aiRouter = Color(0xFFB8860B);
 
   // Neutral
   static const Color grey100 = Color(0xFFF5F5F5);
@@ -35,7 +35,7 @@ class AppColors {
   // Text
   static const Color textPrimary = Color(0xFF1A1A1A);
   static const Color textSecondary = Color(0xFF757575);
-  static const Color textOnPrimary = Color(0xFFFFFFFF);
+  static const Color textOnPrimary = Color(0xFF0D0D0D);
 }
 
 class AppTheme {
