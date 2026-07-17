@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.secondary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +153,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
       bottomSheet: Container(
-        color: AppColors.primary,
+        color: AppColors.secondary,
         padding: const EdgeInsets.only(bottom: 40),
         child: Center(
           child: FadeTransition(
