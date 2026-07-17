@@ -161,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       child: const Center(
                         child: Text('RB',
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w900)),
+                          style: TextStyle(color: AppColors.textOnPrimary, fontSize: 16, fontWeight: FontWeight.w900)),
                       ),
                     ),
                     const SizedBox(width: 10),
