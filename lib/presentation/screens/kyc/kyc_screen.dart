@@ -10,7 +10,6 @@ class KycScreen extends StatefulWidget {
 }
 
 class _KycScreenState extends State<KycScreen> {
-  KycLevel? _currentLevel = KycLevel.standard;
 
   final List<_KycStep> _steps = [
     _KycStep(

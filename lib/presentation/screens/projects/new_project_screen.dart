@@ -59,7 +59,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
 
   // Step 3: Business plan
   final _businessPlanCtrl = TextEditingController();
-  List<String> _uploadedDocs = [];
+  final List<String> _uploadedDocs = [];
 
   final _docTypes = [
     'Business Plan complet (PDF)',
@@ -823,7 +823,6 @@ class _Field extends StatelessWidget {
   final int maxLines;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
-  final Widget? suffix;
 
   const _Field({
     required this.controller,
@@ -833,7 +832,6 @@ class _Field extends StatelessWidget {
     this.maxLines = 1,
     this.keyboardType,
     this.validator,
-    this.suffix,
   });
 
   @override
@@ -846,7 +844,7 @@ class _Field extends StatelessWidget {
         labelText: label,
         hintText: hint,
         prefixIcon: icon != null ? Icon(icon) : null,
-        suffix: suffix,
+
         alignLabelWithHint: maxLines > 1,
       ),
       validator: validator,

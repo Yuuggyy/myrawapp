@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 /// Mock IllicoCash API Service
@@ -14,7 +13,6 @@ class IllicoCashApi {
   // Simulated database
   final Map<String, _MockAccount> _accounts = {};
   final List<_MockTransaction> _transactions = [];
-  final String _adminPhone = '+243810000000';
 
   // Initialize with demo data
   void init() {
