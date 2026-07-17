@@ -161,7 +161,6 @@ class _ChatScreenState extends State<ChatScreen> {
     };
   }
 
-  BusinessSector? _cachedSector;
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
   bool _isAiTyping = false;
@@ -742,7 +741,6 @@ class _TypingIndicatorState extends State<_TypingIndicator>
 
   @override
   void initState() {
-    _loadSectorData();
     super.initState();
     _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
     _a = Tween<double>(begin: 0.3, end: 1).animate(_c);
