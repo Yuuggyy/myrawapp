@@ -74,7 +74,8 @@ class QuickReply {
 
 class ChatScreen extends StatefulWidget {
   final String projectId;
-  const ChatScreen({super.key, required this.projectId});
+  final bool showBackButton;
+  const ChatScreen({super.key, required this.projectId, this.showBackButton = true});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -449,10 +450,13 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ],
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: widget.showBackButton,
+        leading: widget.showBackButton
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
         actions: [
           GestureDetector(
             onTap: () => setState(() => _showAgentPanel = !_showAgentPanel),
