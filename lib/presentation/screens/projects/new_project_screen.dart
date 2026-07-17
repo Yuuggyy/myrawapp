@@ -162,8 +162,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         children: [
           const Text('Informations générales', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
-          Text('Renseignez les informations essentielles du projet',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text('Renseignez les informations essentielles du projet',
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
           const SizedBox(height: 24),
 
           _Field(controller: _titleCtrl, label: 'Titre du projet *', hint: 'Ex: Épicerie Bio Kinshasa', validator: _required),
@@ -236,8 +236,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         children: [
           const Text('Type de financement', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
-          Text('Choisissez le type de financement souhaité',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text('Choisissez le type de financement souhaité',
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
           const SizedBox(height: 24),
 
           // Financing type cards
@@ -340,15 +340,15 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
               ),
-              child: Row(
+              child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.info_outline, color: AppColors.info, size: 22),
+                children: const [
+                  const Icon(Icons.info_outline, color: AppColors.info, size: 22),
                   const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
+                  const Expanded(
+                    child: const Text(
                       'Le prêt sera analysé par nos agents IA. Le taux d\'intérêt sera communiqué après évaluation de votre dossier.',
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                      style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
                     ),
                   ),
                 ],
@@ -372,11 +372,11 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiCommercial.withValues(alpha: 0.2)),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.handshake_outlined, color: AppColors.aiCommercial, size: 22),
+        child: const Row(
+          children: const [
+            const Icon(Icons.handshake_outlined, color: AppColors.aiCommercial, size: 22),
             const SizedBox(width: 12),
-            Expanded(
+            const Expanded(
               child: const Text('Partenariat — précisez les conditions financières',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             ),
@@ -436,11 +436,11 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiAccounting.withValues(alpha: 0.2)),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.percent, color: AppColors.aiAccounting, size: 22),
+        child: const Row(
+          children: const [
+            const Icon(Icons.percent, color: AppColors.aiAccounting, size: 22),
             const SizedBox(width: 12),
-            Expanded(
+            const Expanded(
               child: const Text('Prêt avec intérêt — précisez les conditions',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             ),
@@ -482,11 +482,11 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiRSE.withValues(alpha: 0.2)),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.eco_outlined, color: AppColors.aiRSE, size: 22),
+        child: const Row(
+          children: const [
+            const Icon(Icons.eco_outlined, color: AppColors.aiRSE, size: 22),
             const SizedBox(width: 12),
-            Expanded(
+            const Expanded(
               child: const Text('RSE — Impact sociétal et environnemental',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             ),
@@ -537,8 +537,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         children: [
           const Text('Plan d\'affaires', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
-          Text('Décrivez votre plan d\'affaires complet. Le back-office recevra ces informations structurées.',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text('Décrivez votre plan d\'affaires complet. Le back-office recevra ces informations structurées.',
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
           const SizedBox(height: 24),
 
           // Business plan text area
@@ -641,8 +641,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         children: [
           const Text('Récapitulatif', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
-          Text('Vérifiez les informations avant de soumettre',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text('Vérifiez les informations avant de soumettre',
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
           const SizedBox(height: 24),
 
           _SummaryItem(label: 'Titre', value: _titleCtrl.text.isEmpty ? '—' : _titleCtrl.text),
@@ -693,20 +693,20 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
             ),
-            child: Row(
+            child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(Icons.auto_awesome, color: AppColors.info, size: 22),
+              children: const [
+                const Icon(Icons.auto_awesome, color: AppColors.info, size: 22),
                 const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
+                const Expanded(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       const Text('Analyse IA automatique', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                       const SizedBox(height: 4),
-                      Text(
+                      const Text(
                         'Votre projet sera analysé par 5 agents IA: RSE, Compliance, Commercial, Comptable, et Router. Chaque information sera transmise séparément au back-office.',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                        style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
                       ),
                     ],
                   ),
@@ -870,7 +870,7 @@ class _SummaryItem extends StatelessWidget {
         children: [
           SizedBox(
             width: 130,
-            child: Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+            child: const Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
           ),
           Expanded(
             child: Text(
@@ -933,10 +933,10 @@ class _SuccessDialog extends StatelessWidget {
             const SizedBox(height: 20),
             const Text('Projet soumis !', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'Votre projet est transmis au back-office. Chaque section (informations, financement, plan d\'affaires) est envoyée séparément. Les 5 agents IA vont analyser votre dossier.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             ),
             const SizedBox(height: 24),
             SizedBox(

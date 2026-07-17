@@ -255,7 +255,7 @@ class _AccountCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(accountName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
-                    Text('•••• $accountNumber', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    const Text('•••• $accountNumber', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
                   ],
                 ),
               ),
@@ -344,7 +344,7 @@ class _TxTile extends StatelessWidget {
                 Text(tx.description, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 const SizedBox(height: 2),
                 Text(DateFormat('dd MMM yyyy, HH:mm').format(tx.createdAt),
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               ],
             ),
           ),
@@ -431,8 +431,8 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
             ),
             const Text('Créer un compte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
-            Text('Ouvrez un nouveau compte IllicoCash ou Épargne',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+            const Text('Ouvrez un nouveau compte IllicoCash ou Épargne',
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
             const SizedBox(height: 20),
 
             // Account type
@@ -629,8 +629,8 @@ class _QrPaySheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Text('Placez le QR code du marchand dans le cadre',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+          const Text('Placez le QR code du marchand dans le cadre',
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
@@ -673,8 +673,8 @@ class _StatementSheet extends StatelessWidget {
             ),
             const Text('Relevé de compte', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
-            Text('Compte IllicoCash •••• 001',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+            const Text('Compte IllicoCash •••• 001',
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
             const SizedBox(height: 16),
 
             // Filter chips
@@ -732,7 +732,7 @@ class _StatementTxTile extends StatelessWidget {
               children: [
                 Text(tx.description, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 Text('${DateFormat('dd/MM').format(tx.createdAt)} • ${tx.reference}',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
               ],
             ),
           ),

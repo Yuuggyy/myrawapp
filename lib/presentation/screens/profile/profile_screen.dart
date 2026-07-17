@@ -65,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                         const SizedBox(height: 4),
                         Text(_user.email,
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+                            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
                         const SizedBox(height: 12),
                         // KYC badge
                         Container(
@@ -78,11 +78,11 @@ class ProfileScreen extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.shield, size: 16, color: AppColors.warning),
+                              const Icon(Icons.shield, size: 16, color: AppColors.warning),
                               const SizedBox(width: 6),
                               Text(
                                 'KYC: ${_kycLabel(_user.kycLevel)}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: AppColors.warning,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
@@ -106,25 +106,25 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.lock_outline, color: AppColors.primary, size: 28),
+                      child: const Row(
+                        children: const [
+                          const Icon(Icons.lock_outline, color: AppColors.primary, size: 28),
                           const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
+                          const Expanded(
+                            child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: const [
                                 const Text('Améliorez votre KYC',
                                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                                 const SizedBox(height: 2),
-                                Text(
+                                const Text(
                                   'Débloquez des limites plus élevées',
-                                  style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
                                 ),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right, color: AppColors.grey500),
+                          const Icon(Icons.chevron_right, color: AppColors.grey500),
                         ],
                       ),
                     ),
@@ -132,7 +132,7 @@ class ProfileScreen extends StatelessWidget {
                   ],
 
                   // Menu items
-                  _MenuSection(title: 'Compte', items: [
+                  _MenuSection(title: 'Compte', items: const [
                     _MenuItem(icon: Icons.person_outline, label: 'Informations personnelles'),
                     _MenuItem(icon: Icons.badge_outlined, label: 'Pièces d\'identité'),
                     _MenuItem(icon: Icons.lock_outline, label: 'Sécurité & PIN'),
@@ -140,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                   ]),
                   const SizedBox(height: 16),
 
-                  _MenuSection(title: 'Banque', items: [
+                  _MenuSection(title: 'Banque', items: const [
                     _MenuItem(icon: Icons.account_balance_outlined, label: 'Mes comptes'),
                     _MenuItem(icon: Icons.receipt_long_outlined, label: 'Relevés bancaires'),
                     _MenuItem(icon: Icons.swap_horiz, label: 'Bénéficiaires'),
@@ -148,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
                   ]),
                   const SizedBox(height: 16),
 
-                  _MenuSection(title: 'Préférences', items: [
+                  _MenuSection(title: 'Préférences', items: const [
                     _MenuItem(icon: Icons.notifications_outlined, label: 'Notifications'),
                     _MenuItem(icon: Icons.dark_mode_outlined, label: 'Thème', trailing: 'Clair'),
                     _MenuItem(icon: Icons.info_outline, label: 'À propos', trailing: 'v${AppConstants.version}'),
@@ -171,10 +171,10 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text(
+                  const Text(
                     'MyRawApp v${AppConstants.version}\n© 2026 RawBank RDC',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.grey500, fontSize: 12),
+                    style: const TextStyle(color: AppColors.grey500, fontSize: 12),
                   ),
                   const SizedBox(height: 40),
                 ],
@@ -213,7 +213,7 @@ class _MenuSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(title,
-              style: TextStyle(
+              style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 13,
                   fontWeight: FontWeight.w600)),
@@ -260,9 +260,9 @@ class _MenuItem extends StatelessWidget {
               child: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
             ),
             if (trailing != null)
-              Text(trailing!, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+              const Text(trailing!, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
             const SizedBox(width: 8),
-            Icon(Icons.chevron_right, size: 20, color: AppColors.grey500),
+            const Icon(Icons.chevron_right, size: 20, color: AppColors.grey500),
           ],
         ),
       ),

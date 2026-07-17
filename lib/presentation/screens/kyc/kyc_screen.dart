@@ -121,8 +121,8 @@ class _KycScreenState extends State<KycScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
+                  const Row(
+                    children: const [
                       const Icon(Icons.upgrade, color: AppColors.primary),
                       const SizedBox(width: 8),
                       const Text('Passer au KYC Avancé',

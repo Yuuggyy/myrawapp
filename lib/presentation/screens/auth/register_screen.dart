@@ -198,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: RichText(
                         text: TextSpan(
                           style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
-                          children: [
+                          children: const [
                             const TextSpan(text: "J'accepte les "),
                             TextSpan(
                               text: 'Conditions Générales d\'Utilisation',

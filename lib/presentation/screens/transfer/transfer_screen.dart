@@ -194,12 +194,12 @@ class _TransferScreenState extends State<TransferScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: AppColors.textSecondary, size: 18),
+                    const Icon(Icons.info_outline, color: AppColors.textSecondary, size: 18),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'Frais: ${_transferType == 'illico' ? '0.5%' : '1.5%'} • Plafond: \$10,000/jour',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                        style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
                       ),
                     ),
                   ],
@@ -301,7 +301,7 @@ class _AccountChip extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(isFrom ? 'De' : 'Vers',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                 Text(label,
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
               ],
@@ -381,10 +381,10 @@ class _TransferSuccess extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text('vers $recipient',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 14)),
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 14)),
             const SizedBox(height: 8),
             Text('REF: TRX-${DateTime.now().millisecondsSinceEpoch}',
-                style: TextStyle(color: AppColors.grey500, fontSize: 12)),
+                style: const TextStyle(color: AppColors.grey500, fontSize: 12)),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,

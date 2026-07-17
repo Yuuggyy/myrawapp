@@ -464,7 +464,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.attach_file, color: AppColors.grey500),
+                    icon: const Icon(Icons.attach_file, color: AppColors.grey500),
                     onPressed: () {},
                   ),
                   Expanded(
@@ -821,7 +821,7 @@ class _AgentOption extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: selected ? color : AppColors.textPrimary)),
-                  Text(desc, style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                  const Text(desc, style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
                 ],
               ),
             ),

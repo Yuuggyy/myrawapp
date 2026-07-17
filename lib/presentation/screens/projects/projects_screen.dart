@@ -222,7 +222,7 @@ class _ProjectTile extends StatelessWidget {
                           fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.warning)),
                     ],
                   ),
-                Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.grey500),
+                const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.grey500),
               ],
             ),
           ],

@@ -212,12 +212,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 24),
 
                 // Divider
-                Row(
-                  children: [
+                const Row(
+                  children: const [
                     const Expanded(child: Divider()),
-                    Padding(
+                    const Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('ou', style: TextStyle(color: AppColors.grey500, fontSize: 13)),
+                      child: const Text('ou', style: TextStyle(color: AppColors.grey500, fontSize: 13)),
                     ),
                     const Expanded(child: Divider()),
                   ],
@@ -234,10 +234,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
 
                 // Footer
-                Center(
-                  child: Text(
+                const Center(
+                  child: const Text(
                     '© 2026 RawBank — Inspire by YuuStore',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.grey500,
                       fontSize: 11,
                     ),
