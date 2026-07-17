@@ -216,10 +216,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Open a bank account — not "create a MyRawApp account"
+                // Create a MyRawApp account — bank account opening happens later, once logged in
                 OutlinedButton(
                   onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
-                  child: const Text('Ouvrir un compte RawBank'),
+                  child: const Text('Créer un compte'),
                 ),
 
                 const SizedBox(height: 32),
