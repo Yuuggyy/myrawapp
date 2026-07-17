@@ -202,7 +202,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                 Text('Compte Entreprise RawBank',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
-                Text('Ouvrez le compte bancaire de votre entreprise auprès de RawBank.'),
+                Text('Ouvrez le compte bancaire de votre entreprise auprès de RawBank.',
                   style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
 
                 const SizedBox(height: 16),
