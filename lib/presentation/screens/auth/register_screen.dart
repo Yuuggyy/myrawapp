@@ -166,14 +166,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     Container(
                       width: 44, height: 44,
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: AppColors.primary,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.grey200),
                       ),
-                      child: const Center(
-                        child: Text('RB',
-                          style: TextStyle(color: AppColors.textOnPrimary, fontSize: 16, fontWeight: FontWeight.w900)),
-                      ),
+                      child: Image.asset('assets/images/rawbank_icon.png', fit: BoxFit.contain),
                     ),
                     const SizedBox(width: 10),
                     const Text('RawBank',
