@@ -117,7 +117,7 @@ class _HomeTab extends StatelessWidget {
                   children: [
                     Container(
                       width: 42, height: 42,
-                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: const BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
                       child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
                     ),
                     const Positioned(
@@ -134,7 +134,7 @@ class _HomeTab extends StatelessWidget {
                 const SizedBox(width: 8),
                 Container(
                   width: 42, height: 42,
-                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: const BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
                   child: const Center(
                     child: Text('JM', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
                   ),
@@ -213,7 +213,7 @@ class _IllicoCashCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [AppColors.primary, AppColors.primaryDark],
         ),
-        borderRadius: const BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +263,7 @@ class _QuickBtn extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.15),
-            borderRadius: const BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
             children: [
@@ -299,7 +299,7 @@ class _QuickActions extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: AppColors.grey200),
               ),
               child: Column(
@@ -329,7 +329,7 @@ class _KycBanner extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: 0.08),
-        borderRadius: const BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.2)),
       ),
       child: Row(
@@ -338,7 +338,7 @@ class _KycBanner extends StatelessWidget {
             width: 44, height: 44,
             decoration: BoxDecoration(
               color: AppColors.warning.withValues(alpha: 0.15),
-              borderRadius: const BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.shield_outlined, color: AppColors.warning, size: 24),
           ),
@@ -371,7 +371,7 @@ class _ProjectCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.grey200),
       ),
       child: Column(
@@ -383,7 +383,7 @@ class _ProjectCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: const BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
               ),
@@ -411,7 +411,7 @@ class _ProjectCard extends StatelessWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     color: i <= step ? AppColors.primary : AppColors.grey200,
-                    borderRadius: const BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               );
@@ -435,7 +435,7 @@ class _TxItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.grey200),
       ),
       child: Row(
@@ -444,7 +444,7 @@ class _TxItem extends StatelessWidget {
             width: 40, height: 40,
             decoration: BoxDecoration(
               color: (isCredit ? AppColors.success : AppColors.primary).withValues(alpha: 0.1),
-              borderRadius: const BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               isCredit ? Icons.south_west : Icons.north_east,
@@ -557,7 +557,7 @@ class _FullProjectCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.grey200),
       ),
       child: Column(
@@ -569,7 +569,7 @@ class _FullProjectCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: const BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
               ),
@@ -591,7 +591,7 @@ class _FullProjectCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.12),
-                  borderRadius: const BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(status, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.w600)),
               ),
@@ -608,7 +608,7 @@ class _FullProjectCard extends StatelessWidget {
                   height: 5,
                   decoration: BoxDecoration(
                     color: i < step ? statusColor : AppColors.grey200,
-                    borderRadius: const BorderRadius.circular(3),
+                    borderRadius: BorderRadius.circular(3),
                   ),
                 ),
               );
