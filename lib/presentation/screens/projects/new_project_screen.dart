@@ -250,7 +250,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: selected ? AppColors.primary.withValues(alpha: 0.06) : Colors.white,
-                  borderRadius: const BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: selected ? AppColors.primary : AppColors.grey200,
                     width: selected ? 2 : 1,
@@ -337,7 +337,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.info.withValues(alpha: 0.08),
-                borderRadius: const BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
               ),
               child: const Row(
@@ -369,7 +369,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.aiCommercial.withValues(alpha: 0.08),
-          borderRadius: const BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiCommercial.withValues(alpha: 0.2)),
         ),
         child: const Row(
@@ -433,7 +433,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.aiAccounting.withValues(alpha: 0.08),
-          borderRadius: const BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiAccounting.withValues(alpha: 0.2)),
         ),
         child: const Row(
@@ -479,7 +479,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.aiRSE.withValues(alpha: 0.08),
-          borderRadius: const BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiRSE.withValues(alpha: 0.2)),
         ),
         child: const Row(
@@ -568,7 +568,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isUploaded ? AppColors.success.withValues(alpha: 0.3) : AppColors.grey200,
                 ),
@@ -579,7 +579,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                     width: 40, height: 40,
                     decoration: BoxDecoration(
                       color: isUploaded ? AppColors.success.withValues(alpha: 0.1) : AppColors.grey100,
-                      borderRadius: const BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       isUploaded ? Icons.check_circle : Icons.upload_file,
@@ -624,7 +624,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, 52),
               side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
           const SizedBox(height: 40),
@@ -690,7 +690,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: AppColors.info.withValues(alpha: 0.08),
-              borderRadius: const BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
             ),
             child: const Row(
@@ -738,7 +738,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(0, 52),
                   side: const BorderSide(color: AppColors.grey300),
-                  shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text('Précédent'),
               ),
@@ -751,7 +751,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               onPressed: _nextStep,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(0, 52),
-                shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: Text(_isLastStep ? 'Soumettre le projet' : 'Continuer'),
             ),
@@ -789,7 +789,7 @@ class _StepIndicator extends StatelessWidget {
                   width: 28, height: 28,
                   decoration: BoxDecoration(
                     color: isActive ? AppColors.primary : AppColors.grey200,
-                    borderRadius: const BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: isCurrent
@@ -898,7 +898,7 @@ class _CurrencyToggle extends StatelessWidget {
     return ToggleButtons(
       isSelected: ['USD', 'CDF'].map((c) => c == value).toList(),
       onPressed: (i) => onChanged(['USD', 'CDF'][i]),
-      borderRadius: const BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(8),
       constraints: const BoxConstraints(minWidth: 44, minHeight: 32),
       selectedColor: Colors.white,
       fillColor: AppColors.primary,
@@ -919,7 +919,7 @@ class _SuccessDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(24)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
