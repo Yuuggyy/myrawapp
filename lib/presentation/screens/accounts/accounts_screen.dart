@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/illicocash_api.dart';
+import '../../../core/services/api_service.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../data/models/account_model.dart';
 import '../../../data/account_opening_questions.dart';
@@ -18,9 +19,11 @@ class _AccountsScreenState extends State<AccountsScreen> {
   final IllicoCashApi _api = IllicoCashApi()..init();
   bool _loading = true;
 
-  double _balanceUsd = 2450.75;
-  double _balanceCdf = 7450250;
+  double _balanceUsd = 0;
+  double _balanceCdf = 0;
   double _exchangeRate = 2950;
+  String? _illicoCashAccountId;
+  List<TransactionModel> _transactions = [];
 
   @override
   void initState() {
@@ -29,19 +32,34 @@ class _AccountsScreenState extends State<AccountsScreen> {
   }
 
   void _loadData() async {
-    final balance = await _api.getBalance('+243810000001');
-    final rate = await _api.getExchangeRate();
-    if (mounted) {
-      setState(() {
-        if (balance['success'] == true) {
-          _balanceUsd = (balance['data'] as Map)['balance_usd'].toDouble();
-          _balanceCdf = (balance['data'] as Map)['balance_cdf'].toDouble();
-        }
-        if (rate['success'] == true) {
-          _exchangeRate = ((rate['data'] as Map)['usd_to_cdf'] as num).toDouble();
-        }
-        _loading = false;
-      });
+    try {
+      final accounts = await ApiService.instance.getAccounts();
+      final rate = await _api.getExchangeRate();
+      final illicoCash = accounts.firstWhere(
+        (a) => a['type'] == 'illicoCash',
+        orElse: () => null,
+      );
+      List<TransactionModel> txs = [];
+      if (illicoCash != null) {
+        final rawTxs = await ApiService.instance.getTransactions(illicoCash['id']);
+        txs = rawTxs.map((t) => TransactionModel.fromJson(t)).toList();
+      }
+      if (mounted) {
+        setState(() {
+          if (illicoCash != null) {
+            _balanceUsd = (illicoCash['balance'] as num).toDouble();
+            _illicoCashAccountId = illicoCash['id'];
+          }
+          if (rate['success'] == true) {
+            _exchangeRate = ((rate['data'] as Map)['usd_to_cdf'] as num).toDouble();
+          }
+          _balanceCdf = _balanceUsd * _exchangeRate;
+          _transactions = txs;
+          _loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -166,7 +184,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  ..._mockTransactions.map((t) => _TxTile(tx: t)),
+                  ..._transactions.map((t) => _TxTile(tx: t)),
                   const SizedBox(height: 80),
                 ],
               ),
@@ -949,7 +967,7 @@ class _StatementSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            ..._mockTransactions.map((t) => _StatementTxTile(tx: t)),
+            ..._transactions.map((t) => _StatementTxTile(tx: t)),
             const SizedBox(height: 20),
           ],
         ),
@@ -1068,36 +1086,3 @@ class _MethodChip extends StatelessWidget {
   }
 }
 
-// ── Mock data ──
-final _mockTransactions = [
-  TransactionModel(
-    id: 't1', accountId: 'acc1', type: TransactionType.credit, amount: 500.0, currency: 'USD',
-    description: 'Virement reçu - ONG Partenaire', reference: 'REF001',
-    status: 'completed', createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-  ),
-  TransactionModel(
-    id: 't2', accountId: 'acc1', type: TransactionType.debit, amount: 49.50, currency: 'USD',
-    description: 'Frais dossier PME', reference: 'REF002',
-    status: 'completed', createdAt: DateTime.now().subtract(const Duration(hours: 8)),
-  ),
-  TransactionModel(
-    id: 't3', accountId: 'acc1', type: TransactionType.transfer, amount: 200.0, currency: 'USD',
-    description: 'Transfert IllicoCash → Sarah Kasa', reference: 'REF003',
-    status: 'completed', createdAt: DateTime.now().subtract(const Duration(days: 1)),
-  ),
-  TransactionModel(
-    id: 't4', accountId: 'acc1', type: TransactionType.debit, amount: 35.00, currency: 'USD',
-    description: 'Achat carburant - Station Total', reference: 'REF004',
-    status: 'completed', createdAt: DateTime.now().subtract(const Duration(days: 2)),
-  ),
-  TransactionModel(
-    id: 't5', accountId: 'acc1', type: TransactionType.credit, amount: 1200.0, currency: 'USD',
-    description: 'Dépôt agence RawBank Gombe', reference: 'REF005',
-    status: 'completed', createdAt: DateTime.now().subtract(const Duration(days: 4)),
-  ),
-  TransactionModel(
-    id: 't6', accountId: 'acc1', type: TransactionType.transfer, amount: 150.0, currency: 'USD',
-    description: 'Transfert IllicoCash → J. Tshisekedi', reference: 'REF006',
-    status: 'completed', createdAt: DateTime.now().subtract(const Duration(days: 5)),
-  ),
-];
