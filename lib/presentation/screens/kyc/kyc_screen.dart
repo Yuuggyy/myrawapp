@@ -61,7 +61,7 @@ class _KycScreenState extends State<KycScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: const BorderRadius.circular(16),
               ),
               child: Row(
                 children: [
@@ -81,7 +81,7 @@ class _KycScreenState extends State<KycScreen> {
                         Text('KYC Standard',
                           style: TextStyle(
                             color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text('Votre identité est vérifiée',
                           style: TextStyle(color: Colors.white70, fontSize: 13)),
                       ],
@@ -91,7 +91,7 @@ class _KycScreenState extends State<KycScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: AppColors.success,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: const BorderRadius.circular(8),
                     ),
                     child: const Text('Actif',
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
@@ -115,7 +115,7 @@ class _KycScreenState extends State<KycScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: const BorderRadius.circular(16),
                 border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
               ),
               child: Column(
@@ -123,8 +123,8 @@ class _KycScreenState extends State<KycScreen> {
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.upgrade, color: AppColors.primary),
-                      SizedBox(width: 8),
+                      const Icon(Icons.upgrade, color: AppColors.primary),
+                      const SizedBox(width: 8),
                       Text('Passer au KYC Avancé',
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                     ],
@@ -147,7 +147,7 @@ class _KycScreenState extends State<KycScreen> {
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 48),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
                     ),
                   ),
                 ],
@@ -197,7 +197,7 @@ class _KycLevelCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: const BorderRadius.circular(14),
         border: Border.all(
           color: step.isCurrent ? AppColors.primary : AppColors.grey200,
           width: step.isCurrent ? 2 : 1,
@@ -210,7 +210,7 @@ class _KycLevelCard extends StatelessWidget {
             width: 44, height: 44,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: const BorderRadius.circular(12),
             ),
             child: Icon(
               step.isCompleted ? Icons.check_circle : step.icon,
@@ -232,7 +232,7 @@ class _KycLevelCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: const BorderRadius.circular(6),
                         ),
                         child: const Text('Actuel',
                           style: TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.w600)),
