@@ -119,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
       final commonCount = BusinessSectors.commonDocuments.length;
       final sectorDocsCount = docsCount - commonCount;
       return {
-        'content': "Je suis l'agent Conformité. Je vérifie votre dossier selon les exigences de *${sector.regulator}*.\n\nSecteur détecté: *${sector.name}*\n\nVérifications en cours:\n✅ Registre de commerce — à valider\n✅ Identification du promoteur\n⚠️ ${sectorDocsCount} document(s) spécifiques au secteur — à fournir\n\nRégulateur: ${sector.regulator}\nNiveau de conformité actuel: *45%*",
+        'content': "Je suis l'agent Conformité. Je vérifie votre dossier selon les exigences de *${sector.regulator}*.\n\nSecteur détecté: *${sector.name}*\n\nVérifications en cours:\n✅ Registre de commerce — à valider\n✅ Identification du promoteur\n⚠️ $sectorDocsCount document(s) spécifiques au secteur — à fournir\n\nRégulateur: ${sector.regulator}\nNiveau de conformité actuel: *45%*",
         'quickReplies': [
           QuickReply('Que dois-je fournir ?', 'conformite_docs'),
           QuickReply('Voir régulateur', 'conformite_regulateur'),
@@ -352,6 +352,9 @@ class _ChatScreenState extends State<ChatScreen> {
         };
 
       case AgentType.compliance:
+        if (msg.contains('fournir') || msg.contains('document')) {
+          return _getComplianceDocsResponse();
+        }
         return _getComplianceResponse();
 
       case AgentType.commercial:
