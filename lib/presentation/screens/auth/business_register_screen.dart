@@ -216,7 +216,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                         margin: EdgeInsets.only(right: i < _totalSteps - 1 ? 8 : 0),
                         decoration: BoxDecoration(
                           color: i <= _currentStep ? AppColors.primary : AppColors.grey300,
-                          borderRadius: const BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(2),
                         ),
                       ),
                     );
@@ -233,7 +233,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppColors.error.withValues(alpha: 0.08),
-                      borderRadius: const BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(_errorMessage!,
                       style: const TextStyle(color: AppColors.error, fontSize: 13)),
@@ -258,8 +258,8 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
-                      border: const Border.all(color: AppColors.grey300),
-                      borderRadius: const BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.grey300),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
@@ -324,7 +324,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.06),
-                        borderRadius: const BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
                       child: Column(
@@ -389,7 +389,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: AppColors.grey100,
-                        borderRadius: const BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,7 +416,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: AppColors.warning.withValues(alpha: 0.08),
-                        borderRadius: const BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
                       ),
                       child: Row(
@@ -485,7 +485,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.grey100,
-                        borderRadius: const BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
