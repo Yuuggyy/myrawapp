@@ -172,6 +172,7 @@ class _HomeTabState extends State<_HomeTab> {
         slivers: [
           SliverAppBar(
             floating: true,
+            automaticallyImplyLeading: false,
             backgroundColor: AppColors.primary,
             expandedHeight: 0,
             toolbarHeight: 70,
