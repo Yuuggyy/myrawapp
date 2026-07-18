@@ -69,20 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       width: 52,
                       height: 52,
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppColors.primary,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.grey200),
                       ),
-                      child: const Center(
-                        child: Text(
-                          'RB',
-                          style: TextStyle(
-                            color: AppColors.textOnPrimary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
+                      child: Image.asset('assets/images/rawbank_icon.png', fit: BoxFit.contain),
                     ),
                     const SizedBox(width: 12),
                     const Column(
