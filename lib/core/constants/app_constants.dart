@@ -6,7 +6,7 @@ class AppConstants {
   static const String version = '1.0.0';
 
   // API
-  static const String baseUrl = 'https://api.myrawapp.rawbank.cd/v1';
+  static const String baseUrl = 'https://vesper-4d02d524.base44.app/functions';
   static const int connectTimeout = 30000;
   static const int receiveTimeout = 30000;
 
