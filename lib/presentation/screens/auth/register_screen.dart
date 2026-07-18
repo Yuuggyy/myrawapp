@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/services/api_service.dart';
 import '../../widgets/common/raw_button.dart';
 import '../../widgets/common/raw_text_field.dart';
 
@@ -105,29 +106,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() { _isLoading = true; _errorMessage = null; });
 
-    // Mock — create the MyRawApp account (not a bank account yet).
-    await Future.delayed(const Duration(milliseconds: 700));
+    try {
+      final fullName = '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}';
+      await ApiService.instance.register({
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text,
+        'full_name': fullName,
+      });
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_first_name', _firstNameController.text.trim());
-    await prefs.setString('user_last_name', _lastNameController.text.trim());
-    await prefs.setString('user_name', '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}');
-    await prefs.setString('user_email', _emailController.text.trim());
-    if (_avatarFile != null) {
-      await prefs.setString('user_avatar_path', _avatarFile!.path);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_first_name', _firstNameController.text.trim());
+      await prefs.setString('user_last_name', _lastNameController.text.trim());
+      await prefs.setString('user_name', fullName);
+      await prefs.setString('user_email', _emailController.text.trim());
+      if (_avatarFile != null) {
+        await prefs.setString('user_avatar_path', _avatarFile!.path);
+      }
+      await prefs.setBool('account_created', true);
+
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Compte créé avec succès. Connectez-vous pour continuer.'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    } on ApiException catch (e) {
+      setState(() { _isLoading = false; _errorMessage = e.message; });
+    } catch (_) {
+      setState(() { _isLoading = false; _errorMessage = 'Inscription impossible. Vérifiez votre connexion internet.'; });
     }
-    await prefs.setBool('account_created', true);
-
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Compte créé avec succès. Connectez-vous pour continuer.'),
-        backgroundColor: AppColors.success,
-      ),
-    );
-    Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
   @override
