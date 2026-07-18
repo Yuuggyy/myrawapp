@@ -92,6 +92,12 @@ class ApiService {
     return data;
   }
 
+  Future<Map<String, dynamic>> me() async {
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankAuth', data: {'action': 'me', 'access_token': token});
+    return _unwrap(response);
+  }
+
   // ── Projects ──
 
   Future<List<dynamic>> getProjects() async {
