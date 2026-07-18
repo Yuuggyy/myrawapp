@@ -111,29 +111,29 @@ class DynamicQuestionFormState extends State<DynamicQuestionForm> {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<bool>(
-                      dense: true,
-                      title: const Text('Oui', style: TextStyle(fontSize: 13)),
-                      value: true,
-                      groupValue: value,
-                      activeColor: AppColors.primary,
-                      onChanged: (v) => _update(q.id, v),
+              RadioGroup<bool>(
+                groupValue: value,
+                onChanged: (v) => _update(q.id, v),
+                child: const Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<bool>(
+                        dense: true,
+                        title: Text('Oui', style: TextStyle(fontSize: 13)),
+                        value: true,
+                        activeColor: AppColors.primary,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<bool>(
-                      dense: true,
-                      title: const Text('Non', style: TextStyle(fontSize: 13)),
-                      value: false,
-                      groupValue: value,
-                      activeColor: AppColors.primary,
-                      onChanged: (v) => _update(q.id, v),
+                    Expanded(
+                      child: RadioListTile<bool>(
+                        dense: true,
+                        title: Text('Non', style: TextStyle(fontSize: 13)),
+                        value: false,
+                        activeColor: AppColors.primary,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
