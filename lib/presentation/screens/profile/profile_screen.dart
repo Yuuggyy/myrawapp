@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: const BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: AppColors.grey200),
                     ),
                     child: Column(
@@ -51,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                             gradient: const LinearGradient(
                               colors: [AppColors.primary, AppColors.primaryDark],
                             ),
-                            borderRadius: const BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           child: const Center(
                             child: Text('JM',
@@ -73,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: AppColors.warning.withValues(alpha: 0.12),
-                            borderRadius: const BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
                           ),
                           child: Row(
@@ -104,7 +104,7 @@ class ProfileScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.06),
-                        borderRadius: const BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
                       child: const Row(
@@ -171,7 +171,7 @@ class ProfileScreen extends StatelessWidget {
                           style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600)),
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: AppColors.error),
-                        shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                     ),
                   ),
@@ -226,7 +226,7 @@ class _MenuSection extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: const BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.grey200),
           ),
           child: Column(
@@ -254,7 +254,7 @@ class _MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {},
-      borderRadius: const BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(14),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
