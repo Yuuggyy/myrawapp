@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/services/api_service.dart';
 import '../../widgets/common/raw_button.dart';
 import '../../widgets/common/raw_text_field.dart';
 
@@ -31,15 +32,20 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() { _isLoading = true; _errorMessage = null; });
 
-    // Mock login — any valid email + password (6+ chars) passes
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      await ApiService.instance.login(_emailController.text.trim(), _passwordController.text);
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_logged_in', true);
-    await prefs.setString('user_email', _emailController.text.trim());
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('is_logged_in', true);
+      await prefs.setString('user_email', _emailController.text.trim());
 
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      }
+    } on ApiException catch (e) {
+      setState(() { _isLoading = false; _errorMessage = e.message; });
+    } catch (_) {
+      setState(() { _isLoading = false; _errorMessage = 'Connexion impossible. Vérifiez votre connexion internet.'; });
     }
   }
 
