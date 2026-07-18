@@ -25,6 +25,12 @@ class _AccountsScreenState extends State<AccountsScreen> {
   String? _illicoCashAccountId;
   List<TransactionModel> _transactions = [];
 
+  String get _maskedAccountNumber {
+    final id = _illicoCashAccountId;
+    if (id == null || id.length < 3) return '001';
+    return id.substring(id.length - 3).toUpperCase();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -142,7 +148,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
                   // IllicoCash card
                   _AccountCard(
                     accountName: 'IllicoCash',
-                    accountNumber: '001',
+                    accountNumber: _maskedAccountNumber,
                     balance: _balanceUsd,
                     currency: 'USD',
                     icon: Icons.account_balance_wallet,
@@ -230,7 +236,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (context) => const _StatementSheet(),
+      builder: (context) => _StatementSheet(transactions: _transactions),
     );
   }
 }
@@ -925,7 +931,8 @@ class _QrPaySheet extends StatelessWidget {
 
 // ── Statement Sheet ──
 class _StatementSheet extends StatelessWidget {
-  const _StatementSheet();
+  final List<TransactionModel> transactions;
+  const _StatementSheet({required this.transactions});
 
   @override
   Widget build(BuildContext context) {
@@ -967,7 +974,7 @@ class _StatementSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            ..._transactions.map((t) => _StatementTxTile(tx: t)),
+            ...transactions.map((t) => _StatementTxTile(tx: t)),
             const SizedBox(height: 20),
           ],
         ),
