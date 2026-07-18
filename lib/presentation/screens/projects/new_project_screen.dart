@@ -250,7 +250,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: selected ? AppColors.primary.withValues(alpha: 0.06) : Colors.white,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: const BorderRadius.circular(14),
                   border: Border.all(
                     color: selected ? AppColors.primary : AppColors.grey200,
                     width: selected ? 2 : 1,
@@ -265,7 +265,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                         border: Border.all(color: selected ? AppColors.primary : AppColors.grey300, width: 2),
                       ),
                       child: selected
-                          ? const Center(child: Icon(Icons.check, size: 14, color: AppColors.primary))
+                          ? const Center(child: const Icon(Icons.check, size: 14, color: AppColors.primary))
                           : null,
                     ),
                     const SizedBox(width: 14),
@@ -314,7 +314,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               decoration: const InputDecoration(
                 labelText: 'Durée de remboursement (mois) *',
                 hintText: 'Ex: 24',
-                prefixIcon: Icon(Icons.schedule),
+                prefixIcon: const Icon(Icons.schedule),
               ),
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Durée requise';
@@ -337,14 +337,14 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.info.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: const BorderRadius.circular(14),
                 border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
               ),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.info_outline, color: AppColors.info, size: 22),
-                  SizedBox(width: 12),
+                  const Icon(Icons.info_outline, color: AppColors.info, size: 22),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Le prêt sera analysé par nos agents IA. Le taux d\'intérêt sera communiqué après évaluation de votre dossier.',
@@ -369,13 +369,13 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.aiCommercial.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: const BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiCommercial.withValues(alpha: 0.2)),
         ),
         child: const Row(
           children: [
-            Icon(Icons.handshake_outlined, color: AppColors.aiCommercial, size: 22),
-            SizedBox(width: 12),
+            const Icon(Icons.handshake_outlined, color: AppColors.aiCommercial, size: 22),
+            const SizedBox(width: 12),
             Expanded(
               child: Text('Partenariat — précisez les conditions financières',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
@@ -433,13 +433,13 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.aiAccounting.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: const BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiAccounting.withValues(alpha: 0.2)),
         ),
         child: const Row(
           children: [
-            Icon(Icons.percent, color: AppColors.aiAccounting, size: 22),
-            SizedBox(width: 12),
+            const Icon(Icons.percent, color: AppColors.aiAccounting, size: 22),
+            const SizedBox(width: 12),
             Expanded(
               child: Text('Prêt avec intérêt — précisez les conditions',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
@@ -479,13 +479,13 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.aiRSE.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: const BorderRadius.circular(14),
           border: Border.all(color: AppColors.aiRSE.withValues(alpha: 0.2)),
         ),
         child: const Row(
           children: [
-            Icon(Icons.eco_outlined, color: AppColors.aiRSE, size: 22),
-            SizedBox(width: 12),
+            const Icon(Icons.eco_outlined, color: AppColors.aiRSE, size: 22),
+            const SizedBox(width: 12),
             Expanded(
               child: Text('RSE — Impact sociétal et environnemental',
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
@@ -568,7 +568,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: const BorderRadius.circular(12),
                 border: Border.all(
                   color: isUploaded ? AppColors.success.withValues(alpha: 0.3) : AppColors.grey200,
                 ),
@@ -579,7 +579,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                     width: 40, height: 40,
                     decoration: BoxDecoration(
                       color: isUploaded ? AppColors.success.withValues(alpha: 0.1) : AppColors.grey100,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: const BorderRadius.circular(10),
                     ),
                     child: Icon(
                       isUploaded ? Icons.check_circle : Icons.upload_file,
@@ -624,7 +624,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, 52),
               side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
             ),
           ),
           const SizedBox(height: 40),
@@ -690,20 +690,20 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: AppColors.info.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: const BorderRadius.circular(14),
               border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
             ),
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.auto_awesome, color: AppColors.info, size: 22),
-                SizedBox(width: 12),
+                const Icon(Icons.auto_awesome, color: AppColors.info, size: 22),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Analyse IA automatique', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         'Votre projet sera analysé par 5 agents IA: RSE, Compliance, Commercial, Comptable, et Router. Chaque information sera transmise séparément au back-office.',
                         style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
@@ -738,7 +738,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(0, 52),
                   side: const BorderSide(color: AppColors.grey300),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
                 ),
                 child: const Text('Précédent'),
               ),
@@ -751,7 +751,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               onPressed: _nextStep,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(0, 52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(12)),
               ),
               child: Text(_isLastStep ? 'Soumettre le projet' : 'Continuer'),
             ),
@@ -789,7 +789,7 @@ class _StepIndicator extends StatelessWidget {
                   width: 28, height: 28,
                   decoration: BoxDecoration(
                     color: isActive ? AppColors.primary : AppColors.grey200,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: const BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: isCurrent
@@ -898,7 +898,7 @@ class _CurrencyToggle extends StatelessWidget {
     return ToggleButtons(
       isSelected: ['USD', 'CDF'].map((c) => c == value).toList(),
       onPressed: (i) => onChanged(['USD', 'CDF'][i]),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: const BorderRadius.circular(8),
       constraints: const BoxConstraints(minWidth: 44, minHeight: 32),
       selectedColor: Colors.white,
       fillColor: AppColors.primary,
@@ -919,7 +919,7 @@ class _SuccessDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      shape: RoundedRectangleBorder(borderRadius: const BorderRadius.circular(24)),
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
