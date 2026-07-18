@@ -5,6 +5,7 @@ import '../../../data/models/business_sector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/common/raw_button.dart';
 import '../../widgets/common/raw_text_field.dart';
+import '../../../core/services/api_service.dart';
 
 class BusinessRegisterScreen extends StatefulWidget {
   const BusinessRegisterScreen({super.key});
@@ -123,18 +124,34 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
   Future<void> _register() async {
     setState(() { _isLoading = true; _errorMessage = null; });
 
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      await ApiService.instance.register({
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text,
+        'phone': _phoneController.text.trim(),
+        'full_name': _companyNameController.text.trim(),
+        'client_type': 'enterprise',
+        'business_name': _companyNameController.text.trim(),
+        'business_sector': _isOtherSector ? _otherSectorController.text.trim() : (_selectedSector?.name ?? ''),
+        'rccm': _rccmController.text.trim(),
+        'id_nat': _idNatController.text.trim(),
+      });
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_logged_in', true);
-    await prefs.setString('user_email', _emailController.text.trim());
-    await prefs.setString('user_name', _companyNameController.text.trim());
-    await prefs.setString('account_type', 'enterprise');
-    await prefs.setString('business_sector', _selectedSectorId ?? 'autre');
-    await prefs.setString('business_sector_name', _isOtherSector ? _otherSectorController.text : (_selectedSector?.name ?? 'Autre'));
-    await prefs.setString('rccm', _rccmController.text.trim());
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('is_logged_in', true);
+      await prefs.setString('user_email', _emailController.text.trim());
+      await prefs.setString('user_name', _companyNameController.text.trim());
+      await prefs.setString('account_type', 'enterprise');
+      await prefs.setString('business_sector', _selectedSectorId ?? 'autre');
+      await prefs.setString('business_sector_name', _isOtherSector ? _otherSectorController.text : (_selectedSector?.name ?? 'Autre'));
+      await prefs.setString('rccm', _rccmController.text.trim());
 
-    if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+    } on ApiException catch (e) {
+      setState(() { _isLoading = false; _errorMessage = e.message; });
+    } catch (_) {
+      setState(() { _isLoading = false; _errorMessage = 'Inscription impossible. Vérifiez votre connexion internet.'; });
+    }
   }
 
   IconData _getSectorIcon(String icon) {
