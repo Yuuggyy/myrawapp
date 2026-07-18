@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/services/api_service.dart';
 import '../../../data/models/project_model.dart';
 
 class ProjectsScreen extends StatefulWidget {
@@ -14,44 +15,27 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String _selectedFilter = 'Tous';
+  bool _loading = true;
 
   final List<String> _filters = ['Tous', 'En cours', 'Approuvés', 'Rejetés'];
 
-  final List<ProjectModel> _projects = [
-    ProjectModel(
-      id: 'p1', userId: '1',
-      title: 'Épicerie Bio Kinshasa',
-      type: 'PME', sector: 'Commerce & Distribution',
-      amountRequested: 15000, currency: 'USD',
-      status: ProjectStatus.aiReview,
-      createdAt: DateTime.now().subtract(const Duration(days: 3)),
-      updatedAt: DateTime.now().subtract(const Duration(hours: 4)),
-    ),
-    ProjectModel(
-      id: 'p2', userId: '1',
-      title: "Lady's First — Salon de Coiffure",
-      type: "Lady's First", sector: 'Services & Consulting',
-      amountRequested: 8500, currency: 'USD',
-      status: ProjectStatus.approved,
-      globalAiScore: 82.5,
-      createdAt: DateTime.now().subtract(const Duration(days: 30)),
-      updatedAt: DateTime.now().subtract(const Duration(days: 5)),
-    ),
-    ProjectModel(
-      id: 'p3', userId: '1',
-      title: 'Farm Maïs — Kasai Central',
-      type: 'Agriculture', sector: 'Agriculture & Agro-alimentaire',
-      amountRequested: 22000, currency: 'USD',
-      status: ProjectStatus.humanReview,
-      createdAt: DateTime.now().subtract(const Duration(days: 7)),
-      updatedAt: DateTime.now().subtract(const Duration(hours: 12)),
-    ),
-  ];
+  List<ProjectModel> _projects = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _loadProjects();
+  }
+
+  Future<void> _loadProjects() async {
+    try {
+      final raw = await ApiService.instance.getProjects();
+      final projects = raw.map((p) => ProjectModel.fromJson(p)).toList();
+      if (mounted) setState(() { _projects = projects; _loading = false; });
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
@@ -119,9 +103,16 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
           // Projects List
           Expanded(
-            child: _projects.isEmpty
-                ? _EmptyState()
-                : ListView.separated(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : _projects.isEmpty
+                    ? RefreshIndicator(
+                        onRefresh: _loadProjects,
+                        child: ListView(children: const [SizedBox(height: 120), _EmptyState()]),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: _loadProjects,
+                        child: ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: _projects.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
