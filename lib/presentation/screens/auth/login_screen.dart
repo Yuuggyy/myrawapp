@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setString('user_email', _emailController.text.trim());
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboard, (route) => false);
       }
     } on ApiException catch (e) {
       setState(() { _isLoading = false; _errorMessage = e.message; });
