@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/services/api_service.dart';
 
 // Financing types
 enum FinancingType {
@@ -24,6 +25,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
   final int _totalSteps = 4;
+  bool _isSubmitting = false;
 
   // Step 1: General info
   final _titleCtrl = TextEditingController();
@@ -110,13 +112,44 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
     if (_currentStep > 0) setState(() => _currentStep--);
   }
 
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_sector == null || _financingType == null || _amountCtrl.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Merci de compléter le secteur, le type de financement et le montant.')),
+      );
+      return;
+    }
+    setState(() => _isSubmitting = true);
+    try {
+      final amount = double.tryParse(_amountCtrl.text.replaceAll(',', '.')) ?? 0;
+      await ApiService.instance.createProject({
+        'title': _titleCtrl.text.trim(),
+        'type': _financingType!.label,
+        'sector': _sector,
+        'amount_requested': amount,
+        'currency': _currency,
+        'description': _descCtrl.text.trim(),
+      });
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (_) => _SuccessDialog(onClose: () => Navigator.pushReplacementNamed(context, AppRoutes.projects)),
       );
+    } on ApiException catch (e) {
+      setState(() => _isSubmitting = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    } catch (_) {
+      setState(() => _isSubmitting = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Soumission impossible. Vérifiez votre connexion internet.')),
+        );
+      }
     }
   }
 
@@ -748,12 +781,17 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           Expanded(
             flex: 2,
             child: ElevatedButton(
-              onPressed: _nextStep,
+              onPressed: _isSubmitting ? null : _nextStep,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(0, 52),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: Text(_isLastStep ? 'Soumettre le projet' : 'Continuer'),
+              child: _isSubmitting
+                  ? const SizedBox(
+                      width: 20, height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : Text(_isLastStep ? 'Soumettre le projet' : 'Continuer'),
             ),
           ),
         ],
