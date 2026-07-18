@@ -108,23 +108,26 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                 : _projects.isEmpty
                     ? RefreshIndicator(
                         onRefresh: _loadProjects,
-                        child: ListView(children: const [SizedBox(height: 120), _EmptyState()]),
+                        child: ListView(
+                          children: [const SizedBox(height: 120), const _EmptyState()],
+                        ),
                       )
                     : RefreshIndicator(
                         onRefresh: _loadProjects,
                         child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _projects.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, i) {
-                      final project = _projects[i];
-                      return _ProjectTile(
-                        project: project,
-                        statusColor: _statusColor(project.status),
-                        onTap: () => Navigator.pushNamed(context, '/projects/${project.id}'),
-                      );
-                    },
-                  ),
+                          padding: const EdgeInsets.all(16),
+                          itemCount: _projects.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          itemBuilder: (context, i) {
+                            final project = _projects[i];
+                            return _ProjectTile(
+                              project: project,
+                              statusColor: _statusColor(project.status),
+                              onTap: () => Navigator.pushNamed(context, '/projects/${project.id}'),
+                            );
+                          },
+                        ),
+                      ),
           ),
         ],
       ),
@@ -224,6 +227,8 @@ class _ProjectTile extends StatelessWidget {
 }
 
 class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
   @override
   Widget build(BuildContext context) {
     return Center(
