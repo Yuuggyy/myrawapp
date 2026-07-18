@@ -199,10 +199,10 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Compte Entreprise RawBank',
+                const Text('Compte Entreprise RawBank',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 8),
-                Text('Ouvrez le compte bancaire de votre entreprise auprès de RawBank.',
+                const Text('Ouvrez le compte bancaire de votre entreprise auprès de RawBank.',
                   style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
 
                 const SizedBox(height: 16),
@@ -216,7 +216,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                         margin: EdgeInsets.only(right: i < _totalSteps - 1 ? 8 : 0),
                         decoration: BoxDecoration(
                           color: i <= _currentStep ? AppColors.primary : AppColors.grey300,
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: const BorderRadius.circular(2),
                         ),
                       ),
                     );
@@ -224,7 +224,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text('Étape ${_currentStep + 1} sur $_totalSteps',
-                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
 
                 const SizedBox(height: 24),
 
@@ -233,7 +233,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppColors.error.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: const BorderRadius.circular(10),
                     ),
                     child: Text(_errorMessage!,
                       style: const TextStyle(color: AppColors.error, fontSize: 13)),
@@ -253,24 +253,24 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                   const SizedBox(height: 20),
 
                   // Secteur dropdown
-                  Text('Secteur d\'activité',
+                  const Text('Secteur d\'activité',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 8),
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey300),
-                      borderRadius: BorderRadius.circular(12),
+                      border: const Border.all(color: AppColors.grey300),
+                      borderRadius: const BorderRadius.circular(12),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedSector?.name,
-                        hint: Padding(
+                        hint: const Padding(
                           padding: EdgeInsets.only(left: 16),
                           child: Text('Sélectionnez votre secteur',
                             style: TextStyle(color: AppColors.grey500)),
                         ),
                         isExpanded: true,
-                        icon: Padding(
+                        icon: const Padding(
                           padding: EdgeInsets.only(right: 16),
                           child: Icon(Icons.arrow_drop_down, color: AppColors.grey500),
                         ),
@@ -278,17 +278,17 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                           ...BusinessSectors.sectors.map((s) => DropdownMenuItem(
                             value: s.name,
                             child: Padding(
-                              padding: EdgeInsets.only(left: 12),
+                              padding: const EdgeInsets.only(left: 12),
                               child: Row(
                                 children: [
                                   Icon(_getSectorIcon(s.icon), size: 20, color: AppColors.primary),
-                                  SizedBox(width: 12),
-                                  Expanded(child: Text(s.name, style: TextStyle(fontSize: 14))),
+                                  const SizedBox(width: 12),
+                                  Expanded(child: Text(s.name, style: const TextStyle(fontSize: 14))),
                                 ],
                               ),
                             ),
                           )),
-                          DropdownMenuItem(
+                          const DropdownMenuItem(
                             value: 'Autre',
                             child: Padding(
                               padding: EdgeInsets.only(left: 12),
@@ -324,7 +324,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: const BorderRadius.circular(12),
                         border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                       ),
                       child: Column(
@@ -332,15 +332,15 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info_outline, size: 18, color: AppColors.primary),
-                              SizedBox(width: 8),
+                              const Icon(Icons.info_outline, size: 18, color: AppColors.primary),
+                              const SizedBox(width: 8),
                               Text('Régulateur: ${_selectedSector!.regulator}',
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
                             ],
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(_selectedSector!.description,
-                            style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
                         ],
                       ),
                     ),
@@ -382,26 +382,26 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                   // Show required documents preview
                   if (_selectedSector != null) ...[
                     const SizedBox(height: 20),
-                    Text('Documents requis pour ce secteur:',
+                    const Text('Documents requis pour ce secteur:',
                       style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: AppColors.grey100,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: const BorderRadius.circular(10),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: _selectedSector!.requiredDocuments.map((doc) =>
                           Padding(
-                            padding: EdgeInsets.only(bottom: 6),
+                            padding: const EdgeInsets.only(bottom: 6),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(Icons.check_circle_outline, size: 16, color: AppColors.primary),
-                                SizedBox(width: 8),
-                                Expanded(child: Text(doc, style: TextStyle(fontSize: 12))),
+                                const Icon(Icons.check_circle_outline, size: 16, color: AppColors.primary),
+                                const SizedBox(width: 8),
+                                Expanded(child: Text(doc, style: const TextStyle(fontSize: 12))),
                               ],
                             ),
                           )
@@ -416,16 +416,16 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: AppColors.warning.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: const BorderRadius.circular(10),
                         border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.lightbulb_outline, size: 18, color: AppColors.warning),
-                          SizedBox(width: 8),
+                          const Icon(Icons.lightbulb_outline, size: 18, color: AppColors.warning),
+                          const SizedBox(width: 8),
                           Expanded(
-                            child: Text(
+                            child: const Text(
                               'Votre secteur sera analysé par notre IA. Les documents requis vous seront communiqués après vérification.',
                               style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                             ),
@@ -470,7 +470,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                         onChanged: (v) => setState(() => _acceptTerms = v ?? false),
                       ),
                       Expanded(
-                        child: Text(
+                        child: const Text(
                           "J'accepte les conditions d'utilisation et confirme être autorisé à représenter cette entreprise.",
                           style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
                         ),
@@ -485,19 +485,19 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.grey100,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: const BorderRadius.circular(12),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Récapitulatif — Ouverture de compte',
+                          const Text('Récapitulatif — Ouverture de compte',
                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                          SizedBox(height: 8),
-                          Text('Entreprise: ${_companyNameController.text}', style: TextStyle(fontSize: 13)),
-                          Text('Banque: RawBank', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                          Text('Secteur: ${_isOtherSector ? _otherSectorController.text : _selectedSector?.name}', style: TextStyle(fontSize: 13)),
-                          Text('Email: ${_emailController.text}', style: TextStyle(fontSize: 13)),
-                          Text('RCCM: ${_rccmController.text}', style: TextStyle(fontSize: 13)),
+                          const SizedBox(height: 8),
+                          Text('Entreprise: ${_companyNameController.text}', style: const TextStyle(fontSize: 13)),
+                          Text('Banque: RawBank', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                          Text('Secteur: ${_isOtherSector ? _otherSectorController.text : _selectedSector?.name}', style: const TextStyle(fontSize: 13)),
+                          Text('Email: ${_emailController.text}', style: const TextStyle(fontSize: 13)),
+                          Text('RCCM: ${_rccmController.text}', style: const TextStyle(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -516,7 +516,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: _previousStep,
-                    child: Text('Retour', style: TextStyle(color: AppColors.textSecondary)),
+                    child: const Text('Retour', style: TextStyle(color: AppColors.textSecondary)),
                   ),
                 ],
 
