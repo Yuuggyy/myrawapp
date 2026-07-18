@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  File? _avatarFile;
+  Uint8List? _avatarBytes;
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
@@ -68,13 +69,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _selectImage(ImageSource.gallery);
               },
             ),
-            if (_avatarFile != null)
+            if (_avatarBytes != null)
               ListTile(
                 leading: const Icon(Icons.delete_outline, color: AppColors.error),
                 title: const Text('Retirer la photo', style: TextStyle(color: AppColors.error)),
                 onTap: () {
                   Navigator.pop(sheetContext);
-                  setState(() => _avatarFile = null);
+                  setState(() => _avatarBytes = null);
                 },
               ),
           ],
@@ -91,7 +92,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         imageQuality: 85,
       );
       if (picked != null) {
-        setState(() => _avatarFile = File(picked.path));
+        final bytes = await picked.readAsBytes();
+        setState(() => _avatarBytes = bytes);
       }
     } catch (_) {
       if (mounted) {
@@ -112,6 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'email': _emailController.text.trim(),
         'password': _passwordController.text,
         'full_name': fullName,
+        if (_avatarBytes != null) 'avatar_url': 'data:image/jpeg;base64,${base64Encode(_avatarBytes!)}',
       });
 
       final prefs = await SharedPreferences.getInstance();
@@ -119,9 +122,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await prefs.setString('user_last_name', _lastNameController.text.trim());
       await prefs.setString('user_name', fullName);
       await prefs.setString('user_email', _emailController.text.trim());
-      if (_avatarFile != null) {
-        await prefs.setString('user_avatar_path', _avatarFile!.path);
-      }
       await prefs.setBool('account_created', true);
 
       if (!mounted) return;
@@ -220,11 +220,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             shape: BoxShape.circle,
                             color: AppColors.grey100,
                             border: Border.all(color: AppColors.grey300, width: 1.5),
-                            image: _avatarFile != null
-                                ? DecorationImage(image: FileImage(_avatarFile!), fit: BoxFit.cover)
+                            image: _avatarBytes != null
+                                ? DecorationImage(image: MemoryImage(_avatarBytes!), fit: BoxFit.cover)
                                 : null,
                           ),
-                          child: _avatarFile == null
+                          child: _avatarBytes == null
                               ? const Icon(Icons.person_outline, size: 40, color: AppColors.grey400)
                               : null,
                         ),
@@ -268,7 +268,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: RawTextField(
                         controller: _lastNameController,
                         label: 'Nom',
-                        hint: 'Kabila',
+                        hint: 'Kapinga',
                         validator: (v) => (v?.trim().isEmpty ?? true) ? 'Nom requis' : null,
                       ),
                     ),
