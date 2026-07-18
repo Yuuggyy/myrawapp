@@ -106,16 +106,9 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ],
                 ),
-                child: const Center(
-                  child: Text(
-                    'RB',
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1,
-                    ),
-                  ),
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Image.asset('assets/images/rawbank_icon.png', fit: BoxFit.contain),
                 ),
               ),
             ),
