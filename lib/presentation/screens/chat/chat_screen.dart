@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/services/api_service.dart';
 import '../../../data/models/business_sector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -179,6 +180,35 @@ class _ChatScreenState extends State<ChatScreen> {
     _loadSectorData();
     super.initState();
     _messages = _isGeneralAssistant ? _buildAssistantIntro() : _buildProjectIntro();
+    if (!_isGeneralAssistant) _loadHistory();
+  }
+
+  // Loads any previously persisted conversation for this project. If none
+  // exists yet, the local scripted intro above is kept and persisted so the
+  // next visit (or a bank officer reviewing the record) sees continuity.
+  Future<void> _loadHistory() async {
+    try {
+      final raw = await ApiService.instance.getMessages(widget.projectId);
+      if (raw.isNotEmpty) {
+        final restored = raw.map<ChatMessage>((m) => ChatMessage(
+          content: m['content'] as String,
+          isAi: m['sender_type'] != 'human',
+          time: DateTime.tryParse(m['created_at']?.toString() ?? '') ?? DateTime.now(),
+        )).toList();
+        if (mounted) setState(() => _messages = restored);
+      } else {
+        for (final m in _messages) {
+          _persistMessage(m.content, m.isAi ? 'ai' : 'human', (m.agent ?? AgentType.router).name);
+        }
+      }
+    } catch (_) {
+      // Backend unreachable — keep the local scripted intro, no persistence this time.
+    }
+  }
+
+  void _persistMessage(String content, String senderType, String agentType) {
+    if (_isGeneralAssistant) return;
+    ApiService.instance.logChatMessage(widget.projectId, content, senderType, agentType).catchError((_) {});
   }
 
   List<ChatMessage> _buildAssistantIntro() {
@@ -250,6 +280,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Determine which agent responds
     final respondingAgent = _activeAgent ?? _determineAgent(text);
+    _persistMessage(text, 'human', respondingAgent.name);
 
     // Simulate thinking delay
     await Future.delayed(const Duration(milliseconds: 1500));
@@ -268,6 +299,7 @@ class _ChatScreenState extends State<ChatScreen> {
         quickReplies: response['quickReplies'],
       ));
     });
+    _persistMessage(response['content']!, 'ai', respondingAgent.name);
     _scrollToBottom();
   }
 
