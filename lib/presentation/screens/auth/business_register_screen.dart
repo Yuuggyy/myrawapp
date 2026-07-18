@@ -146,7 +146,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
       await prefs.setString('business_sector_name', _isOtherSector ? _otherSectorController.text : (_selectedSector?.name ?? 'Autre'));
       await prefs.setString('rccm', _rccmController.text.trim());
 
-      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      if (mounted) Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboard, (route) => false);
     } on ApiException catch (e) {
       setState(() { _isLoading = false; _errorMessage = e.message; });
     } catch (_) {
