@@ -2,6 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_constants.dart';
 
+/// Real backend client for MyRawApp.
+/// Talks to the Base44-hosted backend functions (see functions/rawbank*.ts).
+/// Every function endpoint takes a single JSON body with an `action` field —
+/// there is no path-based REST routing, so all parameters (including the
+/// access token) travel in the POST body.
 class ApiService {
   static ApiService? _instance;
   late final Dio _dio;
@@ -17,7 +22,6 @@ class ApiService {
         'Accept': 'application/json',
       },
     ));
-    _setupInterceptors();
     _initPrefs();
   }
 
@@ -35,169 +39,170 @@ class ApiService {
     return _prefs!.getString(AppConstants.tokenKey);
   }
 
-  Future<void> _writeToken(String key, String value) async {
+  Future<void> _saveSession(Map<String, dynamic> data) async {
     await _initPrefs();
-    await _prefs!.setString(key, value);
-  }
-
-  Future<void> _deleteAll() async {
-    await _initPrefs();
-    await _prefs!.remove(AppConstants.tokenKey);
-    await _prefs!.remove(AppConstants.refreshTokenKey);
-  }
-
-  void _setupInterceptors() {
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final token = await _readToken();
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          return handler.next(options);
-        },
-        onError: (error, handler) async {
-          if (error.response?.statusCode == 401) {
-            final refreshed = await _refreshToken();
-            if (refreshed) {
-              final token = await _readToken();
-              error.requestOptions.headers['Authorization'] = 'Bearer $token';
-              final response = await _dio.fetch(error.requestOptions);
-              return handler.resolve(response);
-            }
-          }
-          return handler.next(error);
-        },
-      ),
-    );
-  }
-
-  Future<bool> _refreshToken() async {
-    try {
-      await _initPrefs();
-      final refreshToken = _prefs!.getString(AppConstants.refreshTokenKey);
-      if (refreshToken == null) return false;
-
-      final response = await _dio.post('/auth/refresh', data: {
-        'refresh_token': refreshToken,
-      });
-
-      await _writeToken(AppConstants.tokenKey, response.data['access_token']);
-      await _writeToken(AppConstants.refreshTokenKey, response.data['refresh_token']);
-      return true;
-    } catch (_) {
-      await logout();
-      return false;
+    if (data['access_token'] != null) {
+      await _prefs!.setString(AppConstants.tokenKey, data['access_token']);
+    }
+    if (data['refresh_token'] != null) {
+      await _prefs!.setString(AppConstants.refreshTokenKey, data['refresh_token']);
     }
   }
 
   Future<void> logout() async {
-    await _deleteAll();
+    await _initPrefs();
+    await _prefs!.remove(AppConstants.tokenKey);
+    await _prefs!.remove(AppConstants.refreshTokenKey);
+    await _prefs!.remove(AppConstants.userKey);
   }
 
+  Future<bool> isLoggedIn() async {
+    final token = await _readToken();
+    return token != null && token.isNotEmpty;
+  }
+
+  Map<String, dynamic> _unwrap(Response response) {
+    final data = response.data;
+    if (data is Map<String, dynamic> && data['success'] == false) {
+      throw ApiException(data['error']?.toString() ?? 'Une erreur est survenue');
+    }
+    return data is Map<String, dynamic> ? data : {'data': data};
+  }
+
+  // ── Auth ──
+
   Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await _dio.post('/auth/login', data: {
+    final response = await _dio.post('/rawbankAuth', data: {
+      'action': 'login',
       'email': email,
       'password': password,
     });
-    await _writeToken(AppConstants.tokenKey, response.data['access_token']);
-    await _writeToken(AppConstants.refreshTokenKey, response.data['refresh_token']);
-    return response.data;
+    final data = _unwrap(response);
+    await _saveSession(data);
+    return data;
   }
 
-  Future<Map<String, dynamic>> register(Map<String, dynamic> data) async {
-    final response = await _dio.post('/auth/register', data: data);
-    return response.data;
+  Future<Map<String, dynamic>> register(Map<String, dynamic> fields) async {
+    final response = await _dio.post('/rawbankAuth', data: {
+      'action': 'register',
+      ...fields,
+    });
+    final data = _unwrap(response);
+    await _saveSession(data);
+    return data;
   }
+
+  // ── Projects ──
 
   Future<List<dynamic>> getProjects() async {
-    final response = await _dio.get('/projects');
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankProjects', data: {'action': 'list', 'access_token': token});
+    return response.data as List<dynamic>;
   }
 
   Future<Map<String, dynamic>> getProject(String id) async {
-    final response = await _dio.get('/projects/$id');
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankProjects', data: {'action': 'get', 'access_token': token, 'id': id});
+    return _unwrap(response);
   }
 
   Future<Map<String, dynamic>> createProject(Map<String, dynamic> data) async {
-    final response = await _dio.post('/projects', data: data);
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankProjects', data: {'action': 'create', 'access_token': token, ...data});
+    return _unwrap(response);
   }
 
-  Future<Map<String, dynamic>> uploadProjectFile(String projectId, String filePath, String fileName) async {
-    final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(filePath, filename: fileName),
-    });
-    final response = await _dio.post('/projects/$projectId/files', data: formData);
-    return response.data;
-  }
-
-  Future<Map<String, dynamic>> getAiReport(String projectId) async {
-    final response = await _dio.get('/ai/report/$projectId');
-    return response.data;
-  }
-
-  Future<Map<String, dynamic>> triggerAiAnalysis(String projectId) async {
-    final response = await _dio.post('/ai/route', data: {'project_id': projectId});
-    return response.data;
-  }
+  // ── Accounts ──
 
   Future<List<dynamic>> getAccounts() async {
-    final response = await _dio.get('/accounts');
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankAccounts', data: {'action': 'list', 'access_token': token});
+    return response.data as List<dynamic>;
   }
 
   Future<List<dynamic>> getTransactions(String accountId) async {
-    final response = await _dio.get('/accounts/$accountId/transactions');
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankAccounts', data: {
+      'action': 'transactions', 'access_token': token, 'account_id': accountId,
+    });
+    return response.data as List<dynamic>;
   }
+
+  Future<Map<String, dynamic>> transfer({
+    required String fromAccountId,
+    required String toPhoneOrNumber,
+    required double amount,
+    String? description,
+  }) async {
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankAccounts', data: {
+      'action': 'transfer',
+      'access_token': token,
+      'from_account_id': fromAccountId,
+      'to_phone_or_number': toPhoneOrNumber,
+      'amount': amount,
+      'description': description,
+    });
+    return _unwrap(response);
+  }
+
+  // ── Chat ──
 
   Future<List<dynamic>> getMessages(String projectId) async {
-    final response = await _dio.get('/chats/$projectId');
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankChat', data: {
+      'action': 'list', 'access_token': token, 'project_id': projectId,
+    });
+    return response.data as List<dynamic>;
   }
 
-  Future<Map<String, dynamic>> sendMessage(String projectId, String content) async {
-    final response = await _dio.post('/chats/$projectId/messages', data: {
+  Future<Map<String, dynamic>> sendMessage(String projectId, String content, {String agentType = 'router'}) async {
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankChat', data: {
+      'action': 'send',
+      'access_token': token,
+      'project_id': projectId,
       'content': content,
-      'sender_type': 'human',
+      'agent_type': agentType,
     });
-    return response.data;
+    return _unwrap(response);
   }
+
+  /// Persists a single message as-is (no auto AI-reply generation).
+  /// Used by screens that generate their own reply text locally and just
+  /// need it saved for the record (e.g. the scripted multi-agent chat UI).
+  Future<void> logChatMessage(String projectId, String content, String senderType, String agentType) async {
+    final token = await _readToken();
+    await _dio.post('/rawbankChat', data: {
+      'action': 'log',
+      'access_token': token,
+      'project_id': projectId,
+      'content': content,
+      'sender_type': senderType,
+      'agent_type': agentType,
+    });
+  }
+
+  // ── KYC ──
 
   Future<Map<String, dynamic>> getKycStatus() async {
-    final response = await _dio.get('/kyc/status');
-    return response.data;
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankKyc', data: {'action': 'status', 'access_token': token});
+    return _unwrap(response);
   }
 
-  Future<Map<String, dynamic>> uploadKycDocument(String filePath, String docType) async {
-    final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(filePath),
-      'doc_type': docType,
+  Future<Map<String, dynamic>> uploadKycDocument(String docType, String fileUrl) async {
+    final token = await _readToken();
+    final response = await _dio.post('/rawbankKyc', data: {
+      'action': 'upload', 'access_token': token, 'doc_type': docType, 'file_url': fileUrl,
     });
-    final response = await _dio.post('/kyc/upload', data: formData);
-    return response.data;
+    return _unwrap(response);
   }
+}
 
-  Future<List<dynamic>> getAdminProjects({String? status, String? sector}) async {
-    final response = await _dio.get('/admin/projects', queryParameters: {
-      if (status != null) 'status': status,
-      if (sector != null) 'sector': sector,
-    });
-    return response.data;
-  }
-
-  Future<Map<String, dynamic>> makeDecision(String projectId, String decision, String notes) async {
-    final response = await _dio.post('/admin/projects/$projectId/decision', data: {
-      'decision': decision,
-      'notes': notes,
-    });
-    return response.data;
-  }
-
-  Future<Map<String, dynamic>> getAnalytics() async {
-    final response = await _dio.get('/admin/analytics');
-    return response.data;
-  }
+class ApiException implements Exception {
+  final String message;
+  ApiException(this.message);
+  @override
+  String toString() => message;
 }
