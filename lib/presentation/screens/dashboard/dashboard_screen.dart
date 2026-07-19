@@ -18,6 +18,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
 
+  // Bottom bar destinations map to IndexedStack slots 0,1,2,4.
+  // Slot 3 (Chat IA) is reached only via the centered FAB, RawBank-gold,
+  // taking the place of the QR-scanner button in the reference design.
+  void _onNavTap(int index) => setState(() => _selectedIndex = index);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,47 +37,105 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ProfileScreen(),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Color(0x0F000000), blurRadius: 20, offset: Offset(0, -4)),
+      bottomNavigationBar: _RawBottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onNavTap,
+      ),
+      floatingActionButton: _RawChatFab(
+        isActive: _selectedIndex == 3,
+        onPressed: () => _onNavTap(3),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+}
+
+/// Notched bottom bar (RawBank gold/black) — the docked FAB in the middle
+/// notch opens Chat IA instead of the QR-scanner from the reference design.
+class _RawBottomNavBar extends StatelessWidget {
+  final int selectedIndex;
+  final ValueChanged<int> onItemTapped;
+  const _RawBottomNavBar({required this.selectedIndex, required this.onItemTapped});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(color: Color(0x1A000000), blurRadius: 20, offset: Offset(0, -4)),
+        ],
+      ),
+      child: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10,
+        color: Colors.white,
+        elevation: 0,
+        child: SizedBox(
+          height: 64,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(Icons.home_outlined, Icons.home, 'Accueil', 0),
+              _navItem(Icons.folder_outlined, Icons.folder, 'Projets', 1),
+              const SizedBox(width: 48), // reserved space for the docked FAB notch
+              _navItem(Icons.account_balance_wallet_outlined, Icons.account_balance_wallet, 'Comptes', 2),
+              _navItem(Icons.person_outlined, Icons.person, 'Profil', 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(IconData outlined, IconData filled, String label, int index) {
+    final isSelected = selectedIndex == index;
+    final color = isSelected ? AppColors.primary : AppColors.grey500;
+    return InkWell(
+      onTap: () => onItemTapped(index),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(isSelected ? filled : outlined, color: color, size: 24),
+            const SizedBox(height: 4),
+            Text(label, style: TextStyle(color: color, fontSize: 11, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500)),
           ],
         ),
-        child: NavigationBar(
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-          backgroundColor: Colors.white,
-          indicatorColor: AppColors.primary.withValues(alpha: 0.1),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: const [
-            NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home, color: AppColors.primary),
-              label: 'Accueil',
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.folder_outlined),
-              selectedIcon: const Icon(Icons.folder, color: AppColors.primary),
-              label: 'Projets',
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.account_balance_wallet_outlined),
-              selectedIcon: const Icon(Icons.account_balance_wallet, color: AppColors.primary),
-              label: 'Comptes',
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.smart_toy_outlined),
-              selectedIcon: const Icon(Icons.smart_toy, color: AppColors.primary),
-              label: 'Chat IA',
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.person_outlined),
-              selectedIcon: const Icon(Icons.person, color: AppColors.primary),
-              label: 'Profil',
-            ),
-          ],
+      ),
+    );
+  }
+}
+
+/// Gold-on-black docked FAB — the Chat IA entry point, replacing the
+/// QR-scanner button from the reference design at the user's request.
+class _RawChatFab extends StatelessWidget {
+  final bool isActive;
+  final VoidCallback onPressed;
+  const _RawChatFab({required this.isActive, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 62, height: 62,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [AppColors.secondary, AppColors.primary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        boxShadow: [
+          BoxShadow(color: AppColors.primary.withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 4)),
+        ],
+        border: isActive ? Border.all(color: Colors.white, width: 2.5) : null,
+      ),
+      child: FloatingActionButton(
+        onPressed: onPressed,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: const Icon(Icons.smart_toy_outlined, color: Colors.white, size: 26),
       ),
     );
   }
@@ -173,10 +236,17 @@ class _HomeTabState extends State<_HomeTab> {
           SliverAppBar(
             floating: true,
             automaticallyImplyLeading: false,
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppColors.secondary,
             expandedHeight: 0,
             toolbarHeight: 70,
-            flexibleSpace: Padding(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.secondary, AppColors.primary],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(
                 children: [
