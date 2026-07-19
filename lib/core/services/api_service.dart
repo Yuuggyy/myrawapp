@@ -64,15 +64,43 @@ class ApiService {
   Map<String, dynamic> _unwrap(Response response) {
     final data = response.data;
     if (data is Map<String, dynamic> && data['success'] == false) {
-      throw ApiException(data['error']?.toString() ?? 'Une erreur est survenue');
+      throw ApiException(
+        data['error']?.toString() ?? 'Une erreur est survenue',
+        code: data['error_code']?.toString(),
+      );
     }
     return data is Map<String, dynamic> ? data : {'data': data};
+  }
+
+  /// Wraps every POST call so backend error bodies (sent with a non-2xx
+  /// status like 401/404/409) are turned into a readable [ApiException]
+  /// instead of leaking a raw DioException up to the UI (which used to be
+  /// swallowed as a generic "check your internet connection" message).
+  Future<Response> _post(String path, {Map<String, dynamic>? data}) async {
+    try {
+      return await _dio.post(path, data: data);
+    } on DioException catch (e) {
+      final respData = e.response?.data;
+      if (respData is Map<String, dynamic> && respData['error'] != null) {
+        throw ApiException(
+          respData['error'].toString(),
+          code: respData['error_code']?.toString(),
+        );
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.unknown) {
+        throw ApiException('Connexion impossible. Vérifiez votre connexion internet.');
+      }
+      throw ApiException('Une erreur est survenue. Réessayez.');
+    }
   }
 
   // ── Auth ──
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await _dio.post('/rawbankAuth', data: {
+    final response = await _post('/rawbankAuth', data: {
       'action': 'login',
       'email': email,
       'password': password,
@@ -83,7 +111,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> register(Map<String, dynamic> fields) async {
-    final response = await _dio.post('/rawbankAuth', data: {
+    final response = await _post('/rawbankAuth', data: {
       'action': 'register',
       ...fields,
     });
@@ -94,7 +122,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> me() async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankAuth', data: {'action': 'me', 'access_token': token});
+    final response = await _post('/rawbankAuth', data: {'action': 'me', 'access_token': token});
     return _unwrap(response);
   }
 
@@ -102,19 +130,19 @@ class ApiService {
 
   Future<List<dynamic>> getProjects() async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankProjects', data: {'action': 'list', 'access_token': token});
+    final response = await _post('/rawbankProjects', data: {'action': 'list', 'access_token': token});
     return response.data as List<dynamic>;
   }
 
   Future<Map<String, dynamic>> getProject(String id) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankProjects', data: {'action': 'get', 'access_token': token, 'id': id});
+    final response = await _post('/rawbankProjects', data: {'action': 'get', 'access_token': token, 'id': id});
     return _unwrap(response);
   }
 
   Future<Map<String, dynamic>> createProject(Map<String, dynamic> data) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankProjects', data: {'action': 'create', 'access_token': token, ...data});
+    final response = await _post('/rawbankProjects', data: {'action': 'create', 'access_token': token, ...data});
     return _unwrap(response);
   }
 
@@ -122,13 +150,13 @@ class ApiService {
 
   Future<List<dynamic>> getAccounts() async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankAccounts', data: {'action': 'list', 'access_token': token});
+    final response = await _post('/rawbankAccounts', data: {'action': 'list', 'access_token': token});
     return response.data as List<dynamic>;
   }
 
   Future<List<dynamic>> getTransactions(String accountId) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankAccounts', data: {
+    final response = await _post('/rawbankAccounts', data: {
       'action': 'transactions', 'access_token': token, 'account_id': accountId,
     });
     return response.data as List<dynamic>;
@@ -141,7 +169,7 @@ class ApiService {
     String? description,
   }) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankAccounts', data: {
+    final response = await _post('/rawbankAccounts', data: {
       'action': 'transfer',
       'access_token': token,
       'from_account_id': fromAccountId,
@@ -156,7 +184,7 @@ class ApiService {
 
   Future<List<dynamic>> getMessages(String projectId) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankChat', data: {
+    final response = await _post('/rawbankChat', data: {
       'action': 'list', 'access_token': token, 'project_id': projectId,
     });
     return response.data as List<dynamic>;
@@ -164,7 +192,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> sendMessage(String projectId, String content, {String agentType = 'router'}) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankChat', data: {
+    final response = await _post('/rawbankChat', data: {
       'action': 'send',
       'access_token': token,
       'project_id': projectId,
@@ -179,7 +207,7 @@ class ApiService {
   /// need it saved for the record (e.g. the scripted multi-agent chat UI).
   Future<void> logChatMessage(String projectId, String content, String senderType, String agentType) async {
     final token = await _readToken();
-    await _dio.post('/rawbankChat', data: {
+    await _post('/rawbankChat', data: {
       'action': 'log',
       'access_token': token,
       'project_id': projectId,
@@ -193,13 +221,13 @@ class ApiService {
 
   Future<Map<String, dynamic>> getKycStatus() async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankKyc', data: {'action': 'status', 'access_token': token});
+    final response = await _post('/rawbankKyc', data: {'action': 'status', 'access_token': token});
     return _unwrap(response);
   }
 
   Future<Map<String, dynamic>> uploadKycDocument(String docType, String fileUrl) async {
     final token = await _readToken();
-    final response = await _dio.post('/rawbankKyc', data: {
+    final response = await _post('/rawbankKyc', data: {
       'action': 'upload', 'access_token': token, 'doc_type': docType, 'file_url': fileUrl,
     });
     return _unwrap(response);
@@ -208,7 +236,8 @@ class ApiService {
 
 class ApiException implements Exception {
   final String message;
-  ApiException(this.message);
+  final String? code;
+  ApiException(this.message, {this.code});
   @override
   String toString() => message;
 }

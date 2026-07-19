@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   bool _obscurePassword = true;
   String? _errorMessage;
+  bool _accountNotFound = false;
 
   @override
   void dispose() {
@@ -30,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() { _isLoading = true; _errorMessage = null; });
+    setState(() { _isLoading = true; _errorMessage = null; _accountNotFound = false; });
 
     try {
       await ApiService.instance.login(_emailController.text.trim(), _passwordController.text);
@@ -43,7 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushNamedAndRemoveUntil(context, AppRoutes.dashboard, (route) => false);
       }
     } on ApiException catch (e) {
-      setState(() { _isLoading = false; _errorMessage = e.message; });
+      setState(() {
+        _isLoading = false;
+        _errorMessage = e.message;
+        _accountNotFound = e.code == 'account_not_found';
+      });
     } catch (_) {
       setState(() { _isLoading = false; _errorMessage = 'Connexion impossible. Vérifiez votre connexion internet.'; });
     }
@@ -128,16 +133,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                     ),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.error_outline, color: AppColors.error, size: 18),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _errorMessage!,
-                            style: const TextStyle(color: AppColors.error, fontSize: 13),
-                          ),
+                        Row(
+                          children: [
+                            const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _errorMessage!,
+                                style: const TextStyle(color: AppColors.error, fontSize: 13),
+                              ),
+                            ),
+                          ],
                         ),
+                        if (_accountNotFound) ...[
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton(
+                              style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size.zero),
+                              onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
+                              child: const Text(
+                                'Créer un compte avec cet email →',
+                                style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
