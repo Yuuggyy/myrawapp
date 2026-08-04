@@ -1,9 +1,29 @@
 class AppConstants {
   // App Info
-  static const String appName = 'MyRawApp';
-  static const String appTagline = 'Votre banque, réinventée';
+  static const String appName = 'RawBank';
+  static const String appTagline = "Au-delà d'une banque, la puissance du changement";
   static const String bankName = 'RawBank';
-  static const String version = '1.0.0';
+  static const String bankFullName = 'RawBank SA';
+  static const String version = '2.0.0';
+
+  // Bank Info
+  static const String bankFoundedYear = '2002';
+  static const String bankBranches = '100+';
+  static const String bankATMs = '274';
+  static const String bankCountry = 'République Démocratique du Congo';
+  static const String bankCEO = 'Mustafa Rawji';
+  static const String bankTagline = 'Beyond a bank, the power of change';
+  static const String bankValues = 'Ambition, Initiative, Collaboration, Innovation, Performance';
+
+  // Services
+  static const List<String> services = [
+    'RawbankOnline',
+    'IllicoCash',
+    'Visa Direct',
+    'Kimia Diaspora',
+    'Lady\'s First',
+    'We Act',
+  ];
 
   // API
   static const String baseUrl = 'https://vesper-4d02d524.base44.app/functions';
@@ -26,11 +46,13 @@ class AppConstants {
     'PME',
     'Agriculture',
     'Immobilier',
-    "Lady's First",
+    'Lady\'s First',
     'Exportation',
     'Commerce',
     'Industrie',
     'Services',
+    'RSE / ESG',
+    'Prêt à intérêt',
   ];
 
   // Project Sectors
@@ -41,55 +63,44 @@ class AppConstants {
     'Éducation & Formation',
     'Énergie & Environnement',
     'Industrie & Manufacture',
-    'Mines & Ressources',
-    'Santé & Pharmacie',
-    'Services & Consulting',
-    'Technologies & Numérique',
+    'Santé & Bien-être',
+    'Services financiers',
+    'Technologie & Télécoms',
     'Transport & Logistique',
-    'Tourisme & Hôtellerie',
   ];
 
-  // Project Status
-  static const String statusDraft = 'draft';
-  static const String statusSubmitted = 'submitted';
-  static const String statusAnalyzing = 'analyzing';
-  static const String statusAiReview = 'ai_review';
-  static const String statusHumanReview = 'human_review';
-  static const String statusApproved = 'approved';
-  static const String statusRejected = 'rejected';
-  static const String statusPendingInfo = 'pending_info';
+  // Routing
+  static const String routeSplash = '/';
+  static const String routeLogin = '/login';
+  static const String routeRegister = '/register';
+  static const String routeBusinessRegister = '/business-register';
+  static const String routeDashboard = '/dashboard';
+  static const String routeProjects = '/projects';
+  static const String routeNewProject = '/projects/new';
+  static const String routeKyc = '/kyc';
+  static const String routeTransfer = '/transfer';
+  static const String routeAccounts = '/accounts';
+  static const String routeProfile = '/profile';
 
-  // AI Agent Types
-  static const String agentRouter = 'router';
-  static const String agentRSE = 'rse';
-  static const String agentCompliance = 'compliance';
-  static const String agentCommercial = 'commercial';
-  static const String agentAccounting = 'accounting';
-
-  // IllicoCash
-  static const String currencyUSD = 'USD';
-  static const String currencyCDF = 'CDF';
-
-  // Pagination
-  static const int pageSize = 20;
+  // Social Links
+  static const String youtubeChannel = 'https://www.youtube.com/@Rawbank';
+  static const String websiteUrl = 'https://rawbank.com';
+  static const String facebookUrl = 'https://www.facebook.com/RawbankSa/';
+  static const String instagramUrl = 'https://www.instagram.com/rawbank/';
+  static const String twitterUrl = 'https://x.com/Rawbank_sa';
 }
 
+// Convenience alias used in some screens
 class AppRoutes {
   static const String splash = '/';
-  static const String onboarding = '/onboarding';
   static const String login = '/login';
   static const String register = '/register';
-  static const String forgotPassword = '/forgot-password';
+  static const String businessRegister = '/business-register';
   static const String dashboard = '/dashboard';
   static const String projects = '/projects';
-  static const String projectDetail = '/projects/:id';
   static const String newProject = '/projects/new';
-  static const String chat = '/projects/:id/chat';
-  static const String accounts = '/accounts';
-  static const String accountDetail = '/accounts/:id';
   static const String kyc = '/kyc';
-  static const String notifications = '/notifications';
+  static const String transfer = '/transfer';
+  static const String accounts = '/accounts';
   static const String profile = '/profile';
-  static const String admin = '/admin';
-  static const String adminProjectDetail = '/admin/projects/:id';
 }

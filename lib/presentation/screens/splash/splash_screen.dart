@@ -84,6 +84,16 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Yellow accent bar at top
+            Container(
+              width: 60,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 24),
             AnimatedBuilder(
               animation: _logoController,
               builder: (context, child) {
@@ -93,26 +103,26 @@ class _SplashScreenState extends State<SplashScreen>
                 );
               },
               child: Container(
-                width: 100,
-                height: 100,
+                width: 110,
+                height: 110,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 20,
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 25,
                       offset: const Offset(0, 8),
                     ),
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.all(20),
                   child: Image.asset('assets/images/rawbank_icon.png', fit: BoxFit.contain),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
             SlideTransition(
               position: _textSlide,
               child: FadeTransition(
@@ -120,24 +130,42 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   children: [
                     Text(
-                      'MyRawApp',
+                      'RAWBANK',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.5,
+                        color: AppColors.primary,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 4,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Votre banque, réinventée',
+                      'Au-delà d\'une banque',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 15,
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        letterSpacing: 0.5,
+                        letterSpacing: 1,
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            // Stats row
+            SlideTransition(
+              position: _textSlide,
+              child: FadeTransition(
+                opacity: _textOpacity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _statItem('100+', 'Agences'),
+                    Container(width: 1, height: 30, color: Colors.white24, margin: const EdgeInsets.symmetric(horizontal: 16)),
+                    _statItem('274', 'ATM'),
+                    Container(width: 1, height: 30, color: Colors.white24, margin: const EdgeInsets.symmetric(horizontal: 16)),
+                    _statItem('2002', 'Depuis'),
                   ],
                 ),
               ),
@@ -145,23 +173,15 @@ class _SplashScreenState extends State<SplashScreen>
           ],
         ),
       ),
-      bottomSheet: Container(
-        color: AppColors.secondary,
-        padding: const EdgeInsets.only(bottom: 40),
-        child: Center(
-          child: FadeTransition(
-            opacity: _textOpacity,
-            child: Text(
-              'by Inspire × YuuStore',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5),
-                fontSize: 12,
-                letterSpacing: 1,
-              ),
-            ),
-          ),
-        ),
-      ),
+    );
+  }
+
+  Widget _statItem(String value, String label) {
+    return Column(
+      children: [
+        Text(value, style: TextStyle(color: AppColors.primary, fontSize: 18, fontWeight: FontWeight.w700)),
+        Text(label, style: TextStyle(color: Colors.white54, fontSize: 11)),
+      ],
     );
   }
 }

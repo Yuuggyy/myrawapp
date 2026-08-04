@@ -13,6 +13,7 @@ import 'presentation/screens/kyc/kyc_screen.dart';
 import 'presentation/screens/transfer/transfer_screen.dart';
 import 'presentation/screens/accounts/accounts_screen.dart';
 import 'presentation/screens/profile/profile_screen.dart';
+import 'presentation/screens/admin/admin_dashboard_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +61,8 @@ class MyRawApp extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const AccountsScreen());
           case '/profile':
             return MaterialPageRoute(builder: (_) => const ProfileScreen());
+          case '/admin':
+            return MaterialPageRoute(builder: (_) => const AdminDashboardScreen());
           default:
             // Handle dynamic routes like /projects/:id and /projects/:id/chat
             final uri = Uri.parse(settings.name ?? '/');

@@ -54,6 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _goAdmin() {
+    Navigator.pushNamed(context, '/admin');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () => Navigator.pushNamed(context, AppRoutes.forgotPassword),
+                    onPressed: () => Navigator.pushNamed(context, AppRoutes.kyc),
                     child: const Text(
                       'Mot de passe oublié ?',
                       style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w500),
@@ -239,13 +243,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Create a MyRawApp account — bank account opening happens later, once logged in
                 OutlinedButton(
                   onPressed: () => Navigator.pushNamed(context, AppRoutes.register),
                   child: const Text('Créer un compte'),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+
+                // Admin access — back-office entry point
+                Center(
+                  child: TextButton.icon(
+                    onPressed: _goAdmin,
+                    icon: Icon(Icons.shield_outlined, size: 16, color: AppColors.grey700),
+                    label: Text('Accès Back-Office', style: TextStyle(color: AppColors.grey700, fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
 
                 const Center(
                   child: Text(

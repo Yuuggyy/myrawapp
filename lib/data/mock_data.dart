@@ -25,6 +25,14 @@ class MockAccounts {
       "status": "Actif",
       "number": "RAW-00842-P",
     },
+    {
+      "id": "3",
+      "type": "Lady's First",
+      "balance": 3200.00,
+      "currency": "USD",
+      "status": "Actif",
+      "number": "LF-00842-W",
+    },
   ];
 }
 
@@ -78,135 +86,67 @@ class MockTransactions {
       "description": "Recharge IllicoCash",
       "date": "2026-06-22",
       "status": "Complété",
-      "reference": "TXN-20260622-089",
+      "reference": "TXN-20260622-003",
+    },
+    {
+      "id": "6",
+      "type": "debit",
+      "amount": 45.00,
+      "currency": "USD",
+      "description": "Visa Direct - Envoi diaspora",
+      "date": "2026-06-20",
+      "status": "Complété",
+      "reference": "TXN-20260620-008",
     },
   ];
 }
 
-class MockProjects {
-  static const List<Map<String, dynamic>> projects = [
+class MockServices {
+  static const List<Map<String, dynamic>> services = [
     {
-      "id": "1",
-      "title": "Épicerie Bio Gombe",
-      "type": "PME",
-      "sector": "Commerce / Alimentation",
-      "amount": 25000.00,
-      "currency": "USD",
-      "status": "En validation humaine",
-      "statusCode": 3,
-      "createdDate": "2026-06-15",
-      "aiScore": 78,
-      "rseScore": 82,
-      "complianceScore": 91,
-      "commercialScore": 74,
-      "accountingScore": 65,
-      "aiRecommendation": "Favorable",
-      "step": "Analyse IA terminée — En attente validation chargé de compte",
+      "name": "RawbankOnline",
+      "description": "Gérez vos comptes en ligne, 24h/24",
+      "icon": "phone_android",
+      "color": "#F0B000",
     },
     {
-      "id": "2",
-      "title": "Salon de Beauté Lady's First",
-      "type": "Lady's First",
-      "sector": "Services / Beauté",
-      "amount": 8000.00,
-      "currency": "USD",
-      "status": "Analyse IA en cours",
-      "statusCode": 2,
-      "createdDate": "2026-06-28",
-      "aiScore": 0,
-      "rseScore": 0,
-      "complianceScore": 0,
-      "commercialScore": 0,
-      "accountingScore": 0,
-      "aiRecommendation": "En cours",
-      "step": "Documents reçus — Routage IA en cours",
+      "name": "IllicoCash",
+      "description": "Envoyez de l'argent partout en RDC",
+      "icon": "send",
+      "color": "#F0B000",
     },
     {
-      "id": "3",
-      "title": "Ferme Avicole Kasaï",
-      "type": "Agriculture",
-      "sector": "Agriculture / Élevage",
-      "amount": 45000.00,
-      "currency": "USD",
-      "status": "Décision rendue",
-      "statusCode": 4,
-      "createdDate": "2026-05-10",
-      "aiScore": 85,
-      "rseScore": 90,
-      "complianceScore": 88,
-      "commercialScore": 80,
-      "accountingScore": 82,
-      "aiRecommendation": "Favorable",
-      "step": "Approuvé — Contrat en préparation",
+      "name": "Visa Direct",
+      "description": "Recevez et envoyez avec votre carte",
+      "icon": "credit_card",
+      "color": "#F0B000",
+    },
+    {
+      "name": "Kimia Diaspora",
+      "description": "Assurance pour la diaspora congolaise",
+      "icon": "shield",
+      "color": "#F0B000",
+    },
+    {
+      "name": "Lady's First",
+      "description": "Programme pour femmes entrepreneurs",
+      "icon": "female",
+      "color": "#F0B000",
+    },
+    {
+      "name": "We Act",
+      "description": "RSE et accompagnement des jeunes",
+      "icon": "groups",
+      "color": "#F0B000",
     },
   ];
 }
 
-class MockChatMessages {
-  static const List<Map<String, dynamic>> messages = [
-    {
-      "id": "1",
-      "sender": "ai",
-      "content": "Bonjour Jean-Philippe ! Je suis votre assistant IA RawBank. Comment puis-je vous aider avec votre dossier de financement aujourd'hui ?",
-      "time": "09:00",
-      "date": "2026-06-30",
-    },
-    {
-      "id": "2",
-      "sender": "user",
-      "content": "Bonjour ! J'ai des questions sur mon dossier Épicerie Bio Gombe.",
-      "time": "09:05",
-      "date": "2026-06-30",
-    },
-    {
-      "id": "3",
-      "sender": "ai",
-      "content": "Bien sûr ! Votre dossier 'Épicerie Bio Gombe' est actuellement en validation humaine après une analyse IA favorable (score global : 78/100). Votre chargé de compte Mme Kabila l'examinera dans les 48h. Avez-vous des documents supplémentaires à fournir ?",
-      "time": "09:06",
-      "date": "2026-06-30",
-    },
-    {
-      "id": "4",
-      "sender": "user",
-      "content": "Est-ce que je dois fournir un plan de financement supplémentaire ?",
-      "time": "09:10",
-      "date": "2026-06-30",
-    },
-    {
-      "id": "5",
-      "sender": "ai",
-      "content": "D'après l'analyse de votre dossier, votre plan de financement actuel est suffisant. Cependant, l'IA Comptabilité suggère d'ajouter des projections de cash-flow sur 24 mois pour renforcer votre dossier. Souhaitez-vous un modèle de tableau ?",
-      "time": "09:11",
-      "date": "2026-06-30",
-    },
-  ];
-}
-
-class MockNotifications {
-  static const List<Map<String, dynamic>> notifications = [
-    {
-      "id": "1",
-      "title": "Analyse IA terminée",
-      "body": "Votre dossier 'Épicerie Bio Gombe' a été analysé. Score global : 78/100",
-      "type": "project",
-      "isRead": false,
-      "time": "Il y a 2h",
-    },
-    {
-      "id": "2",
-      "title": "Document requis",
-      "body": "Veuillez compléter votre KYC — pièce d'identité en attente de vérification",
-      "type": "kyc",
-      "isRead": false,
-      "time": "Il y a 5h",
-    },
-    {
-      "id": "3",
-      "title": "Transaction reçue",
-      "body": "Vous avez reçu 500 USD de Mama Shop",
-      "type": "transaction",
-      "isRead": true,
-      "time": "Hier",
-    },
-  ];
+class RawbankStats {
+  static const String branches = "100+";
+  static const String atms = "274";
+  static const String foundedYear = "2002";
+  static const String marketShare = "35%";
+  static const String totalAssets = "2.5 Mrd $";
+  static const String employees = "1,200+";
 }

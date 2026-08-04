@@ -4,6 +4,9 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../data/models/account_model.dart';
 import '../accounts/accounts_screen.dart';
+import 'media_tab.dart';
+import '../../../data/video_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../profile/profile_screen.dart';
 import '../chat/chat_screen.dart';
 import '../../../core/services/api_service.dart';
@@ -32,7 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: const [
           _HomeTab(),
           _ProjectsTab(),
-          AccountsScreen(),
+          const MediaTab(),
           ChatScreen(projectId: 'assistant', showBackButton: false),
           ProfileScreen(),
         ],
@@ -78,7 +81,7 @@ class _RawBottomNavBar extends StatelessWidget {
               _navItem(Icons.home_outlined, Icons.home, 'Accueil', 0),
               _navItem(Icons.folder_outlined, Icons.folder, 'Projets', 1),
               const SizedBox(width: 48), // reserved space for the docked FAB notch
-              _navItem(Icons.account_balance_wallet_outlined, Icons.account_balance_wallet, 'Comptes', 2),
+              _navItem(Icons.play_circle_outline, Icons.play_circle, 'Médias', 2),
               _navItem(Icons.person_outlined, Icons.person, 'Profil', 4),
             ],
           ),
@@ -393,6 +396,110 @@ class _HomeTabState extends State<_HomeTab> {
                           isCredit: isCredit,
                         );
                       }),
+                  // Médias RawBank section
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Médias RawBank', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                      TextButton(
+                        onPressed: () => _onNavTapMedia(context),
+                        child: const Text('Tout voir', style: TextStyle(color: AppColors.primary, fontSize: 13)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 180,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: VideoData.videos.length > 5 ? 5 : VideoData.videos.length,
+                      itemBuilder: (context, index) {
+                        final v = VideoData.videos[index];
+                        return GestureDetector(
+                          onTap: () async {
+                            final url = 'https://www.youtube.com/watch?v=\${v.youtubeId}';
+                            if (await canLaunchUrl(Uri.parse(url))) {
+                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                            }
+                          },
+                          child: Container(
+                            width: 240,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(color: AppColors.grey200),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  children: [
+                                    AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: Image.asset(
+                                        v.thumbnail,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (c, _, __) => Container(
+                                          color: AppColors.secondary,
+                                          child: Center(child: Icon(Icons.play_circle, color: AppColors.primary, size: 32)),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: Center(
+                                        child: Container(
+                                          width: 40, height: 40,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary.withValues(alpha: 0.9),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(Icons.play_arrow, color: Colors.white, size: 20),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 4, right: 4,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(color: Colors.black87, borderRadius: BorderRadius.circular(3)),
+                                        child: Text(v.duration, style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w600)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(v.title,
+                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(3)),
+                                            child: Text(v.category, style: const TextStyle(fontSize: 9, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(v.date, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 80),
                 ],
               ),
@@ -401,6 +508,13 @@ class _HomeTabState extends State<_HomeTab> {
         ],
       ),
     );
+  }
+
+  void _onNavTapMedia(BuildContext context) {
+    // Navigate to the media tab by simulating nav tap
+    // Since we're in a stateful widget, we can't directly access _DashboardScreenState
+    // Instead, use the navigator approach
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const MediaTab()));
   }
 }
 
