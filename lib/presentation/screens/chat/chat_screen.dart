@@ -168,6 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final _scrollController = ScrollController();
   bool _isAiTyping = false;
   AgentType? _typingAgent;
+  List<QuickReply>? _fallbackQuickReplies;
   AgentType? _activeAgent; // null = router
   bool _showAgentPanel = false;
 
@@ -215,7 +216,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatMessage> _buildAssistantIntro() {
     return [
       ChatMessage(
-        content: "Bonjour 👋 Je suis l'Assistant RawBank. Je peux répondre à vos questions sur vos comptes, vos virements, vos projets de financement ou votre dossier KYC. Que puis-je faire pour vous ?",
+        content: "Bonjour 👋 Je suis l'Assistant IA RawBank, propulsé par Llama 3.3. Je peux analyser votre projet, évaluer sa viabilité, vérifier la conformité et vous guider dans votre demande de financement.\n\nPosez-moi votre question !",
         isAi: true,
         time: DateTime.now(),
         agent: AgentType.router,
@@ -282,6 +283,7 @@ class _ChatScreenState extends State<ChatScreen> {
     // Determine which agent responds
     final respondingAgent = _activeAgent ?? _determineAgent(text);
     _persistMessage(text, 'human', respondingAgent.name);
+    _fallbackQuickReplies = null;
 
     // Try calling the real AI backend first
     final backendAgent = AiService.agentToBackend(respondingAgent.name);
@@ -298,12 +300,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
 
     if (aiResult != null) {
+      // Real AI response — no scripted quick replies
       aiResponse = aiResult.response;
     } else {
-      // Fallback to mock response
-      await Future.delayed(const Duration(milliseconds: 800));
+      // Fallback to mock response only if backend unreachable
+      await Future.delayed(const Duration(milliseconds: 600));
       final mockResponse = _generateResponse(text, respondingAgent);
       aiResponse = mockResponse['content']!;
+      _fallbackQuickReplies = mockResponse['quickReplies'] as List<QuickReply>?;
     }
 
     if (!mounted) return;
@@ -316,7 +320,7 @@ class _ChatScreenState extends State<ChatScreen> {
         isAi: true,
         time: DateTime.now(),
         agent: respondingAgent,
-        quickReplies: _generateResponse(text, respondingAgent)['quickReplies'],
+        quickReplies: _fallbackQuickReplies,
       ));
     });
     _persistMessage(aiResponse, 'ai', respondingAgent.name);
