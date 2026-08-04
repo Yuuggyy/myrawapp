@@ -233,7 +233,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         ),
         child: SafeArea(
           child: SizedBox(
-            height: 64,
+            height: 68,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -242,6 +242,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 _adminNavItem(Icons.inbox, Icons.inbox_outlined, 'Demandes', 2),
                 _adminNavItem(Icons.psychology, Icons.psychology_outlined, 'IA Hub', 3),
                 _adminNavItem(Icons.people, Icons.people_outlined, 'Users', 4),
+                _adminNavItem(Icons.newspaper, Icons.newspaper_outlined, 'Actus', 5),
               ],
             ),
           ),
@@ -256,7 +257,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return InkWell(
       onTap: () => setState(() => _currentTab = index),
       child: SizedBox(
-        width: 60,
+        width: 55,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
