@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/api_service.dart';
 import '../../../data/models/business_sector.dart';
+import '../../../core/services/ai_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ── AI Agent Model ──
@@ -282,24 +283,43 @@ class _ChatScreenState extends State<ChatScreen> {
     final respondingAgent = _activeAgent ?? _determineAgent(text);
     _persistMessage(text, 'human', respondingAgent.name);
 
-    // Simulate thinking delay
-    await Future.delayed(const Duration(milliseconds: 1500));
-    if (!mounted) return;
+    // Try calling the real AI backend first
+    final backendAgent = AiService.agentToBackend(respondingAgent.name);
+    final history = _messages
+        .where((m) => m.content.isNotEmpty)
+        .map((m) => {'role': m.isAi ? 'assistant' : 'user', 'content': m.content})
+        .toList();
 
-    final response = _generateResponse(text, respondingAgent);
+    String aiResponse;
+    final aiResult = await AiService.instance.chat(
+      message: text,
+      agentBackendName: backendAgent,
+      conversationHistory: history,
+    );
+
+    if (aiResult != null) {
+      aiResponse = aiResult.response;
+    } else {
+      // Fallback to mock response
+      await Future.delayed(const Duration(milliseconds: 800));
+      final mockResponse = _generateResponse(text, respondingAgent);
+      aiResponse = mockResponse['content']!;
+    }
+
+    if (!mounted) return;
 
     setState(() {
       _isAiTyping = false;
       _typingAgent = null;
       _messages.add(ChatMessage(
-        content: response['content']!,
+        content: aiResponse,
         isAi: true,
         time: DateTime.now(),
         agent: respondingAgent,
-        quickReplies: response['quickReplies'],
+        quickReplies: _generateResponse(text, respondingAgent)['quickReplies'],
       ));
     });
-    _persistMessage(response['content']!, 'ai', respondingAgent.name);
+    _persistMessage(aiResponse, 'ai', respondingAgent.name);
     _scrollToBottom();
   }
 

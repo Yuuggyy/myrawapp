@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../core/services/ai_service.dart';
 import '../../../data/models/admin_models.dart';
 import '../../../data/models/project_model.dart';
 import '../../../data/models/user_model.dart';
@@ -16,6 +17,9 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int _currentTab = 0;
+  List<NewsItem> _newsItems = [];
+  List<RawbankUpdate> _rawbankUpdates = [];
+  bool _isLoadingNews = false;
 
   // ── Mock data for the back-office (will be replaced by real API) ──
   final AdminStats _stats = const AdminStats(
@@ -188,6 +192,25 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   final List<ProjectModel> _projects = [];
 
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNewsFeed();
+  }
+
+  Future<void> _loadNewsFeed() async {
+    setState(() => _isLoadingNews = true);
+    final result = await AiService.instance.getNewsFeed(query: 'RawBank RDC banque 2025', limit: 10);
+    if (mounted) {
+      setState(() {
+        _newsItems = result?.news ?? [];
+        _rawbankUpdates = result?.rawbankUpdates ?? [];
+        _isLoadingNews = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,6 +223,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           _buildRequestsTab(),
           _buildAiHubTab(),
           _buildUsersTab(),
+          _buildNewsTab(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -1091,6 +1115,139 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   String _formatDate(DateTime date) {
     return DateFormat('dd/MM/yyyy').format(date);
   }
+
+  Widget _buildNewsTab() {
+    return RefreshIndicator(
+      onRefresh: _loadNewsFeed,
+      color: AppColors.primary,
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _buildAdminHeader2('Actualités', 'RawBank et secteur bancaire RDC'),
+
+          // RawBank KPIs from annual report
+          if (_rawbankUpdates.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            _buildSectionTitle('Indicateurs Clés 2025'),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _rawbankUpdates.map((u) {
+                Color impactColor;
+                if (u.impact == 'Positif') {
+                  impactColor = const Color(0xFF4CAF50);
+                } else if (u.impact == 'Vigilance') {
+                  impactColor = const Color(0xFFFFA726);
+                } else {
+                  impactColor = const Color(0xFFEF5350);
+                }
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF15151E),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border(left: BorderSide(color: impactColor, width: 3)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(u.category, style: TextStyle(fontSize: 10, color: Colors.grey[400], fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Text(u.title, style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 4),
+                      Text(u.detail, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(color: impactColor.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
+                        child: Text(u.impact, style: TextStyle(fontSize: 10, color: impactColor, fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+
+          // News articles
+          const SizedBox(height: 24),
+          _buildSectionTitle('Dernières Actualités'),
+          const SizedBox(height: 12),
+
+          if (_isLoadingNews)
+            const Center(child: Padding(padding: EdgeInsets.all(40), child: CircularProgressIndicator(color: AppColors.primary)))
+          else if (_newsItems.isEmpty)
+            const Center(child: Padding(padding: EdgeInsets.all(40), child: Text('Aucune actualité disponible', style: TextStyle(color: Colors.grey))))
+          else
+            ..._newsItems.map((n) => Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xFF15151E),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.15), borderRadius: BorderRadius.circular(6)),
+                        child: Text(n.source, style: const TextStyle(fontSize: 10, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                      ),
+                      const Spacer(),
+                      if (n.date.isNotEmpty)
+                        Text(n.date, style: TextStyle(fontSize: 10, color: Colors.grey[500])),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(n.title, style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600)),
+                  if (n.description.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text(n.description, style: TextStyle(fontSize: 12, color: Colors.grey[400]), maxLines: 3, overflow: TextOverflow.ellipsis),
+                  ],
+                ],
+              ),
+            )).toList(),
+
+          const SizedBox(height: 20),
+          // AI Info box
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A2E),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Icon(Icons.psychology, color: AppColors.primary, size: 20),
+                  const SizedBox(width: 8),
+                  const Text('Auto-Formation IA', style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w700)),
+                ]),
+                const SizedBox(height: 8),
+                Text(
+                  "L\'IA RawBank s\'auto-forme automatiquement à partir des actualités bancaires. "
+                  "Connexion à X (Twitter) prévue pour un flux temps réel des nouveautés. "
+                  "Modèle: Llama 3.3 70B via Groq (gratuit).",
+                  style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(title, style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700));
+  }
 }
 
 // Extension to add date to AdminRequest
@@ -1111,6 +1268,7 @@ extension on AdminRequest {
 }
 
 // Simple mock project for admin view
+
 class _MockAdminProject {
   final String id;
   final String title;
@@ -1132,6 +1290,19 @@ class _MockAdminProject {
       case ProjectStatus.approved: return 'Approuvé';
       case ProjectStatus.rejected: return 'Rejeté';
       case ProjectStatus.pendingInfo: return 'Complément requis';
+    }
+  }
+
+  Color get statusColor {
+    switch (status) {
+      case ProjectStatus.draft: return const Color(0xFF9E9E9E);
+      case ProjectStatus.submitted: return const Color(0xFF2196F3);
+      case ProjectStatus.analyzing: return const Color(0xFFFFA726);
+      case ProjectStatus.aiReview: return const Color(0xFF9C27B0);
+      case ProjectStatus.humanReview: return const Color(0xFFFFA726);
+      case ProjectStatus.approved: return const Color(0xFF4CAF50);
+      case ProjectStatus.rejected: return const Color(0xFFEF5350);
+      case ProjectStatus.pendingInfo: return const Color(0xFFFFC107);
     }
   }
 }
