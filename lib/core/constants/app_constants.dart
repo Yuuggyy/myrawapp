@@ -125,3 +125,19 @@ class AppConstants {
   static const String adminEmail = 'admin@rawbank.cd';
   static const String adminPassword = 'rawbank2024';
 }
+
+class AppRoutes {
+  static const String splash = '/';
+  static const String login = '/login';
+  static const String register = '/register';
+  static const String businessRegister = '/business-register';
+  static const String dashboard = '/dashboard';
+  static const String projects = '/projects';
+  static const String newProject = '/projects/new';
+  static const String kyc = '/kyc';
+  static const String transfer = '/transfer';
+  static const String accounts = '/accounts';
+  static const String profile = '/profile';
+  static const String admin = '/admin';
+  static const String chat = '/chat';
+}

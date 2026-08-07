@@ -200,26 +200,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
 
                     // Menu items
-                    _MenuSection(title: 'Compte', items: const [
-                      _MenuItem(icon: Icons.person_outline, label: 'Informations personnelles'),
-                      _MenuItem(icon: Icons.badge_outlined, label: 'Pièces d\'identité'),
-                      _MenuItem(icon: Icons.lock_outline, label: 'Sécurité & PIN'),
-                      _MenuItem(icon: Icons.language, label: 'Langue', trailing: 'Français'),
+                    _MenuSection(title: 'Compte', items: [
+                      _MenuItem(icon: Icons.person_outline, label: 'Informations personnelles', onTap: () => Navigator.pushNamed(context, AppRoutes.profile)),
+                      _MenuItem(icon: Icons.badge_outlined, label: 'KYC & Documents', onTap: () => Navigator.pushNamed(context, AppRoutes.kyc)),
+                      _MenuItem(icon: Icons.lock_outline, label: 'Sécurité & PIN', onTap: () {}),
+                      _MenuItem(icon: Icons.language, label: 'Langue', trailing: 'Français', onTap: () {}),
                     ]),
                     const SizedBox(height: 16),
 
-                    _MenuSection(title: 'Banque', items: const [
-                      _MenuItem(icon: Icons.account_balance_outlined, label: 'Mes comptes'),
-                      _MenuItem(icon: Icons.receipt_long_outlined, label: 'Relevés bancaires'),
-                      _MenuItem(icon: Icons.swap_horiz, label: 'Bénéficiaires'),
-                      _MenuItem(icon: Icons.support_agent, label: 'Support client'),
+                    _MenuSection(title: 'Banque', items: [
+                      _MenuItem(icon: Icons.account_balance_outlined, label: 'Mes comptes', onTap: () => Navigator.pushNamed(context, AppRoutes.accounts)),
+                      _MenuItem(icon: Icons.receipt_long_outlined, label: 'Transferts', onTap: () => Navigator.pushNamed(context, AppRoutes.transfer)),
+                      _MenuItem(icon: Icons.swap_horiz, label: 'Bénéficiaires', onTap: () => Navigator.pushNamed(context, AppRoutes.transfer)),
+                      _MenuItem(icon: Icons.support_agent, label: 'Support client (Chat IA)', onTap: () => Navigator.pushNamed(context, AppRoutes.chat)),
                     ]),
                     const SizedBox(height: 16),
 
-                    _MenuSection(title: 'Préférences', items: const [
-                      _MenuItem(icon: Icons.notifications_outlined, label: 'Notifications'),
-                      _MenuItem(icon: Icons.dark_mode_outlined, label: 'Thème', trailing: 'Clair'),
-                      _MenuItem(icon: Icons.info_outline, label: 'À propos', trailing: 'v${AppConstants.version}'),
+                    _MenuSection(title: 'Préférences', items: [
+                      _MenuItem(icon: Icons.notifications_outlined, label: 'Notifications', onTap: () {}),
+                      _MenuItem(icon: Icons.dark_mode_outlined, label: 'Thème', trailing: 'Clair', onTap: () {}),
+                      _MenuItem(icon: Icons.info_outline, label: 'À propos', trailing: 'v${AppConstants.version}', onTap: () {}),
                     ]),
                     const SizedBox(height: 24),
 
@@ -316,12 +316,13 @@ class _MenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final String? trailing;
-  const _MenuItem({required this.icon, required this.label, this.trailing});
+  final VoidCallback? onTap;
+  const _MenuItem({required this.icon, required this.label, this.trailing, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap ?? () {},
       borderRadius: BorderRadius.circular(14),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
