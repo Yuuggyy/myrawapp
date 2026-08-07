@@ -223,6 +223,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ]),
                     const SizedBox(height: 24),
 
+                    // Admin Back-Office access
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () => Navigator.pushNamed(context, '/admin'),
+                        icon: const Icon(Icons.admin_panel_settings, color: Colors.white),
+                        label: const Text('Accéder au Back-Office',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1a1a2e),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
                     // Logout
                     SizedBox(
                       width: double.infinity,

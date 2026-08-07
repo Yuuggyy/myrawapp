@@ -25,9 +25,11 @@ class AppConstants {
     'We Act',
   ];
 
-  // API
-  static const String baseUrl = 'https://vesper-4d02d524.base44.app/functions';
-  static const String aiChatUrl = 'https://base44.app/api/apps/6a10802fc1e2a32a74055143/functions/rawbankAiChat';
+  // API — Base44 backend functions
+  static const String baseUrl = 'https://base44.app/api/apps/6a10802fc1e2a32a74055143/functions';
+  static const String aiChatUrl = '$baseUrl/rawbankAiChat';
+  static const String adminUrl = '$baseUrl/rawbankAdmin';
+  static const String ragUploadUrl = '$baseUrl/rawbankRagUpload';
   static const int connectTimeout = 30000;
   static const int receiveTimeout = 30000;
 
@@ -36,6 +38,7 @@ class AppConstants {
   static const String refreshTokenKey = 'refresh_token';
   static const String userKey = 'user_data';
   static const String kycLevelKey = 'kyc_level';
+  static const String isAdminKey = 'is_admin';
 
   // KYC Levels
   static const String kycBasic = 'basic';
@@ -58,50 +61,67 @@ class AppConstants {
 
   // Project Sectors
   static const List<String> projectSectors = [
-    'Agriculture & Agro-alimentaire',
+    'Agriculture & Agro-industrie',
+    'Mines & Énergie',
     'Commerce & Distribution',
-    'Construction & Immobilier',
-    'Éducation & Formation',
-    'Énergie & Environnement',
-    'Industrie & Manufacture',
-    'Santé & Bien-être',
-    'Services financiers',
-    'Technologie & Télécoms',
+    'BTP & Immobilier',
     'Transport & Logistique',
+    'Technologie & Télécoms',
+    'Santé & Pharmacie',
+    'Éducation & Formation',
+    'Tourisme & Hôtellerie',
+    'Industrie Manufacturière',
+    'Services Financiers',
+    'Environnement & Énergies Renouvelables',
   ];
 
-  // Routing
-  static const String routeSplash = '/';
-  static const String routeLogin = '/login';
-  static const String routeRegister = '/register';
-  static const String routeBusinessRegister = '/business-register';
-  static const String routeDashboard = '/dashboard';
-  static const String routeProjects = '/projects';
-  static const String routeNewProject = '/projects/new';
-  static const String routeKyc = '/kyc';
-  static const String routeTransfer = '/transfer';
-  static const String routeAccounts = '/accounts';
-  static const String routeProfile = '/profile';
+  // Project Status
+  static const String statusSubmitted = 'submitted';
+  static const String statusPending = 'pending';
+  static const String statusUnderReview = 'under_review';
+  static const String statusApproved = 'approved';
+  static const String statusRejected = 'rejected';
 
-  // Social Links
-  static const String youtubeChannel = 'https://www.youtube.com/@Rawbank';
-  static const String websiteUrl = 'https://rawbank.com';
-  static const String facebookUrl = 'https://www.facebook.com/RawbankSa/';
-  static const String instagramUrl = 'https://www.instagram.com/rawbank/';
-  static const String twitterUrl = 'https://x.com/Rawbank_sa';
-}
+  // Funding Types
+  static const List<String> fundingTypes = [
+    'Prêt',
+    'Prêt avec intérêt',
+    'Financement de partenariat',
+    'RSE / ESG',
+  ];
 
-// Convenience alias used in some screens
-class AppRoutes {
-  static const String splash = '/';
-  static const String login = '/login';
-  static const String register = '/register';
-  static const String businessRegister = '/business-register';
-  static const String dashboard = '/dashboard';
-  static const String projects = '/projects';
-  static const String newProject = '/projects/new';
-  static const String kyc = '/kyc';
-  static const String transfer = '/transfer';
-  static const String accounts = '/accounts';
-  static const String profile = '/profile';
+  // AI Agents
+  static const String agentRouteur = 'routeur';
+  static const String agentRse = 'rse';
+  static const String agentConformite = 'conformite';
+  static const String agentCommercial = 'commercial';
+  static const String agentComptabilite = 'comptabilite';
+
+  static const List<String> agentKeys = [
+    agentRouteur,
+    agentRse,
+    agentConformite,
+    agentCommercial,
+    agentComptabilite,
+  ];
+
+  static const Map<String, String> agentNames = {
+    'routeur': 'Routeur IA',
+    'rse': 'Agent RSE',
+    'conformite': 'Agent Conformité',
+    'commercial': 'Agent Commercial',
+    'comptabilite': 'Agent Comptabilité',
+  };
+
+  static const Map<String, String> agentDescriptions = {
+    'routeur': 'Synthèse & orientation des demandes',
+    'rse': 'Impact social & environnemental',
+    'conformite': 'Conformité réglementaire & juridique',
+    'commercial': 'Viabilité commerciale & marché',
+    'comptabilite': 'Analyse financière & comptable',
+  };
+
+  // Admin credentials (demo)
+  static const String adminEmail = 'admin@rawbank.cd';
+  static const String adminPassword = 'rawbank2024';
 }
