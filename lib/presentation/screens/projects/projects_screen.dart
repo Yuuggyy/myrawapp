@@ -11,20 +11,20 @@ class ProjectsScreen extends StatefulWidget {
   State<ProjectsScreen> createState() => _ProjectsScreenState();
 }
 
-class _ProjectsScreenState extends State<ProjectsScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _ProjectsScreenState extends State<ProjectsScreen> {
   String _selectedFilter = 'Tous';
   bool _loading = true;
+  bool _isSearching = false;
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
 
   final List<String> _filters = ['Tous', 'En cours', 'Approuvés', 'Rejetés'];
-
   List<ProjectModel> _projects = [];
+  List<ProjectModel> _filteredProjects = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
     _loadProjects();
   }
 
@@ -32,16 +32,41 @@ class _ProjectsScreenState extends State<ProjectsScreen>
     try {
       final raw = await ApiService.instance.getProjects();
       final projects = raw.map((p) => ProjectModel.fromJson(p)).toList();
-      if (mounted) setState(() { _projects = projects; _loading = false; });
+      if (mounted) {
+        setState(() {
+          _projects = projects;
+          _filteredProjects = projects;
+          _loading = false;
+        });
+        _applyFilters();
+      }
     } catch (_) {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  void _applyFilters() {
+    List<ProjectModel> result = _projects;
+
+    // Apply status filter
+    if (_selectedFilter != 'Tous') {
+      result = result.where((p) {
+        if (_selectedFilter == 'En cours') return p.status == ProjectStatus.aiReview || p.status == ProjectStatus.analyzing || p.status == ProjectStatus.humanReview || p.status == ProjectStatus.pendingInfo;
+        if (_selectedFilter == 'Approuvés') return p.status == ProjectStatus.approved;
+        if (_selectedFilter == 'Rejetés') return p.status == ProjectStatus.rejected;
+        return true;
+      }).toList();
+    }
+
+    // Apply search
+    if (_searchQuery.isNotEmpty) {
+      result = result.where((p) =>
+        p.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        p.sector.toLowerCase().contains(_searchQuery.toLowerCase())
+      ).toList();
+    }
+
+    setState(() => _filteredProjects = result);
   }
 
   Color _statusColor(ProjectStatus status) {
@@ -57,22 +82,52 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Mes Projets'),
-        backgroundColor: AppColors.primary,
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Rechercher un projet...',
+                  hintStyle: TextStyle(color: Colors.white70, fontSize: 16),
+                  border: InputBorder.none,
+                ),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+                onChanged: (val) {
+                  _searchQuery = val;
+                  _applyFilters();
+                },
+              )
+            : const Text('Mes Projets'),
+        backgroundColor: AppColors.secondary,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) {
+                  _searchController.clear();
+                  _searchQuery = '';
+                  _applyFilters();
+                }
+              });
+            },
           ),
         ],
       ),
       body: Column(
         children: [
-          // Filters
           Container(
             color: AppColors.surface,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -86,7 +141,10 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                     child: FilterChip(
                       label: Text(f),
                       selected: isSelected,
-                      onSelected: (_) => setState(() => _selectedFilter = f),
+                      onSelected: (_) {
+                        setState(() => _selectedFilter = f);
+                        _applyFilters();
+                      },
                       selectedColor: AppColors.primary.withValues(alpha: 0.15),
                       checkmarkColor: AppColors.primary,
                       labelStyle: TextStyle(
@@ -100,26 +158,24 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               ),
             ),
           ),
-
-          // Projects List
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : _projects.isEmpty
+                ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+                : _filteredProjects.isEmpty
                     ? RefreshIndicator(
                         onRefresh: _loadProjects,
                         child: ListView(
-                          children: [const SizedBox(height: 120), const _EmptyState()],
+                          children: [const SizedBox(height: 120), _EmptyState(onCreate: () => Navigator.pushNamed(context, AppRoutes.newProject))],
                         ),
                       )
                     : RefreshIndicator(
                         onRefresh: _loadProjects,
                         child: ListView.separated(
                           padding: const EdgeInsets.all(16),
-                          itemCount: _projects.length,
+                          itemCount: _filteredProjects.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, i) {
-                            final project = _projects[i];
+                            final project = _filteredProjects[i];
                             return _ProjectTile(
                               project: project,
                               statusColor: _statusColor(project.status),
@@ -134,9 +190,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
         backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Nouveau projet',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+        foregroundColor: AppColors.secondary,
+        icon: const Icon(Icons.add),
+        label: const Text('Nouveau projet', style: TextStyle(fontWeight: FontWeight.w700)),
       ),
     );
   }
@@ -146,12 +202,7 @@ class _ProjectTile extends StatelessWidget {
   final ProjectModel project;
   final Color statusColor;
   final VoidCallback onTap;
-
-  const _ProjectTile({
-    required this.project,
-    required this.statusColor,
-    required this.onTap,
-  });
+  const _ProjectTile({required this.project, required this.statusColor, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -171,49 +222,33 @@ class _ProjectTile extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(project.type,
-                    style: const TextStyle(
-                      color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.w600)),
+                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
+                  child: Text(project.type, style: const TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.w600)),
                 ),
                 const Spacer(),
-                Container(
-                  width: 8, height: 8,
-                  decoration: BoxDecoration(
-                    color: statusColor, shape: BoxShape.circle),
-                ),
+                Container(width: 8, height: 8, decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle)),
                 const SizedBox(width: 5),
-                Text(project.statusLabel,
-                  style: TextStyle(
-                    color: statusColor, fontSize: 11, fontWeight: FontWeight.w600)),
+                Text(project.statusLabel, style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.w600)),
               ],
             ),
             const SizedBox(height: 10),
-            Text(project.title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-              maxLines: 2, overflow: TextOverflow.ellipsis),
+            Text(project.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 4),
-            Text(project.sector,
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+            Text(project.sector, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   '\$${project.amountRequested.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} USD',
-                  style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primary)),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primary),
+                ),
                 if (project.globalAiScore != null)
                   Row(
                     children: [
                       const Icon(Icons.auto_awesome, size: 13, color: AppColors.warning),
                       const SizedBox(width: 4),
-                      Text('Score IA: ${project.globalAiScore!.toStringAsFixed(0)}/100',
-                        style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.warning)),
+                      Text('Score IA: ${project.globalAiScore!.toStringAsFixed(0)}/100', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.warning)),
                     ],
                   ),
                 const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.grey500),
@@ -227,7 +262,8 @@ class _ProjectTile extends StatelessWidget {
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState();
+  final VoidCallback onCreate;
+  const _EmptyState({required this.onCreate});
 
   @override
   Widget build(BuildContext context) {
@@ -237,20 +273,15 @@ class _EmptyState extends StatelessWidget {
         children: [
           const Icon(Icons.folder_open_outlined, size: 64, color: AppColors.grey300),
           const SizedBox(height: 16),
-          const Text('Aucun projet',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.grey500)),
+          const Text('Aucun projet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.grey500)),
           const SizedBox(height: 8),
-          const Text('Déposez votre premier dossier de financement',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+          const Text('Déposez votre premier dossier de financement', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
+            onPressed: onCreate,
             icon: const Icon(Icons.add),
             label: const Text('Créer un projet'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: AppColors.secondary),
           ),
         ],
       ),

@@ -46,7 +46,7 @@ class _TransferScreenState extends State<TransferScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Virement'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(

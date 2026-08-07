@@ -82,7 +82,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
         slivers: [
           SliverAppBar(
             floating: true,
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppColors.secondary,
             toolbarHeight: 64,
             title: const Text('Mes Comptes', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
             actions: [
@@ -578,7 +578,7 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
                       child: ElevatedButton(
                         onPressed: _loading ? null : _goNext,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: AppColors.secondary,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
