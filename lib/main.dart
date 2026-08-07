@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'core/theme/app_theme.dart';
+import 'data/services/supabase_service.dart';
 import 'presentation/screens/splash/splash_screen.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/auth/register_screen.dart';
@@ -15,7 +16,7 @@ import 'presentation/screens/accounts/accounts_screen.dart';
 import 'presentation/screens/profile/profile_screen.dart';
 import 'presentation/screens/admin/admin_dashboard_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(
@@ -24,6 +25,10 @@ void main() {
       statusBarIconBrightness: Brightness.light,
     ),
   );
+
+  // Initialize Supabase
+  await SupabaseService.initialize();
+
   runApp(const MyRawApp());
 }
 
@@ -53,6 +58,8 @@ class MyRawApp extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const ProjectsScreen());
           case '/projects/new':
             return MaterialPageRoute(builder: (_) => const NewProjectScreen());
+          case '/chat':
+            return MaterialPageRoute(builder: (_) => const ChatScreen());
           case '/kyc':
             return MaterialPageRoute(builder: (_) => const KycScreen());
           case '/transfer':
@@ -64,19 +71,7 @@ class MyRawApp extends StatelessWidget {
           case '/admin':
             return MaterialPageRoute(builder: (_) => const AdminDashboardScreen());
           default:
-            // Handle dynamic routes like /projects/:id and /projects/:id/chat
-            final uri = Uri.parse(settings.name ?? '/');
-            if (uri.pathSegments.length == 2 && uri.pathSegments[0] == 'projects') {
-              final projectId = uri.pathSegments[1];
-              return MaterialPageRoute(
-                builder: (_) => ChatScreen(projectId: projectId),
-              );
-            }
-            return MaterialPageRoute(
-              builder: (_) => Scaffold(
-                body: Center(child: Text('Page introuvable: ${settings.name}')),
-              ),
-            );
+            return MaterialPageRoute(builder: (_) => const SplashScreen());
         }
       },
     );

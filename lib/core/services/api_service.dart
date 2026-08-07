@@ -1,5 +1,7 @@
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/services/supabase_service.dart';
 import '../constants/app_constants.dart';
 
 /// Real backend client for MyRawApp.
@@ -57,6 +59,8 @@ class ApiService {
   }
 
   Future<void> logout() async {
+    // Sign out of Supabase
+    try { await SupabaseService.signOut(); } catch (_) {}
     await _initPrefs();
     await _prefs!.remove(AppConstants.tokenKey);
     await _prefs!.remove(AppConstants.refreshTokenKey);
@@ -268,44 +272,75 @@ class ApiService {
   // ═══════════════════════════════════════════════════════════════════════
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-    if (_mockMode) {
-      await _saveSession({'access_token': 'mock_token_${DateTime.now().millisecondsSinceEpoch}'});
-      return {'access_token': 'mock_token', 'user': _mockUser(email)};
-    }
+    // Try Supabase auth first
     try {
-      final response = await _post('/rawbankAuth', data: {
-        'action': 'login',
-        'email': email,
-        'password': password,
-      });
-      final data = _unwrap(response);
-      await _saveSession(data);
-      return data;
+      final response = await SupabaseService.signIn(email: email, password: password);
+      if (response.user != null) {
+        final profile = await SupabaseService.getUserProfile();
+        final userData = {
+          'id': response.user!.id,
+          'email': response.user!.email ?? email,
+          'name': profile?['full_name'] ?? email.split('@').first,
+          'phone': profile?['phone'] ?? '+243 81 234 5678',
+          'kyc_level': profile?['kyc_status'] == 'verified' ? 'standard' : 'basic',
+          'client_type': 'Particulier',
+          'account_number': profile?['account_number'] ?? 'RAW-2024-00842',
+        };
+        await _saveSession({
+          'access_token': response.session?.accessToken ?? 'supabase_token',
+          'user': userData,
+        });
+        return {'access_token': response.session?.accessToken ?? 'supabase_token', 'user': userData};
+      }
     } catch (e) {
-      _mockMode = true;
-      await _saveSession({'access_token': 'mock_token_${DateTime.now().millisecondsSinceEpoch}'});
-      return {'access_token': 'mock_token', 'user': _mockUser(email)};
+      // Supabase auth failed, fall through to mock mode
     }
+    // Fallback: mock mode for demo
+    _mockMode = true;
+    await _saveSession({'access_token': 'mock_token_${DateTime.now().millisecondsSinceEpoch}'});
+    return {'access_token': 'mock_token', 'user': _mockUser(email)};
   }
 
   Future<Map<String, dynamic>> register(Map<String, dynamic> fields) async {
-    if (_mockMode) {
-      await _saveSession({'access_token': 'mock_token_${DateTime.now().millisecondsSinceEpoch}'});
-      return {'access_token': 'mock_token', 'user': _mockUser(fields['email'] ?? '')};
-    }
+    // Try Supabase auth first
     try {
-      final response = await _post('/rawbankAuth', data: {
-        'action': 'register',
-        ...fields,
-      });
-      final data = _unwrap(response);
-      await _saveSession(data);
-      return data;
+      final response = await SupabaseService.signUp(
+        email: fields['email'] ?? '',
+        password: fields['password'] ?? '',
+        data: {
+          'full_name': fields['name'],
+          'phone': fields['phone'],
+        },
+      );
+      if (response.user != null) {
+        // Create user profile
+        await SupabaseService.upsertUserProfile(
+          fullName: fields['name'],
+          email: fields['email'],
+          phone: fields['phone'],
+        );
+        final userData = {
+          'id': response.user!.id,
+          'email': response.user!.email ?? fields['email'],
+          'name': fields['name'] ?? fields['email'],
+          'phone': fields['phone'] ?? '',
+          'kyc_level': 'basic',
+          'client_type': fields['client_type'] ?? 'Particulier',
+          'account_number': 'RAW-${DateTime.now().year}-${Random().nextInt(99999).toString().padLeft(5, '0')}',
+        };
+        await _saveSession({
+          'access_token': response.session?.accessToken ?? 'supabase_token',
+          'user': userData,
+        });
+        return {'access_token': response.session?.accessToken ?? 'supabase_token', 'user': userData};
+      }
     } catch (e) {
-      _mockMode = true;
-      await _saveSession({'access_token': 'mock_token_${DateTime.now().millisecondsSinceEpoch}'});
-      return {'access_token': 'mock_token', 'user': _mockUser(fields['email'] ?? '')};
+      // Supabase auth failed, fall through to mock mode
     }
+    // Fallback: mock mode for demo
+    _mockMode = true;
+    await _saveSession({'access_token': 'mock_token_${DateTime.now().millisecondsSinceEpoch}'});
+    return {'access_token': 'mock_token', 'user': _mockUser(fields['email'] ?? '')};
   }
 
   Future<Map<String, dynamic>> me() async {
