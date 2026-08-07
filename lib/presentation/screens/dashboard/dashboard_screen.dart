@@ -28,8 +28,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isChatActive = _selectedIndex == 3;
     return Scaffold(
       backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: !isChatActive,
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
@@ -40,12 +42,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ProfileScreen(),
         ],
       ),
-      bottomNavigationBar: _RawBottomNavBar(
+      bottomNavigationBar: isChatActive ? null : _RawBottomNavBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onNavTap,
       ),
-      floatingActionButton: _RawChatFab(
-        isActive: _selectedIndex == 3,
+      floatingActionButton: isChatActive ? null : _RawChatFab(
+        isActive: false,
         onPressed: () => _onNavTap(3),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

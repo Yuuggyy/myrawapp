@@ -171,7 +171,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     : RefreshIndicator(
                         onRefresh: _loadProjects,
                         child: ListView.separated(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                           itemCount: _filteredProjects.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, i) {
@@ -187,13 +187,17 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.secondary,
-        icon: const Icon(Icons.add),
-        label: const Text('Nouveau projet', style: TextStyle(fontWeight: FontWeight.w700)),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16, right: 8),
+        child: FloatingActionButton.extended(
+          onPressed: () => Navigator.pushNamed(context, AppRoutes.newProject),
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.secondary,
+          icon: const Icon(Icons.add),
+          label: const Text('Nouveau projet', style: TextStyle(fontWeight: FontWeight.w700)),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
