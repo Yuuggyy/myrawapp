@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../constants/app_constants.dart';
 
-/// AI Service - calls the RawBank AI backend function powered by Google Gemini
+/// AI Service - calls the RawBank AI backend function powered by Groq (Llama 3.3 70B)
 /// Falls back to keyword-based response if backend is unreachable
 class AiService {
   static AiService? _instance;
@@ -33,7 +33,7 @@ class AiService {
     }
   }
 
-  /// Calls the RawBank AI chat backend function (Gemini powered)
+  /// Calls the RawBank AI chat backend function (Groq powered)
   /// Returns the AI response, or null if the backend is unreachable
   Future<AiChatResult?> chat({
     required String message,
@@ -64,29 +64,6 @@ class AiService {
       return null;
     }
   }
-
-  /// Fetches the latest RawBank news feed
-  Future<NewsFeedResult?> getNewsFeed({String? query, int limit = 10}) async {
-    try {
-      final response = await _dio.post(
-        '${AppConstants.baseUrl}/rawbanknewsfeed',
-        data: {'query': query, 'limit': limit},
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data;
-        return NewsFeedResult(
-          news: (data['news'] as List?)?.map((n) => NewsItem.fromJson(n)).toList() ?? [],
-          rawbankUpdates: (data['rawbankUpdates'] as List?)?.map((u) => RawbankUpdate.fromJson(u)).toList() ?? [],
-          source: data['source'] ?? 'unknown',
-          timestamp: data['timestamp'] ?? DateTime.now().toIso8601String(),
-        );
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
 }
 
 class AiChatResult {
@@ -101,67 +78,4 @@ class AiChatResult {
     required this.agentName,
     required this.timestamp,
   });
-}
-
-class NewsFeedResult {
-  final List<NewsItem> news;
-  final List<RawbankUpdate> rawbankUpdates;
-  final String source;
-  final String timestamp;
-
-  NewsFeedResult({
-    required this.news,
-    required this.rawbankUpdates,
-    required this.source,
-    required this.timestamp,
-  });
-}
-
-class NewsItem {
-  final String title;
-  final String link;
-  final String date;
-  final String description;
-  final String source;
-
-  NewsItem({
-    required this.title,
-    required this.link,
-    required this.date,
-    required this.description,
-    required this.source,
-  });
-
-  factory NewsItem.fromJson(Map<String, dynamic> json) {
-    return NewsItem(
-      title: json['title'] ?? '',
-      link: json['link'] ?? '',
-      date: json['date'] ?? '',
-      description: json['description'] ?? '',
-      source: json['source'] ?? '',
-    );
-  }
-}
-
-class RawbankUpdate {
-  final String category;
-  final String title;
-  final String impact;
-  final String detail;
-
-  RawbankUpdate({
-    required this.category,
-    required this.title,
-    required this.impact,
-    required this.detail,
-  });
-
-  factory RawbankUpdate.fromJson(Map<String, dynamic> json) {
-    return RawbankUpdate(
-      category: json['category'] ?? '',
-      title: json['title'] ?? '',
-      impact: json['impact'] ?? '',
-      detail: json['detail'] ?? '',
-    );
-  }
 }
