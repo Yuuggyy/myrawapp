@@ -63,10 +63,11 @@ class ChatMessage {
 }
 
 class ChatScreen extends StatefulWidget {
+  final Map<String, dynamic>? projectContext;
   final String projectId;
   final bool showBackButton;
   final VoidCallback? onBack;
-  const ChatScreen({super.key, required this.projectId, this.showBackButton = true, this.onBack});
+  const ChatScreen({super.key, required this.projectId, this.showBackButton = true, this.onBack, this.projectContext});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -84,6 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final String _projectTitle = 'Épicerie Bio Kinshasa';
 
   late List<ChatMessage> _messages;
+  Map<String, dynamic>? _scoring;
 
   @override
   void initState() {
@@ -91,6 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _loadSectorData();
     _messages = _isGeneralAssistant ? _buildAssistantIntro() : _buildProjectIntro();
     if (!_isGeneralAssistant) _loadHistory();
+    if (widget.projectContext != null) _autoAnalyze();
 
     _inputFocusNode.addListener(() {
       if (_inputFocusNode.hasFocus) {
@@ -146,6 +149,64 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (_) {}
   }
 
+  void _autoAnalyze() {
+    if (widget.projectContext == null) return;
+    
+    setState(() {
+      _messages.add(ChatMessage(
+        content: 'Analyse automatique de votre projet en cours...',
+        isAi: false,
+        time: DateTime.now(),
+      ));
+      _isAiTyping = true;
+      _typingAgent = AgentRouter.router;
+    });
+    _scrollToBottom();
+
+    AiService.instance.chat(
+      message: 'Analyse mon projet pour le financement',
+      agentBackendName: 'routeur',
+      projectContext: widget.projectContext,
+      conversationType: 'project_submission',
+    ).then((result) {
+      if (!mounted) return;
+      setState(() {
+        _isAiTyping = false;
+        _typingAgent = null;
+        if (result != null) {
+          // Remove the "Analyse..." placeholder message
+          if (_messages.isNotEmpty && _messages.last.content.contains('Analyse automatique')) {
+            _messages.removeLast();
+          }
+          // Replace with actual user message
+          _messages.add(ChatMessage(
+            content: 'Analyse mon projet pour le financement',
+            isAi: false,
+            time: DateTime.now(),
+          ));
+          // Add AI response
+          _messages.add(ChatMessage(
+            content: result.response,
+            isAi: true,
+            time: DateTime.now(),
+            agent: AgentRouter.router,
+          ));
+          // Store scoring
+          _scoring = result.scoring;
+        } else {
+          // Fallback
+          _messages.add(ChatMessage(
+            content: 'Je rencontre une difficulte technique. Voici une analyse preliminaire de votre projet.',
+            isAi: true,
+            time: DateTime.now(),
+            agent: AgentRouter.router,
+          ));
+        }
+      });
+      _scrollToBottom();
+    });
+  }
+
   List<ChatMessage> _buildAssistantIntro() {
     return [
       ChatMessage(
@@ -194,6 +255,7 @@ class _ChatScreenState extends State<ChatScreen> {
       message: trimmed,
       agentBackendName: agentBackend,
       conversationHistory: history.cast<Map<String, String>>(),
+      projectContext: widget.projectContext,
     ).then((result) {
       if (!mounted) return;
       
@@ -206,6 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
             time: DateTime.now(),
             agent: agent,
           ));
+          if (result.scoring != null) _scoring = result.scoring;
         } else {
           // Fallback to local response if backend is unreachable
           final fallback = _generateResponse(trimmed, agent);
@@ -306,6 +369,91 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   @override
+  Widget _buildScoringBanner() {
+    final s = _scoring!;
+    final score = _getInt(s['score']);
+    final interest = (s['interest'] ?? 'moyen').toString();
+    final breakdown = s['breakdown'] as Map<String, dynamic>? ?? {};
+    final recommendation = (s['recommendation'] ?? '').toString();
+    
+    final scoreColor = score >= 75 ? Colors.green : (score >= 50 ? Colors.orange : Colors.red);
+    final recoColor = recommendation.contains('approuver') ? Colors.green : (recommendation.contains('rejeter') ? Colors.red : Colors.orange);
+    final recoLabel = recommendation.contains('approuver') ? 'APPROUVER' : (recommendation.contains('rejeter') ? 'REJETER' : 'DEMANDER INFO');
+
+    return Container(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [scoreColor.withOpacity(0.08), scoreColor.withOpacity(0.03)]),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: scoreColor.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.analytics, color: scoreColor, size: 20),
+              const SizedBox(width: 8),
+              Text('Score IA: $score/100', style: TextStyle(color: scoreColor, fontWeight: FontWeight.w800, fontSize: 16)),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(color: scoreColor.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                child: Text('Interet: ${interest.toUpperCase()}', style: TextStyle(color: scoreColor, fontSize: 12, fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          if (breakdown.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _scoreChip('RSE', _getInt(breakdown['rse']), Colors.green),
+                _scoreChip('Conf.', _getInt(breakdown['conformite']), Colors.blue),
+                _scoreChip('Com.', _getInt(breakdown['commercial']), Colors.orange),
+                _scoreChip('Compt.', _getInt(breakdown['comptabilite']), Colors.purple),
+              ],
+            ),
+          const SizedBox(height: 8),
+          if (s['summary'] != null && s['summary'].toString().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(s['summary'].toString(), style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.grey)),
+            ),
+          if (s['missingDocuments'] != null && s['missingDocuments'].toString() != 'Aucun')
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text('Documents manquants: ${s['missingDocuments']}', style: const TextStyle(fontSize: 11, color: Colors.red)),
+            ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(color: recoColor.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                child: Text('Recommandation: $recoLabel', style: TextStyle(color: recoColor, fontSize: 12, fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  int _getInt(dynamic v) {
+    if (v is int) return v;
+    if (v is double) return v.toInt();
+    return 0;
+  }
+
+  Widget _scoreChip(String label, int value, Color color) {
+    return Column(children: [
+      Text('$value', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: color)),
+      Text(label, style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+    ]);
+  }
+
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final isEmbedded = !widget.showBackButton;
@@ -332,6 +480,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
+          if (_scoring != null) _buildScoringBanner(),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -431,7 +580,7 @@ class _MessageBubble extends StatelessWidget {
             bottomLeft: isAi ? const Radius.circular(4) : const Radius.circular(16),
             bottomRight: isAi ? const Radius.circular(16) : const Radius.circular(4),
           ),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2))],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

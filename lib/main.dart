@@ -59,7 +59,7 @@ class MyRawApp extends StatelessWidget {
           case '/projects/new':
             return MaterialPageRoute(builder: (_) => const NewProjectScreen());
           case '/chat':
-            return MaterialPageRoute(builder: (_) => const ChatScreen());
+            return MaterialPageRoute(builder: (_) => const ChatScreen(projectId: 'assistant'));
           case '/kyc':
             return MaterialPageRoute(builder: (_) => const KycScreen());
           case '/transfer':

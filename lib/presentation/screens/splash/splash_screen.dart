@@ -110,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
+                      color: AppColors.primary.withOpacity(0.3),
                       blurRadius: 25,
                       offset: const Offset(0, 8),
                     ),
@@ -142,7 +142,7 @@ class _SplashScreenState extends State<SplashScreen>
                     Text(
                       'Au-delà d\'une banque',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: Colors.white.withOpacity(0.7),
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 1,

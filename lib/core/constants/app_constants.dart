@@ -27,7 +27,7 @@ class AppConstants {
 
   // API — Base44 backend functions
   static const String baseUrl = 'https://base44.app/api/apps/6a10802fc1e2a32a74055143/functions';
-  static const String aiChatUrl = '$baseUrl/rawbankAiChat';
+  static const String aiChatUrl = '$baseUrl/rawbankaichat';
   static const String adminUrl = '$baseUrl/rawbankAdmin';
   static const String ragUploadUrl = '$baseUrl/rawbankRagUpload';
   static const int connectTimeout = 30000;

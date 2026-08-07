@@ -332,12 +332,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     };
     return Card(
       child: ListTile(
-        leading: CircleAvatar(backgroundColor: colors[agentKey]?.withValues(alpha: 0.2), child: Icon(Icons.psychology, color: colors[agentKey])),
+        leading: CircleAvatar(backgroundColor: colors[agentKey]?.withOpacity(0.2), child: Icon(Icons.psychology, color: colors[agentKey])),
         title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text(desc),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: Colors.green.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
           child: const Text('Actif', style: TextStyle(color: Colors.green, fontSize: 12)),
         ),
       ),
@@ -356,7 +356,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         subtitle: Text('${p['sector'] ?? 'N/A'} • \$${p['requested_amount'] ?? 0}'),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(color: (statusColors[status] ?? Colors.grey).withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: (statusColors[status] ?? Colors.grey).withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
           child: Text(status, style: TextStyle(color: statusColors[status] ?? Colors.grey, fontSize: 12)),
         ),
       ),
@@ -401,7 +401,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(color: (statusColors[status] ?? Colors.grey).withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: (statusColors[status] ?? Colors.grey).withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
                   child: Text(status, style: TextStyle(color: statusColors[status] ?? Colors.grey, fontSize: 12, fontWeight: FontWeight.w600)),
                 ),
               ],
@@ -470,7 +470,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         children: [
           // Header
           Card(
-            color: AppColors.primary.withValues(alpha: 0.1),
+            color: AppColors.primary.withOpacity(0.1),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -525,7 +525,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           const SizedBox(height: 16),
           // Info banner
           Card(
-            color: Colors.blue.withValues(alpha: 0.1),
+            color: Colors.blue.withOpacity(0.1),
             child: const Padding(
               padding: EdgeInsets.all(12),
               child: Row(
@@ -560,7 +560,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: (colors[agentKey] ?? Colors.grey).withValues(alpha: 0.2),
+              backgroundColor: (colors[agentKey] ?? Colors.grey).withOpacity(0.2),
               child: Icon(Icons.psychology, color: colors[agentKey]),
             ),
             const SizedBox(width: 12),
@@ -575,7 +575,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: Colors.green.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
               child: const Text('Actif', style: TextStyle(color: Colors.green, fontSize: 12)),
             ),
           ],
@@ -620,7 +620,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: AppColors.primary.withValues(alpha: 0.2),
+          backgroundColor: AppColors.primary.withOpacity(0.2),
           child: Text(
             (u['full_name'] ?? 'U')[0].toUpperCase(),
             style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
@@ -630,7 +630,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         subtitle: Text(u['email'] ?? ''),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(color: (kycColors[kyc] ?? Colors.grey).withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: (kycColors[kyc] ?? Colors.grey).withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
           child: Text('KYC: $kyc', style: TextStyle(color: kycColors[kyc] ?? Colors.grey, fontSize: 12)),
         ),
       ),

@@ -97,7 +97,7 @@ class AppTheme {
         labelStyle: TextStyle(color: AppColors.textSecondary),
         hintStyle: TextStyle(color: AppColors.grey500),
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: const BorderSide(color: AppColors.grey200)),
@@ -112,7 +112,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.grey100,
-        selectedColor: AppColors.primary.withValues(alpha: 0.15),
+        selectedColor: AppColors.primary.withOpacity(0.15),
         labelStyle: TextStyle(fontSize: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),

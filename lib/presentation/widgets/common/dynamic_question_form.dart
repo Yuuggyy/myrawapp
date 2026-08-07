@@ -81,7 +81,7 @@ class DynamicQuestionFormState extends State<DynamicQuestionForm> {
     switch (q.inputType) {
       case QuestionInputType.dropdown:
         return DropdownButtonFormField<String>(
-          initialValue: _answers[q.id] as String?,
+          value: _answers[q.id] as String?,
           decoration: _decoration(q),
           items: q.options
               .map((o) => DropdownMenuItem(value: o, child: Text(o, style: const TextStyle(fontSize: 14))))
@@ -111,29 +111,29 @@ class DynamicQuestionFormState extends State<DynamicQuestionForm> {
                   ],
                 ),
               ),
-              RadioGroup<bool>(
-                groupValue: value,
-                onChanged: (v) => _update(q.id, v),
-                child: const Row(
-                  children: [
+              Row(
+                children: [
                     Expanded(
                       child: RadioListTile<bool>(
                         dense: true,
-                        title: Text('Oui', style: TextStyle(fontSize: 13)),
+                        title: const Text('Oui', style: TextStyle(fontSize: 13)),
                         value: true,
+                        groupValue: value,
+                        onChanged: (v) => _update(q.id, v),
                         activeColor: AppColors.primary,
                       ),
                     ),
                     Expanded(
                       child: RadioListTile<bool>(
                         dense: true,
-                        title: Text('Non', style: TextStyle(fontSize: 13)),
+                        title: const Text('Non', style: TextStyle(fontSize: 13)),
                         value: false,
+                        groupValue: value,
+                        onChanged: (v) => _update(q.id, v),
                         activeColor: AppColors.primary,
                       ),
                     ),
                   ],
-                ),
               ),
             ],
           ),

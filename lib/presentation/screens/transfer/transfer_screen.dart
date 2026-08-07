@@ -244,7 +244,7 @@ class _TypeChip extends StatelessWidget {
             color: selected ? Colors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             boxShadow: selected
-                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 4)]
+                ? [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 4)]
                 : [],
           ),
           child: Row(
@@ -287,7 +287,7 @@ class _AccountChip extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: AppColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(

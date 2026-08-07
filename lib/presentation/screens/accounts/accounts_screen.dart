@@ -278,7 +278,7 @@ class _AccountCard extends StatelessWidget {
             children: [
               Container(
                 width: 44, height: 44,
-                decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
                 child: Icon(icon, color: color, size: 24),
               ),
               const SizedBox(width: 12),
@@ -293,7 +293,7 @@ class _AccountCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(color: AppColors.success.withOpacity(0.12), borderRadius: BorderRadius.circular(20)),
                 child: const Text('Actif', style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w600)),
               ),
             ],
@@ -362,7 +362,7 @@ class _TxTile extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: (isCredit ? AppColors.success : AppColors.primary).withValues(alpha: 0.1),
+              color: (isCredit ? AppColors.success : AppColors.primary).withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(isCredit ? Icons.south_west : Icons.north_east,
@@ -653,7 +653,7 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.info.withValues(alpha: 0.06),
+          color: AppColors.info.withOpacity(0.06),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(_accountTypeInfo, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
@@ -688,7 +688,7 @@ class _CreateAccountSheetState extends State<_CreateAccountSheet> {
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.06),
+          color: AppColors.primary.withOpacity(0.06),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -1003,7 +1003,7 @@ class _StatementTxTile extends StatelessWidget {
           Container(
             width: 36, height: 36,
             decoration: BoxDecoration(
-              color: (isCredit ? AppColors.success : AppColors.primary).withValues(alpha: 0.1),
+              color: (isCredit ? AppColors.success : AppColors.primary).withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(isCredit ? Icons.add : Icons.remove, color: isCredit ? AppColors.success : AppColors.primary, size: 18),
@@ -1045,7 +1045,7 @@ class _TypeOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary.withValues(alpha: 0.06) : AppColors.grey100,
+          color: selected ? AppColors.primary.withOpacity(0.06) : AppColors.grey100,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: selected ? AppColors.primary : Colors.transparent, width: 2),
         ),
@@ -1076,7 +1076,7 @@ class _MethodChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primary.withValues(alpha: 0.06) : AppColors.grey100,
+          color: selected ? AppColors.primary.withOpacity(0.06) : AppColors.grey100,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: selected ? AppColors.primary : Colors.transparent, width: 2),
         ),

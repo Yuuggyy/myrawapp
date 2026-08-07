@@ -77,10 +77,10 @@ class MediaTab extends StatelessWidget {
                             width: 56,
                             height: 56,
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.9),
+                              color: AppColors.primary.withOpacity(0.9),
                               shape: BoxShape.circle,
                               boxShadow: [
-                                BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 8),
+                                BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 8),
                               ],
                             ),
                             child: const Icon(Icons.play_arrow, color: Colors.white, size: 28),
@@ -94,7 +94,7 @@ class MediaTab extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.85),
+                            color: Colors.black.withOpacity(0.85),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(v.duration,

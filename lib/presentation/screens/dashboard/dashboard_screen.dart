@@ -132,7 +132,7 @@ class _RawChatFab extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         boxShadow: [
-          BoxShadow(color: AppColors.primary.withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 4)),
+          BoxShadow(color: AppColors.primary.withOpacity(0.4), blurRadius: 12, offset: const Offset(0, 4)),
         ],
         border: isActive ? Border.all(color: Colors.white, width: 2.5) : null,
       ),
@@ -270,7 +270,7 @@ class _HomeTabState extends State<_HomeTab> {
                     children: [
                       Container(
                         width: 42, height: 42,
-                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
                         child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 22),
                       ),
                       const Positioned(
@@ -287,7 +287,7 @@ class _HomeTabState extends State<_HomeTab> {
                   const SizedBox(width: 8),
                   Container(
                     width: 42, height: 42,
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
                     child: Center(
                       child: Text(_initials(_userName), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
                     ),
@@ -308,7 +308,7 @@ class _HomeTabState extends State<_HomeTab> {
                       padding: const EdgeInsets.all(14),
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: AppColors.error.withValues(alpha: 0.08),
+                        color: AppColors.error.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -455,7 +455,7 @@ class _HomeTabState extends State<_HomeTab> {
                                         child: Container(
                                           width: 40, height: 40,
                                           decoration: BoxDecoration(
-                                            color: AppColors.primary.withValues(alpha: 0.9),
+                                            color: AppColors.primary.withOpacity(0.9),
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(Icons.play_arrow, color: Colors.white, size: 20),
@@ -613,7 +613,7 @@ class _QuickBtn extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.15),
+            color: Colors.white.withOpacity(0.15),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -679,16 +679,16 @@ class _KycBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.warning.withValues(alpha: 0.08),
+        color: AppColors.warning.withOpacity(0.08),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.warning.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.warning.withOpacity(0.2)),
       ),
       child: Row(
         children: [
           Container(
             width: 44, height: 44,
             decoration: BoxDecoration(
-              color: AppColors.warning.withValues(alpha: 0.15),
+              color: AppColors.warning.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.shield_outlined, color: AppColors.warning, size: 24),
@@ -733,7 +733,7 @@ class _ProjectCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: AppColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
@@ -794,7 +794,7 @@ class _TxItem extends StatelessWidget {
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-              color: (isCredit ? AppColors.success : AppColors.primary).withValues(alpha: 0.1),
+              color: (isCredit ? AppColors.success : AppColors.primary).withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -960,7 +960,7 @@ class _FullProjectCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: AppColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(type, style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w600)),
@@ -982,7 +982,7 @@ class _FullProjectCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.12),
+                  color: statusColor.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(status, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.w600)),

@@ -145,7 +145,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         setState(() => _selectedFilter = f);
                         _applyFilters();
                       },
-                      selectedColor: AppColors.primary.withValues(alpha: 0.15),
+                      selectedColor: AppColors.primary.withOpacity(0.15),
                       checkmarkColor: AppColors.primary,
                       labelStyle: TextStyle(
                         color: isSelected ? AppColors.primary : AppColors.textSecondary,
@@ -226,7 +226,7 @@ class _ProjectTile extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(6)),
+                  decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.08), borderRadius: BorderRadius.circular(6)),
                   child: Text(project.type, style: const TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.w600)),
                 ),
                 const Spacer(),

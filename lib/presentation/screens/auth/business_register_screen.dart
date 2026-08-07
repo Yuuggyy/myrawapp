@@ -249,7 +249,7 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.error.withValues(alpha: 0.08),
+                      color: AppColors.error.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(_errorMessage!,
@@ -340,9 +340,9 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.06),
+                        color: AppColors.primary.withOpacity(0.06),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,9 +432,9 @@ class _BusinessRegisterScreenState extends State<BusinessRegisterScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.warning.withValues(alpha: 0.08),
+                        color: AppColors.warning.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                        border: Border.all(color: AppColors.warning.withOpacity(0.3)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,

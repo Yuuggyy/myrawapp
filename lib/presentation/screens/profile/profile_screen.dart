@@ -136,9 +136,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: AppColors.warning.withValues(alpha: 0.12),
+                              color: AppColors.warning.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                              border: Border.all(color: AppColors.warning.withOpacity(0.3)),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -167,9 +167,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.06),
+                          color: AppColors.primary.withOpacity(0.06),
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                          border: Border.all(color: AppColors.primary.withOpacity(0.2)),
                         ),
                         child: Row(
                           children: [

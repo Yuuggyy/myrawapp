@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/services/api_service.dart';
+import '../chat/chat_screen.dart';
 
 // Financing types
 enum FinancingType {
@@ -133,7 +134,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
       double? bankProfitShare;
       double? roiPercentage;
       
-      switch (_financingType) {
+      switch (_financingType ?? FinancingType.pret) {
         case FinancingType.pret:
           fundingType = 'loan';
           break;
@@ -178,7 +179,30 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => _SuccessDialog(onClose: () => Navigator.pushReplacementNamed(context, AppRoutes.projects)),
+        builder: (_) => _SuccessDialog(onClose: () {
+          // Build project context for AI analysis
+          final projectContext = <String, dynamic>{
+            'project_name': _titleCtrl.text.trim(),
+            'sector': _sector,
+            'funding_type': fundingType,
+            'amount': amount,
+            'description': _descCtrl.text.trim(),
+            'interest_rate': interestRate,
+          };
+          if (_socialImpactCtrl.text.trim().isNotEmpty) projectContext['social_impact'] = _socialImpactCtrl.text.trim();
+          if (_envImpactCtrl.text.trim().isNotEmpty) projectContext['environmental_impact'] = _envImpactCtrl.text.trim();
+          if (_jobsCreatedCtrl.text.trim().isNotEmpty) projectContext['jobs_created'] = int.tryParse(_jobsCreatedCtrl.text.trim()) ?? 0;
+          
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => ChatScreen(
+              projectId: 'new_project',
+              showBackButton: true,
+              onBack: () => Navigator.pushReplacementNamed(context, AppRoutes.projects),
+              projectContext: projectContext,
+            )),
+          );
+        }),
       );
     } on ApiException catch (e) {
       setState(() => _isSubmitting = false);
@@ -245,7 +269,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           const SizedBox(height: 16),
 
           DropdownButtonFormField<String>(
-            initialValue: _sector,
+            value: _sector,
             decoration: const InputDecoration(labelText: 'Secteur d\'activité *'),
             items: AppConstants.projectSectors.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
             onChanged: (v) => setState(() => _sector = v),
@@ -324,7 +348,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: selected ? AppColors.primary.withValues(alpha: 0.06) : Colors.white,
+                  color: selected ? AppColors.primary.withOpacity(0.06) : Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: selected ? AppColors.primary : AppColors.grey200,
@@ -411,9 +435,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.info.withValues(alpha: 0.08),
+                color: AppColors.info.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
+                border: Border.all(color: AppColors.info.withOpacity(0.2)),
               ),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -443,9 +467,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.aiCommercial.withValues(alpha: 0.08),
+          color: AppColors.aiCommercial.withOpacity(0.08),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.aiCommercial.withValues(alpha: 0.2)),
+          border: Border.all(color: AppColors.aiCommercial.withOpacity(0.2)),
         ),
         child: const Row(
           children: [
@@ -507,9 +531,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.aiAccounting.withValues(alpha: 0.08),
+          color: AppColors.aiAccounting.withOpacity(0.08),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.aiAccounting.withValues(alpha: 0.2)),
+          border: Border.all(color: AppColors.aiAccounting.withOpacity(0.2)),
         ),
         child: const Row(
           children: [
@@ -553,9 +577,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.aiRSE.withValues(alpha: 0.08),
+          color: AppColors.aiRSE.withOpacity(0.08),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.aiRSE.withValues(alpha: 0.2)),
+          border: Border.all(color: AppColors.aiRSE.withOpacity(0.2)),
         ),
         child: const Row(
           children: [
@@ -645,7 +669,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isUploaded ? AppColors.success.withValues(alpha: 0.3) : AppColors.grey200,
+                  color: isUploaded ? AppColors.success.withOpacity(0.3) : AppColors.grey200,
                 ),
               ),
               child: Row(
@@ -653,7 +677,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                   Container(
                     width: 40, height: 40,
                     decoration: BoxDecoration(
-                      color: isUploaded ? AppColors.success.withValues(alpha: 0.1) : AppColors.grey100,
+                      color: isUploaded ? AppColors.success.withOpacity(0.1) : AppColors.grey100,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -764,9 +788,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.info.withValues(alpha: 0.08),
+              color: AppColors.info.withOpacity(0.08),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.info.withValues(alpha: 0.2)),
+              border: Border.all(color: AppColors.info.withOpacity(0.2)),
             ),
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -801,7 +825,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, -2)),
+          BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, -2)),
         ],
       ),
       child: Row(
@@ -1007,7 +1031,7 @@ class _SuccessDialog extends StatelessWidget {
           children: [
             Container(
               width: 72, height: 72,
-              decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), shape: BoxShape.circle),
+              decoration: BoxDecoration(color: AppColors.success.withOpacity(0.1), shape: BoxShape.circle),
               child: const Icon(Icons.check, color: AppColors.success, size: 40),
             ),
             const SizedBox(height: 20),
@@ -1021,7 +1045,7 @@ class _SuccessDialog extends StatelessWidget {
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(onPressed: onClose, child: const Text('Voir mes projets')),
+              child: ElevatedButton(onPressed: onClose, child: const Text('Analyser avec l IA')),
             ),
           ],
         ),
