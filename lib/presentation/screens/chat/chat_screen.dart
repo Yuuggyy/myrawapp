@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/services/api_service.dart';
+import '../../../core/services/ai_service.dart';
 import '../../../data/models/business_sector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -179,20 +180,42 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollToBottom();
 
     // Auto-route the message
-    Future.delayed(const Duration(milliseconds: 600), () {
+    final agent = AgentRouter.route(trimmed);
+    final agentBackend = AiService.agentToBackend(agent.id);
+    
+    // Build conversation history for the AI
+    final history = _messages.map((m) => {
+      'role': m.isAi ? 'assistant' : 'user',
+      'content': m.content,
+    }).toList();
+
+    // Call the AI service (Gemini powered backend)
+    AiService.instance.chat(
+      message: trimmed,
+      agentBackendName: agentBackend,
+      conversationHistory: history.cast<Map<String, String>>(),
+    ).then((result) {
       if (!mounted) return;
-      
-      final agent = AgentRouter.route(trimmed);
-      final response = _generateResponse(trimmed, agent);
       
       setState(() {
         _isAiTyping = false;
-        _messages.add(ChatMessage(
-          content: response,
-          isAi: true,
-          time: DateTime.now(),
-          agent: agent,
-        ));
+        if (result != null) {
+          _messages.add(ChatMessage(
+            content: result.response,
+            isAi: true,
+            time: DateTime.now(),
+            agent: agent,
+          ));
+        } else {
+          // Fallback to local response if backend is unreachable
+          final fallback = _generateResponse(trimmed, agent);
+          _messages.add(ChatMessage(
+            content: fallback,
+            isAi: true,
+            time: DateTime.now(),
+            agent: agent,
+          ));
+        }
       });
       _scrollToBottom();
     });

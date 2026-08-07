@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import '../constants/app_constants.dart';
 
-/// AI Service - calls the RawBank AI backend function
-/// Falls back to mock response if backend is unreachable
+/// AI Service - calls the RawBank AI backend function powered by Google Gemini
+/// Falls back to keyword-based response if backend is unreachable
 class AiService {
   static AiService? _instance;
   late final Dio _dio;
 
   AiService._internal() {
     _dio = Dio(BaseOptions(
-      baseUrl: AppConstants.baseUrl,
+      baseUrl: '',
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 30),
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
@@ -33,7 +33,7 @@ class AiService {
     }
   }
 
-  /// Calls the RawBank AI chat backend function
+  /// Calls the RawBank AI chat backend function (Gemini powered)
   /// Returns the AI response, or null if the backend is unreachable
   Future<AiChatResult?> chat({
     required String message,
@@ -42,7 +42,7 @@ class AiService {
   }) async {
     try {
       final response = await _dio.post(
-        '/rawbankaichat',
+        AppConstants.aiChatUrl,
         data: {
           'message': message,
           'agent': agentBackendName,
@@ -69,7 +69,7 @@ class AiService {
   Future<NewsFeedResult?> getNewsFeed({String? query, int limit = 10}) async {
     try {
       final response = await _dio.post(
-        '/rawbanknewsfeed',
+        '${AppConstants.baseUrl}/rawbanknewsfeed',
         data: {'query': query, 'limit': limit},
       );
 

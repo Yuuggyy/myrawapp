@@ -392,6 +392,27 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> createProject(Map<String, dynamic> data) async {
+    // Try Supabase first
+    try {
+      final result = await SupabaseService.createProject(
+        projectName: data['title'] ?? data['project_name'] ?? 'Projet sans nom',
+        projectDescription: data['description'] ?? data['project_description'] ?? '',
+        sector: data['sector'],
+        fundingType: data['type'] ?? data['funding_type'] ?? 'loan',
+        requestedAmount: (data['amount_requested'] ?? data['requested_amount'] ?? 0).toDouble(),
+        interestRate: data['interest_rate']?.toDouble(),
+        projectedRevenue: data['projected_revenue']?.toDouble(),
+        bankProfitShare: data['bank_profit_share']?.toDouble(),
+        roiPercentage: data['roi_percentage']?.toDouble(),
+        businessPlanUrl: data['business_plan_url'],
+      );
+      if (result != null) {
+        return result;
+      }
+    } catch (e) {
+      // Supabase failed, fall through to mock
+    }
+    // Fallback: mock mode
     final newProject = {
       'id': 'p${_mockProjects.length + 1}',
       'user_id': 'u1',
@@ -405,19 +426,9 @@ class ApiService {
       'updated_at': DateTime.now().toUtc().toIso8601String(),
       ...data,
     };
-    if (_mockMode) {
-      _mockProjects.insert(0, newProject);
-      return newProject;
-    }
-    try {
-      final token = await _readToken();
-      final response = await _post('/rawbankProjects', data: {'action': 'create', 'access_token': token, ...data});
-      return _unwrap(response);
-    } catch (e) {
-      _mockMode = true;
-      _mockProjects.insert(0, newProject);
-      return newProject;
-    }
+    _mockMode = true;
+    _mockProjects.insert(0, newProject);
+    return newProject;
   }
 
   // ═══════════════════════════════════════════════════════════════════════

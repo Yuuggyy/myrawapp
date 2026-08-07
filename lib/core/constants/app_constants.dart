@@ -27,6 +27,7 @@ class AppConstants {
 
   // API
   static const String baseUrl = 'https://vesper-4d02d524.base44.app/functions';
+  static const String aiChatUrl = 'https://base44.app/api/apps/6a10802fc1e2a32a74055143/functions/rawbankAiChat';
   static const int connectTimeout = 30000;
   static const int receiveTimeout = 30000;
 

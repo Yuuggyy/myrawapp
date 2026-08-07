@@ -123,13 +123,55 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
     setState(() => _isSubmitting = true);
     try {
       final amount = double.tryParse(_amountCtrl.text.replaceAll(',', '.')) ?? 0;
+      
+      // Map financing type to Supabase format
+      String fundingType;
+      String? rseEsgCategory;
+      String? rseEsgDescription;
+      double? interestRate;
+      double? projectedRevenue;
+      double? bankProfitShare;
+      double? roiPercentage;
+      
+      switch (_financingType) {
+        case FinancingType.pret:
+          fundingType = 'loan';
+          break;
+        case FinancingType.pretInteret:
+          fundingType = 'interest_loan';
+          interestRate = double.tryParse(_interestRateCtrl.text.replaceAll(',', '.')) ?? 0;
+          break;
+        case FinancingType.partenariat:
+          fundingType = 'partnership';
+          projectedRevenue = double.tryParse(_projectedRevenueCtrl.text.replaceAll(',', '.')) ?? 0;
+          bankProfitShare = double.tryParse(_bankShareCtrl.text.replaceAll(',', '.')) ?? 0;
+          roiPercentage = double.tryParse(_percentageCtrl.text.replaceAll(',', '.')) ?? 0;
+          break;
+        case FinancingType.rse:
+          fundingType = 'loan';
+          rseEsgCategory = 'mixte';
+          rseEsgDescription = 'Impact social: ${_socialImpactCtrl.text.trim()}\nImpact environnemental: ${_envImpactCtrl.text.trim()}\nBeneficiaires: ${_beneficiariesCtrl.text.trim()}\nEmplois crees: ${_jobsCreatedCtrl.text.trim()}';
+          break;
+      }
+      
       await ApiService.instance.createProject({
         'title': _titleCtrl.text.trim(),
-        'type': _financingType!.label,
+        'project_name': _titleCtrl.text.trim(),
+        'type': fundingType,
+        'funding_type': fundingType,
         'sector': _sector,
         'amount_requested': amount,
+        'requested_amount': amount,
         'currency': _currency,
         'description': _descCtrl.text.trim(),
+        'project_description': _descCtrl.text.trim(),
+        'interest_rate': interestRate,
+        'projected_revenue': projectedRevenue,
+        'bank_profit_share': bankProfitShare,
+        'roi_percentage': roiPercentage,
+        'rse_esg_category': rseEsgCategory,
+        'rse_esg_description': rseEsgDescription,
+        'business_plan_url': _businessPlanCtrl.text.trim().isNotEmpty ? _businessPlanCtrl.text.trim() : null,
       });
       if (!mounted) return;
       setState(() => _isSubmitting = false);
