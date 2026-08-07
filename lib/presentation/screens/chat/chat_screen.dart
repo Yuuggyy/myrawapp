@@ -64,7 +64,8 @@ class ChatMessage {
 class ChatScreen extends StatefulWidget {
   final String projectId;
   final bool showBackButton;
-  const ChatScreen({super.key, required this.projectId, this.showBackButton = true});
+  final VoidCallback? onBack;
+  const ChatScreen({super.key, required this.projectId, this.showBackButton = true, this.onBack});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -147,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatMessage> _buildAssistantIntro() {
     return [
       ChatMessage(
-        content: "Bonjour 👋 Je suis l'Assistant IA RawBank. J'analyse votre demande en temps réel et je l'oriente automatiquement vers le bon agent spécialisé.\n\nJe peux vous aider sur :\n1. L'impact social et environnemental (RSE)\n2. La conformité réglementaire\n3. La viabilité commerciale\n4. L'analyse financière\n\nPosez-moi votre question !",
+        content: "Bonjour 👋 Je suis l'Agent IA RawBank. J'analyse votre demande et je l'oriente automatiquement vers le bon agent spécialisé.\n\nJe peux vous aider sur :\n1. L'impact social et environnemental (RSE)\n2. La conformité réglementaire\n3. La viabilité commerciale\n4. L'analyse financière\n\nPosez-moi votre question !",
         isAi: true,
         time: DateTime.now(),
         agent: AgentRouter.router,
@@ -293,30 +294,18 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          children: [
-            Container(
-              width: 36, height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.smart_toy, color: AppColors.primary, size: 20),
-            ),
-            const SizedBox(width: 10),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Assistant IA', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
-                Text('RawBank • Llama 3.3', style: TextStyle(fontSize: 11, color: Colors.white70)),
-              ],
-            ),
-          ],
+        centerTitle: true,
+        title: const Text('Agent IA', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+          onPressed: () {
+            if (widget.onBack != null) {
+              widget.onBack!();
+            } else {
+              Navigator.pop(context);
+            }
+          },
         ),
-        automaticallyImplyLeading: widget.showBackButton,
-        leading: widget.showBackButton
-            ? IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context))
-            : null,
       ),
       body: Column(
         children: [

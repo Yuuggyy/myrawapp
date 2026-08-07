@@ -34,12 +34,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       resizeToAvoidBottomInset: !isChatActive,
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [
-          _HomeTab(),
-          _ProjectsTab(),
+        children: [
+          const _HomeTab(),
+          const _ProjectsTab(),
           const MediaTab(),
-          ChatScreen(projectId: 'assistant', showBackButton: false),
-          ProfileScreen(),
+          ChatScreen(projectId: 'assistant', showBackButton: false, onBack: () => _onNavTap(0)),
+          const ProfileScreen(),
         ],
       ),
       bottomNavigationBar: isChatActive ? null : _RawBottomNavBar(
